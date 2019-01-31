@@ -1,0 +1,31 @@
+cache: packages
+sudo: required
+warnings_are_errors: true
+
+before_install: [
+   "sudo add-apt-repository \"deb http://archive.ubuntu.com/ubuntu/ xenial main\" -y",
+   "sudo apt-get update -q",
+   "sudo apt-get install libfreetype6"
+   ]
+
+language: r
+r:
+- bioc-devel
+- bioc-release
+
+r_binary_packages:
+- assertthat
+- data.table
+- dplyr
+- FNN
+- ggplot2
+- glasso
+- Matrix
+- plyr
+- reshape2
+- stringr
+- tibble
+- VGAM
+
+after_success:
+- Rscript -e 'covr::codecov()'
