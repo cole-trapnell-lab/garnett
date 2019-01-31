@@ -4,3 +4,9 @@ inst/doc
 .RData
 .Ruserdata
 .DS_Store
+# Ruby and Jekyll files
+Gemfile.lock
+.sass-cache/
+_site/
+vendor/
+.DS_Store
