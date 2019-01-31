@@ -1,0 +1,19 @@
+#
+>test cell 1
+expressed: hannah
+not expressed: zach
+expressed below: jose 7
+expressed above: lauren 1.2
+expressed between: cole 0 5
+tissue: liver
+references: website1.htm, website2.htm
+
+
+>test cell 1
+expressed: hannah, gene2
+not expressed: zach, gene3
+expressed below: jose 7, dejun 2, gene4 0.9
+expressed above: lauren 1.2, greg 2, hannah 5
+expressed between: cole 0 5, mike 8 10
+tissue: liver
+subtype of: test cell 1

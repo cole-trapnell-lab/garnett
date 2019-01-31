@@ -1,0 +1,24 @@
+>B cells
+expressed: CD19, MS4A1, CD79A
+expressed between: RPS18 10 50
+FACS_type: B cells, T cells
+references: https://www.ncbi.nlm.nih.gov/pubmed/?term=23688120,
+https://www.ncbi.nlm.nih.gov/pubmed/?term=21149806
+
+>T cells
+expressed: CD3E, CD3G
+expressed below: CD19 1
+expressed above: CD3D 1
+FACS_type: CD4 T cells, CD8 T cells
+references: https://www.ncbi.nlm.nih.gov/pubmed/?term=1534551
+
+>CD4 T cells
+expressed: CD4, FOXP3, IL2RA, IL7R
+subtype of: T cells
+FACS_type: T cells
+
+>CD8 T cells
+expressed: CD8A, CD8B #GZMK might be in NKs
+subtype of: T cells
+FACS_type: T cells
+

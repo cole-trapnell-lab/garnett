@@ -1,0 +1,90 @@
+---
+title: "Garnett Website Vignette"
+author: "Hannah Pliner"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r}
+library(garnett)
+library(org.Hs.eg.db)
+```
+
+```{r}
+# load in the data
+# NOTE: the 'system.file' file name is only necessary to read in 
+# included package data
+#
+mat <- readMM(system.file("extdata", "exprs_sparse.mtx", package = "garnett"))
+fdata <- read.table(system.file("extdata", "fdata.txt", package = "garnett"))
+pdata <- read.table(system.file("extdata", "pdata.txt", package = "garnett"), 
+                    sep="\t")
+
+row.names(mat) <- row.names(fdata)
+colnames(mat) <- row.names(pdata)
+# create a new CDS object
+pd <- new("AnnotatedDataFrame", data = pdata)
+fd <- new("AnnotatedDataFrame", data = fdata)
+pbmc_cds <- newCellDataSet(as(mat, "dgCMatrix"),
+                             phenoData = pd,
+                             featureData = fd)
+
+# generate size factors for normalization later
+pbmc_cds <- estimateSizeFactors(pbmc_cds)
+```
+
+```{r}
+marker_file_path <- system.file("extdata", "pbmc_bad_markers.txt", 
+                                package = "garnett")
+marker_check <- check_markers(pbmc_cds, marker_file_path, 
+                              db=org.Hs.eg.db, 
+                              cds_gene_id_type = "SYMBOL", 
+                              marker_file_gene_id_type = "SYMBOL")
+
+plot_markers(marker_check)
+```
+
+```{r}
+set.seed(260)
+
+marker_file_path <- system.file("extdata", "pbmc_test.txt", 
+                                package = "garnett")
+pbmc_classifier <- train_cell_classifier(cds = pbmc_cds,
+                                         marker_file = marker_file_path,
+                                         db=org.Hs.eg.db,
+                                         cds_gene_id_type = "SYMBOL",
+                                         num_unknown = 50,
+                                         marker_file_gene_id_type = "SYMBOL")
+head(pData(pbmc_cds))
+```
+
+
+```{r}
+feature_genes <- get_feature_genes(pbmc_classifier, 
+                                   node = "root", 
+                                   db = org.Hs.eg.db)
+head(feature_genes)
+```
+
+
+```{r}
+pbmc_cds <- classify_cells(pbmc_cds, pbmc_classifier,
+                           db = org.Hs.eg.db,
+                           cluster_extend = TRUE,
+                           cds_gene_id_type = "SYMBOL")
+
+table(pData(pbmc_cds)$cell_type)
+table(pData(pbmc_cds)$cluster_ext_type)
+```
+
