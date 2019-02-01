@@ -1,7 +1,7 @@
 ---
 ---
 
-<div class="jumbotron container-fullwidth" style="background-color:black; background-image: url(images/front.png); background-position: right 35% bottom 50%; background-repeat: no-repeat; background-size: contain;">
+<div class="jumbotron container-fullwidth" style="background-color:black; background-image: url(images/front.png); background-position: right 35% bottom 50%; background-repeat: no-repeat; background-size: 2000px;">
   <div class="container">
     <div class="text-center">
       <h1>Garnett</h1>
@@ -12,12 +12,34 @@
   </div>
 </div>
 
+
 <div class="container">
 
-  <div class="row">
-      <div class="text-center">
-        <img src="images/front_diagram-01.png"></img>
+  <!-- START THE FEATURETTES -->
+
+  <hr class="featurette-divider">
+
+  <div class="row featurette">
+    <div class="col-md-7 col-md-push-5">
+      <h2 class="featurette-heading"><a href = "/docs/#1b-train-your-own-classifier">Train cell type classifiers</a></h2>
+      <p class="lead">Use your single-cell RNA-seq data to build a cell type classifier</p>
+
+    </div>
+    <div class="col-md-5 col-md-pull-7">
+      <img class="featurette-image img-responsive center-block" src="{{site.baseurl}}/images/class.png" width=300 height=300 alt="Build a classifier">
     </div>
   </div>
 
-</div>
+  <hr class="featurette-divider">
+
+  <div class="row featurette">
+    <div class="col-md-7">
+      <h2 class="featurette-heading"><a href = "{{site.baseurl}}/docs/#2-classifying-your-cells">Classify your cells</a></h2>
+      <p class="lead">Use pre-trained classifiers to identify cell types in your data</p>
+      <!-- <p>Monocle allows you to compare groups of cells to identify genes that differ between them, even after controlling for other variables in the experiment. For example, the plot above shows genes that differ between two conditions, but only one of them, LAG3, is **also** different between cell types, even after subtracting the other effects. You can use Monocle's differential expression system to zero in on the genes that are most relevant in your experiment.</p> -->
+
+    </div>
+    <div class="col-md-5">
+      <img class="featurette-image img-responsive center-block" src="{{site.baseurl}}/images/tsne_ex.png" width=300 height=300 alt="tSNE example">
+    </div>
+  </div>
