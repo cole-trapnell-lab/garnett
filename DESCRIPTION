@@ -34,6 +34,7 @@ Imports:
     Matrix (>= 1.2-15),
     methods,
     org.Hs.eg.db (>= 3.7.0),
+    org.Mm.eg.db,
     plyr (>= 1.8.4),
     RANN (>= 2.6),
     reshape2 (>= 1.4.3),
