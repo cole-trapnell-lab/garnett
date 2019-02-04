@@ -10,11 +10,7 @@ r:
 - bioc-devel
 - bioc-release
 r_binary_packages:
-- AnnotationDbi
 - assertthat
-- Biobase
-- DelayedArray
-- DelayedMatrixStats
 - doParallel
 - forcats
 - ggplot2
@@ -24,11 +20,9 @@ r_binary_packages:
 - igraph
 - irlba
 - Matrix
-- org.Hs.eg.db
 - plyr
 - RANN
 - reshape2
-- rly
 - stringr
 - tibble
 - VGAM
