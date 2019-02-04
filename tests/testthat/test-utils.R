@@ -100,6 +100,7 @@ test_that("check_markers works", {
 })
 
 test_that("plot_markers works", {
+  skip_on_travis()
   vdiffr::expect_doppelganger("basic_marker_plot",
                               fig = plot_markers(marker_check))
   vdiffr::expect_doppelganger("basic_marker_plot change amb",
