@@ -22,8 +22,13 @@ r_binary_packages:
 - stringr
 - tibble
 - VGAM
+
+r_packages:
+  - covr
+
 after_success:
-- Rscript -e 'covr::codecov()'
+  - Rscript -e 'library(covr); codecov()'
+
 notifications:
   slack:
     secure: QUVNBAduu41IMbW1rzUdfPA6kEbNYv1mnBuOEGAlcs/tMrdxW/i4nJK7TBz7YnxxySNA/IIPB/ES9V7FY8cKEliNf4dqZ2a2rtgFQgVzPfq3fIDF3hcsT/+eg4Y8O4hpadJwj8aHPS9RFbatvzp/qJClG9gIgyck9NizW+1jiT6crXhqfTUXAgyMtvJ8ztGUmKXBhu81TRWXgzkFpTGp0CeDl9Yhx6cuG6WF7khtnUUpLmgtrmYfvs6/d0WkmdFstLurb7PuQdlTapyXlniS/TjJukFF+QhkzkW/FzhNuvZ3nrdji28CXpv5Rh5CbWjvp2yN5Aio4sadg3V56CdVpufsFvcO9QsyN3V/hwzcYN+07p53H8PHPKP+Di5pXI3CpVDLFKIw4alYgwOwwI0ylvCoLq6MpLoRhFouQfo6U52noV1sy8+HdV5LzlN+mcdGRKjOis7uJotdyiePkZCuZ6fU3FJMfrtq3SAALqI9gMTH/gPJairVgp9zOL3+DKJ2JTUv1hxV9FQzEI01VivRaJPSoJj/o45n8ieK+/l54+GC4i9AYkEJlM2OM5oI6fhWlO3+ko49BQNZaRJVACIM7bQ1B2usAZ1KYKciqboHZdg5Je08JDH9jg1Avvp+LYHbuXuuDO+fAmLk4IDiTMwX4OfAIVAmGq5nhg4GvqMuBuY=
