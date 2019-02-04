@@ -26,6 +26,7 @@ new_cds <- classify_cells(test_cds, test_classifier,
                           cds_gene_id_type = "SYMBOL")
 
 test_that("classify_cells works", {
+  skip_on_travis()
   expect_identical(exprs(new_cds), exprs(test_cds))
   expect_identical(fData(new_cds), fData(test_cds))
   expect_equal(sum(pData(new_cds)$cell_type == "B cells"), 207)
