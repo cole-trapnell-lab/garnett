@@ -10,18 +10,29 @@ r:
 - bioc-devel
 - bioc-release
 r_binary_packages:
+- AnnotationDbi
 - assertthat
-- data.table
-- dplyr
-- FNN
+- Biobase
+- DelayedArray
+- DelayedMatrixStats
+- doParallel
+- forcats
 - ggplot2
+- ggrepel
 - glasso
+- glmnet
+- igraph
+- irlba
 - Matrix
+- org.Hs.eg.db
 - plyr
+- RANN
 - reshape2
+- rly
 - stringr
 - tibble
 - VGAM
+- viridis
 
 r_packages:
   - covr
