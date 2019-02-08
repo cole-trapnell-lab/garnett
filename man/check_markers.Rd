@@ -6,7 +6,7 @@
 \usage{
 check_markers(cds, marker_file, db, cds_gene_id_type = "SYMBOL",
   marker_file_gene_id_type = "SYMBOL", propogate_markers = TRUE,
-  use_tf_idf = TRUE)
+  use_tf_idf = TRUE, classifier_gene_id_type = "ENSEMBL")
 }
 \arguments{
 \item{cds}{Input CDS object.}
@@ -32,6 +32,10 @@ generally be \code{TRUE}.}
 \item{use_tf_idf}{Logical. Should TF-IDF matrix be calculated during
 estimation? If \code{TRUE}, estimates will be more accurate, but
 calculation is slower with very large datasets.}
+
+\item{classifier_gene_id_type}{The type of gene ID that will be used in the
+classifier. If possible for your organism, this should be "ENSEMBL", which
+is the default.}
 }
 \value{
 Data.frame of marker check results.

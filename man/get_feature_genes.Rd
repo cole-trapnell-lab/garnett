@@ -14,7 +14,7 @@ get_feature_genes(classifier, node = "root", convert_ids = TRUE,
 \item{node}{Character. The name of the parent node of the multinomial
 classifier you would like to view features for. If top level, use "root".}
 
-\item{convert_ids}{Logical. Should ENSEMBL IDs be converted to SYMBOL?}
+\item{convert_ids}{Logical. Should classifier IDs be converted to SYMBOL?}
 
 \item{db}{Bioconductor AnnotationDb-class package for converting gene IDs.
 For example, for humans use org.Hs.eg.db. See available packages at

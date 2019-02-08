@@ -387,6 +387,8 @@ make_name_map <- function(parse_list,
     gene_table <- merge(gene_table, possibles, all.x=T,
                         by.x="fgenes", by.y="ensembl")
     gene_table$fgenes <- gene_table$cds
+  } else {
+    gene_table$cds <- gene_table$fgenes
   }
 
   gene_table$in_cds <- gene_table$f %in% possible_genes
