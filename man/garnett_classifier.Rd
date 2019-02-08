@@ -17,6 +17,7 @@ functions.
  \describe{
    \item{\code{classification_tree}:}{Object of class \code{"igraph"}}
    \item{\code{cell_totals}:}{Object of class \code{"numeric"}}
+   \item{\code{gene_id_type}:}{Object of class \code{"character"}}
    \item{\code{references}:}{Object of class \code{"list"}}
  }
 }

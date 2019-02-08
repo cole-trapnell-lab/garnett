@@ -7,7 +7,8 @@
 train_cell_classifier(cds, marker_file, db, cds_gene_id_type = "ENSEMBL",
   marker_file_gene_id_type = "SYMBOL", min_observations = 8,
   max_training_samples = 500, num_unknown = 500,
-  propogate_markers = TRUE, cores = 1, lambdas = NULL)
+  propogate_markers = TRUE, cores = 1, lambdas = NULL,
+  classifier_gene_id_type = "ENSEMBL")
 }
 \arguments{
 \item{cds}{Input CDS object.}
@@ -47,6 +48,10 @@ generally be \code{TRUE}.}
 \item{lambdas}{\code{NULL} or a numeric vector. Allows the user to pass
 their own lambda values to \code{\link[glmnet]{cv.glmnet}}. If \code{NULL},
 preset lambda values are used.}
+
+\item{classifier_gene_id_type}{The type of gene ID that will be used in the
+classifier. If possible for your organism, this should be "ENSEMBL", which
+is the default.}
 }
 \description{
 This function takes single-cell expression data in the form of a CDS object
