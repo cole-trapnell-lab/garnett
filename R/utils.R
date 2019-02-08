@@ -99,10 +99,16 @@ get_feature_genes <- function(classifier,
   zeroes <- all != 0
   all <- all[rowSums(zeroes) > 0,]
 
+  if (.hasSlot(classifier, "gene_id_type")) {
+    classifier_gene_id_type <- classifier@gene_id_type
+  } else {
+    classifier_gene_id_type <- "ENSEMBL"
+  }
+
   if (convert_ids) {
     convs <- convert_gene_ids(row.names(all)[2:length(row.names(all))],
                               db,
-                              classifier@gene_id_type,
+                              classifier_gene_id_type,
                               "SYMBOL")
     convs[is.na(convs)] <- names(convs[is.na(convs)])
     if(sum(duplicated(convs)) > 0) {
