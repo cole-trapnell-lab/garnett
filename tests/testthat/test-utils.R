@@ -3,9 +3,10 @@ context("test-utils.R")
 library(org.Hs.eg.db)
 data(test_cds)
 
-ensembl <- garnett:::cds_to_ensembl(test_cds, db=org.Hs.eg.db, "SYMBOL")
+ensembl <- garnett:::cds_to_other_id(test_cds, db=org.Hs.eg.db,
+                                     "SYMBOL", "ENSEMBL")
 
-test_that("cds_to_ensembl works", {
+test_that("cds_to_other_id works", {
   expect_is(ensembl, "CellDataSet")
   expect_equal(nrow(fData(ensembl)), 19570)
   expect_equal(row.names(fData(ensembl)[

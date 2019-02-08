@@ -1,24 +1,25 @@
-cds_to_ensembl <- function(cds,
-                           db,
-                           input_file_gene_id_type,
-                           verbose = FALSE) {
+cds_to_other_id <- function(cds,
+                            db,
+                            input_file_gene_id_type,
+                            new_gene_id_type,
+                            verbose = FALSE) {
   matrix <- exprs(cds)
   fdata <- fData(cds)
 
   new_g <- convert_gene_ids(row.names(fdata),
                             db,
                             input_file_gene_id_type,
-                            "ENSEMBL")
+                            new_gene_id_type)
   lstart <- length(new_g)
   new_g <- new_g[!is.na(new_g)]
   new_g <- new_g[!duplicated(new_g)]
   lend <- length(new_g)
   if((lstart-lend)/lstart > .7) warning(paste("More than 70% of IDs were lost",
-                                              "when converting to ENSEMBL IDs.",
-                                              "Did you specify the correct",
-                                              "gene ID types and the correct",
-                                              "db?"))
-  if(verbose) message(paste("After converting CDS to ENSEMBL IDs,",
+                                              "when converting to",
+                                              new_gene_id_type, "IDs. Did you",
+                                              "specify the correct gene ID",
+                                              "types and the correct db?"))
+  if(verbose) message(paste("After converting CDS to", new_gene_id_type,"IDs,",
                             lstart - lend, "IDs were lost"))
 
   matrix <- matrix[names(new_g),]
@@ -56,7 +57,7 @@ convert_gene_ids <- function(gene_list,
 #'  \code{\link{train_cell_classifier}}.
 #' @param node Character. The name of the parent node of the multinomial
 #'  classifier you would like to view features for. If top level, use "root".
-#' @param convert_ids Logical. Should ENSEMBL IDs be converted to SYMBOL?
+#' @param convert_ids Logical. Should classifier IDs be converted to SYMBOL?
 #' @param db Bioconductor AnnotationDb-class package for converting gene IDs.
 #'  For example, for humans use org.Hs.eg.db. See available packages at
 #'  \href{http://bioconductor.org/packages/3.8/data/annotation/}{Bioconductor}.
@@ -101,7 +102,7 @@ get_feature_genes <- function(classifier,
   if (convert_ids) {
     convs <- convert_gene_ids(row.names(all)[2:length(row.names(all))],
                               db,
-                              "ENSEMBL",
+                              classifier@gene_id_type,
                               "SYMBOL")
     convs[is.na(convs)] <- names(convs[is.na(convs)])
     if(sum(duplicated(convs)) > 0) {
@@ -163,6 +164,9 @@ get_classifier_references <- function(classifier,
 #' @param use_tf_idf Logical. Should TF-IDF matrix be calculated during
 #'  estimation? If \code{TRUE}, estimates will be more accurate, but
 #'  calculation is slower with very large datasets.
+#' @param classifier_gene_id_type The type of gene ID that will be used in the
+#'  classifier. If possible for your organism, this should be "ENSEMBL", which
+#'  is the default.
 #'
 #' @return Data.frame of marker check results.
 #'
@@ -222,7 +226,8 @@ check_markers <- function(cds,
                           cds_gene_id_type = "SYMBOL",
                           marker_file_gene_id_type = "SYMBOL",
                           propogate_markers = TRUE,
-                          use_tf_idf = TRUE) {
+                          use_tf_idf = TRUE,
+                          classifier_gene_id_type = "ENSEMBL") {
 
   ##### Check inputs #####
   assertthat::assert_that(is(cds, "CellDataSet"))
@@ -266,8 +271,9 @@ check_markers <- function(cds,
   }
 
 
-  if(cds_gene_id_type != "ENSEMBL")  {
-    cds <- cds_to_ensembl(cds, db=db, cds_gene_id_type)
+  if(cds_gene_id_type != classifier_gene_id_type)  {
+    cds <- cds_to_other_id(cds, db=db, cds_gene_id_type,
+                           classifier_gene_id_type)
     pData(cds)$Size_Factor <- sf
   }
   pData(cds)$num_genes_expressed <- Matrix::colSums(as(exprs(cds), "lgCMatrix"))
@@ -417,12 +423,12 @@ check_markers <- function(cds,
     }
   }
 
-  names(gene_table) <- c("ENSEMBL", "parent", "cell_type", "marker_gene",
+  names(gene_table) <- c("gene_id", "parent", "cell_type", "marker_gene",
                          "in_cds", "nominates", "exclusion_dismisses",
                          "inclusion_ambiguates", "most_overlap",
                          "total_nominated")
 
-  gene_table <- gene_table[,c("marker_gene", "ENSEMBL", "parent", "cell_type",
+  gene_table <- gene_table[,c("marker_gene", "gene_id", "parent", "cell_type",
                               "in_cds", "nominates", "total_nominated",
                               "exclusion_dismisses", "inclusion_ambiguates",
                               "most_overlap")]
@@ -433,7 +439,7 @@ check_markers <- function(cds,
     gene_table$nominates/gene_table$total_nominated
   gene_table$summary <- NA
 
-  gene_table$summary[is.na(gene_table$ENSEMBL)] <- "Not in db"
+  gene_table$summary[is.na(gene_table$gene_id)] <- "Not in db"
   gene_table$summary[is.na(gene_table$summary) &
                        !gene_table$in_cds] <- "Not in CDS"
   gene_table$summary[is.na(gene_table$summary) &

@@ -119,14 +119,22 @@ classify_cells <- function(cds,
   norm_cds <- newCellDataSet(temp,
                              phenoData = pd, featureData = fd)
 
-  ### Convert to ENSEMBL IDs ###
-  if(cds_gene_id_type != "ENSEMBL") {
-    if (verbose) message("Converting CDS IDs to ENSEMBL\n")
+  if (.hasSlot(classifier, "gene_id_type")) {
+    classifier_gene_id_type <- classifier@gene_id_type
+  } else {
+    classifier_gene_id_type <- "ENSEMBL"
+  }
+
+  ### Convert to Classifier IDs ###
+  if(cds_gene_id_type != classifier_gene_id_type) {
+    if (verbose) message(paste("Converting CDS IDs to",
+                               classifier_gene_id_type, "\n"))
     lstart <- nrow(fData(norm_cds))
-    norm_cds <- cds_to_ensembl(norm_cds,
-                               db=db,
-                               cds_gene_id_type,
-                               verbose = FALSE)
+    norm_cds <- cds_to_other_id(norm_cds,
+                                db=db,
+                                cds_gene_id_type,
+                                classifier_gene_id_type,
+                                verbose = FALSE)
     lend <- nrow(fData(norm_cds))
   }
 

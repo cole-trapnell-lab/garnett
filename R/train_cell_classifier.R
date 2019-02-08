@@ -34,6 +34,9 @@
 #' @param lambdas \code{NULL} or a numeric vector. Allows the user to pass
 #'  their own lambda values to \code{\link[glmnet]{cv.glmnet}}. If \code{NULL},
 #'  preset lambda values are used.
+#' @param classifier_gene_id_type The type of gene ID that will be used in the
+#'  classifier. If possible for your organism, this should be "ENSEMBL", which
+#'  is the default.
 #'
 #' @details This function has three major parts: 1) parsing the marker file 2)
 #'  choosing cell representatives and 3) training the classifier. Details on
@@ -92,7 +95,8 @@ train_cell_classifier <- function(cds,
                                   num_unknown = 500,
                                   propogate_markers = TRUE,
                                   cores=1,
-                                  lambdas = NULL) {
+                                  lambdas = NULL,
+                                  classifier_gene_id_type = "ENSEMBL") {
 
   ##### Check inputs #####
   assertthat::assert_that(is(cds, "CellDataSet"))
@@ -112,6 +116,9 @@ train_cell_classifier <- function(cds,
   assertthat::assert_that(is.character(marker_file_gene_id_type))
   assertthat::assert_that(cds_gene_id_type %in% AnnotationDbi::keytypes(db),
                           msg = paste("cds_gene_id_type must be one of",
+                                      "keytypes(db)"))
+  assertthat::assert_that(classifier_gene_id_type %in% AnnotationDbi::keytypes(db),
+                          msg = paste("classifier_gene_id_type must be one of",
                                       "keytypes(db)"))
   assertthat::assert_that(marker_file_gene_id_type %in%
                             AnnotationDbi::keytypes(db),
@@ -157,9 +164,11 @@ train_cell_classifier <- function(cds,
   norm_cds <- newCellDataSet(temp,
                              phenoData = pd, featureData = fd)
   orig_cds <- cds
-  if(cds_gene_id_type != "ENSEMBL")  {
-    norm_cds <- cds_to_ensembl(norm_cds, db=db, cds_gene_id_type)
-    orig_cds <- cds_to_ensembl(cds, db=db, cds_gene_id_type)
+  if(cds_gene_id_type != classifier_gene_id_type)  {
+    norm_cds <- cds_to_other_id(norm_cds, db=db, cds_gene_id_type,
+                                classifier_gene_id_type)
+    orig_cds <- cds_to_other_id(cds, db=db, cds_gene_id_type,
+                                classifier_gene_id_type)
   }
   pData(norm_cds)$Size_Factor <- sf
 
@@ -189,12 +198,13 @@ train_cell_classifier <- function(cds,
   # Check gene names and keywords
   gene_table <- make_name_map(parse_list,
                               as.character(row.names(fData(norm_cds))),
-                              "ENSEMBL",
+                              classifier_gene_id_type,
                               marker_file_gene_id_type,
                               db)
 
   ##### Make garnett_classifier #####
   classifier <- new_garnett_classifier()
+  classifier@gene_id_type <- classifier_gene_id_type
 
   for(i in name_order) {
     # check meta data exists
@@ -357,13 +367,13 @@ make_name_map <- function(parse_list,
                                           marker_file_gene_id_type,
                                           cds_gene_id_type)
     bad_convert <- sum(is.na(gene_table$fgenes))
-    if (bad_convert > 0) warning(bad_convert,
-                                 " genes could not be converted from ",
+    if (bad_convert > 0) warning(paste(bad_convert,
+                                 "genes could not be converted from",
                                  marker_file_gene_id_type,
-                                 " to ENSEMBL. These genes are listed below:",
-                                 paste0(gene_table$orig_genes[
+                                 "to", cds_gene_id_type, "These genes are",
+                                 "listed below:", paste0(gene_table$orig_genes[
                                    is.na(gene_table$fgenes)],
-                                   collapse="\n"))
+                                   collapse="\n")))
   } else {
     gene_table$cds <- gene_table$fgenes
   }

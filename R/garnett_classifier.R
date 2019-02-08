@@ -12,6 +12,7 @@ setOldClass(c("igraph"), prototype=structure(list(), class="igraph"))
 #'  \describe{
 #'    \item{\code{classification_tree}:}{Object of class \code{"igraph"}}
 #'    \item{\code{cell_totals}:}{Object of class \code{"numeric"}}
+#'    \item{\code{gene_id_type}:}{Object of class \code{"character"}}
 #'    \item{\code{references}:}{Object of class \code{"list"}}
 #'  }
 #'
@@ -22,4 +23,5 @@ setOldClass(c("igraph"), prototype=structure(list(), class="igraph"))
 setClass( "garnett_classifier",
           slots = c(classification_tree="igraph",
                     cell_totals = "numeric",
+                    gene_id_type = "character",
                     references = "list"))
