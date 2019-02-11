@@ -320,7 +320,7 @@ check_markers <- function(cds,
   # Check gene names and keywords
   gene_table <- check_marker_conversion(parse_list,
                                         as.character(row.names(fData(cds))),
-                                        "ENSEMBL",
+                                        classifier_gene_id_type,
                                         marker_file_gene_id_type,
                                         db)
   gene_table$nominates <- NA
@@ -346,7 +346,7 @@ check_markers <- function(cds,
     root <- propogate_func(curr_node = "root", parse_list, classifier)
     gene_table <- check_marker_conversion(parse_list,
                                           as.character(row.names(fData(cds))),
-                                          "ENSEMBL",
+                                          classifier_gene_id_type,
                                           marker_file_gene_id_type,
                                           db)
     gene_table$nominates <- NA

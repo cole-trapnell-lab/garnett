@@ -22,7 +22,7 @@ test_that("basic parsing works", {
 
 test_that("error messages work", {
   expect_error(garnett:::parse_input("hannah"),
-               "Syntax error 'hannah' at or near line number 1")
+               "Marker file error. Syntax error 'hannah' at or near line number 1")
   expect_error(garnett:::parse_input(">hannah\nexpressed below: cole\n"),
                paste("Syntax error in marker file at or near line 3: expressed",
                      "below needs one value"))
@@ -40,6 +40,6 @@ test_that("error messages work", {
                      "near line 20."))
   expect_error(garnett:::parse_input(paste(">hannah\nexpressed between: cole 3",
                                            "6\n han")),
-               "Syntax error at EOF")
+               "Marker file error. Syntax error at EOF")
 })
 

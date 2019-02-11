@@ -14,7 +14,7 @@ Lexer <- R6::R6Class(
     t_ignore = " \t",
     t_NEWLINE = "\n",
     t_error = function(t) {
-      cat(sprintf("Illegal character '%s'\n", t$value[1]))
+      cat(sprintf("Marker file error. Illegal character '%s'\n", t$value[1]))
       t$lexer$skip(1)
       return(t)
     }
@@ -339,8 +339,8 @@ Parser <- R6::R6Class(
         p$set(1, l)
       },
     p_error = function(p) {
-      if(is.null(p)) stop("Syntax error at EOF")
-      else           stop(sprintf("Syntax error '%s' at or near line number %s\n",
+      if(is.null(p)) stop("Marker file error. Syntax error at EOF")
+      else           stop(sprintf("Marker file error. Syntax error '%s' at or near line number %s\n",
                                   p$value, self[["linenum"]]))
     }
   )
