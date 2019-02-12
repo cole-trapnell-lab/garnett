@@ -29,11 +29,11 @@ cds_to_other_id <- function(cds,
 
   pd = new("AnnotatedDataFrame", data = pData(cds))
   fd = new("AnnotatedDataFrame", data = fdata)
-  cds = newCellDataSet(matrix,
+  cds = suppressWarnings(newCellDataSet(matrix,
                        phenoData=pd,
                        featureData=fd,
                        expressionFamily=cds@expressionFamily,
-                       lowerDetectionLimit=cds@lowerDetectionLimit)
+                       lowerDetectionLimit=cds@lowerDetectionLimit))
 
   return(cds)
 }
@@ -270,9 +270,9 @@ check_markers <- function(cds,
   if (!is(exprs(cds), "dgCMatrix")) {
     pd <- new("AnnotatedDataFrame", data = pData(cds))
     fd <- new("AnnotatedDataFrame", data = fData(cds))
-    cds <- newCellDataSet(as(exprs(cds), "dgCMatrix"),
+    cds <- suppressWarnings(newCellDataSet(as(exprs(cds), "dgCMatrix"),
                           phenoData = pd,
-                          featureData = fd)
+                          featureData = fd))
     pData(cds)$Size_Factor <- sf
   }
 
@@ -291,8 +291,8 @@ check_markers <- function(cds,
   orig_cds <- cds
   temp <- exprs(cds)
   temp@x <- temp@x / rep.int(pData(cds)$Size_Factor, diff(temp@p))
-  cds <- newCellDataSet(temp,
-                        phenoData = pd, featureData = fd)
+  cds <- suppressWarnings(newCellDataSet(temp,
+                        phenoData = pd, featureData = fd))
 
   pData(cds)$Size_Factor <- sf
 
@@ -477,8 +477,6 @@ check_marker_conversion <- function(parse_list,
                                           marker_file_gene_id_type,
                                           cds_gene_id_type)
     bad_convert <- sum(is.na(gene_table$fgenes))
-  } else {
-    gene_table$cds <- gene_table$fgenes
   }
 
   gene_table$in_cds <- gene_table$fgenes %in% possible_genes

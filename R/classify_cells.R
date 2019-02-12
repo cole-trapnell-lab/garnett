@@ -98,9 +98,9 @@ classify_cells <- function(cds,
     sf <- pData(cds)$Size_Factor
     pd <- new("AnnotatedDataFrame", data = pData(cds))
     fd <- new("AnnotatedDataFrame", data = fData(cds))
-    cds <- newCellDataSet(as(exprs(cds), "dgCMatrix"),
+    cds <- suppressWarnings(newCellDataSet(as(exprs(cds), "dgCMatrix"),
                           phenoData = pd,
-                          featureData = fd)
+                          featureData = fd))
     pData(cds)$Size_Factor <- sf
   }
 
@@ -116,8 +116,8 @@ classify_cells <- function(cds,
   fd <- new("AnnotatedDataFrame", data = fData(cds))
   temp <- exprs(cds)
   temp@x <- temp@x / rep.int(pData(cds)$Size_Factor, diff(temp@p))
-  norm_cds <- newCellDataSet(temp,
-                             phenoData = pd, featureData = fd)
+  norm_cds <- suppressWarnings(newCellDataSet(temp,
+                             phenoData = pd, featureData = fd))
 
   if (.hasSlot(classifier, "gene_id_type")) {
     classifier_gene_id_type <- classifier@gene_id_type
