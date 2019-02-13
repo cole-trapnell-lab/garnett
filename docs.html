@@ -32,10 +32,19 @@ tags: [garnett, manual, vignette]
       </p>
       <p>
         Garnett builds upon a package called <a href="http://cole-trapnell-lab.github.io/monocle-release/">Monocle</a>.
-        Before installing Garnett, first, follow
-        <a href= "http://cole-trapnell-lab.github.io/monocle-release/docs/#installing-monocle"
-          target="_blank">these instructions</a> to install Monocle.
-      </p>
+        Before installing Garnett, first install Monocle using Bioconductor: 
+        # First install Bioconductor and Monocle
+
+{% highlight R %}
+if (!requireNamespace("BiocManager"))
+    install.packages("BiocManager")
+
+BiocManager::install()
+BiocManager::install(c("monocle"))
+
+# Next install a few more dependencies
+BiocManager::install(c('DelayedArray', 'DelayedMatrixStats', 'org.Hs.eg.db', 'org.Mm.eg.db'))
+{% endhighlight %}
 
       <p>
         You're now ready to install Garnett:
