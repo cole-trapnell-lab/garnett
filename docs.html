@@ -390,7 +390,7 @@ plot_markers(marker_check)
 {% endhighlight %}
 
 <div class= "text-center">
-    <img src= "/garnett-/images/marker_check.png">
+    <img src= "/garnett/images/marker_check.png">
 </div>
     <p>
       This marker plot provides some key information about whether the chosen markers are good. First, The red note
@@ -439,6 +439,20 @@ expressed: CD8A, CD8B
 subtype of: T cells
 
 {% endhighlight %}
+
+<div class= "panel panel-warning">
+  <div class= "panel-heading">
+    <h4 class= "panel-title">No ENSEMBL in your db</h4>
+  </div>
+  <div class= "panel-body">
+    By default, Garnett converts gene IDs into ENSEMBL for use in the classifier. This allows classifiers to be portable 
+    so they can classify future datasets that might have different gene IDs. For some organisms however, ENSEMBL IDs are 
+    either not available or not commonly used. In these cases, you can use the parameter <code>classifier_gene_id_type</code>
+    in both <code>train_cell_classifier</code> and <code>check_markers</code> to specify a different ID type. The value you 
+    choose will be stored with the classifier, so you do not need to specify it again when classifying future datasets.
+
+  </div>
+</div>
 
       <h4>Train the classifier</h4>
       <p>
