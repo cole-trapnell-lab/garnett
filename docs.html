@@ -32,10 +32,20 @@ tags: [garnett, manual, vignette]
       </p>
       <p>
         Garnett builds upon a package called <a href="http://cole-trapnell-lab.github.io/monocle-release/">Monocle</a>.
-        Before installing Garnett, first, follow
-        <a href= "http://cole-trapnell-lab.github.io/monocle-release/docs/#installing-monocle"
-          target="_blank">these instructions</a> to install Monocle.
-      </p>
+        Before installing Garnett, first install Monocle using Bioconductor: 
+        
+
+{% highlight R %}
+# First install Bioconductor and Monocle
+if (!requireNamespace("BiocManager"))
+    install.packages("BiocManager")
+
+BiocManager::install()
+BiocManager::install(c("monocle"))
+
+# Next install a few more dependencies
+BiocManager::install(c('DelayedArray', 'DelayedMatrixStats', 'org.Hs.eg.db', 'org.Mm.eg.db'))
+{% endhighlight %}
 
       <p>
         You're now ready to install Garnett:
@@ -319,6 +329,19 @@ subtype of: T cells
 references: https://www.ncbi.nlm.nih.gov/pubmed/?term=12000723
 {% endhighlight %}
 
+<div class= "panel panel-warning">
+  <div class= "panel-heading">
+    <h4 class= "panel-title">Warning for Windows users:</h4>
+  </div>
+  <div class= "panel-body">
+    At the moment, the Garnett marker file cannot have carriage returns (\r), which will be included automatically if you
+    generate your marker file in certain Windows text editors. Instead, you must use newline characters (\n). There are 
+    many ways to replace carriage returns on Windows, for example using Notepad++ you can use replace, choose extended, and 
+    replace all \r with \n.
+
+    I intend to address this in a more automated way soon.
+  </div>
+</div>
 
       <h3>Checking your markers</h3>
       <p>
