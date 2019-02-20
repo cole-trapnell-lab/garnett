@@ -359,7 +359,8 @@ subtype of: T cells
           <a href="http://bioconductor.org/packages/3.8/data/annotation/html/org.Hs.eg.db.html">org.Hs.eg.db</a>. See 
           available packages at the
           <a href = "http://bioconductor.org/packages/3.8/data/annotation/">Bioconductor website</a>. Load your chosen
-        db using <code>library(db)</code>.</li>
+        db using <code>library(db)</code>. If your species does not have an AnnotationDb-class package, see 
+        <a href="/garnett/docs/#my-species-doesn-t-have-an-annotationdbi-class-database">here</a>.</li>
         <li><code>cds_gene_id_type</code>: This argument tells Garnett the format of the gene IDs in your CDS object.
         It should be one of the values in <code>columns(db)</code>. The default is "ENSEMBL".</li>
         <li><code>marker_file_gene_id_type</code>: Similarly to above, this argument tells Garnett the format of the
@@ -492,8 +493,8 @@ head(pData(pbmc_cds))
         The function we use to see the relevant genes is <code>get_feature_genes</code>. The arguments are the
         classifier, which node you'd like to view (if your tree is hierarchical) - use "root" for the top node and the
         parent cell type name for other nodes, and the <code>db</code> for your species. The function will
-        automatically convert the gene IDs to SYMBOL, but you can leave them as ENSEMBL IDs by setting
-        <code>convert_ids = FALSE</code>.
+        automatically convert the gene IDs to SYMBOL if you set
+        <code>convert_ids = TRUE</code>.
       </p>
 
 {% highlight R %}
@@ -592,7 +593,8 @@ pbmc_cds <- estimateSizeFactors(pbmc_cds)
             <li><code>db</code>: <code>db</code> is a required argument for a Bioconductor AnnotationDb-class package used
               for converting gene IDs. For example, for humans use <a href="http://bioconductor.org/packages/3.8/data/annotation/html/org.Hs.eg.db.html">org.Hs.eg.db</a>. See available packages at the
               <a href = "http://bioconductor.org/packages/3.8/data/annotation/">Bioconductor website</a>. Load your
-              chosen db using <code>library(db)</code>.</li>
+              chosen db using <code>library(db)</code>. If your species does not have an AnnotationDb-class package, see 
+              <a href="/garnett/docs/#my-species-doesn-t-have-an-annotationdbi-class-database">here</a>.</li>
               <li><code>cluster_extend</code>: This tells Garnett whether to create a second set of assignments that 
               expands classifications to cells in the same cluster. You can either provide cluster IDs in the pData 
               table in a column titled "garnett_cluster", or you can let Garnett calculate the clusters and populate 
@@ -668,7 +670,18 @@ qplot(tsne_1, tsne_2, color = FACS_type, data = pData(pbmc_cds)) + theme_bw()
     <img src= "/garnett/images/FACS_type_ex.png">
 </div>
 
+<h2>Troubleshooting </h2>
+<h3>My species doesn't have an AnnotationDbi-class database</h3>
+<p>
+  If your species doesn't have an available AnnotationDbi-class database, then Garnett won't be able to convert among
+  gene ID types. However, you can still use Garnett for classification. Set <code>db = 'none'</code> and then be sure 
+  that <strong>you use the same gene ID type in your marker file as your CDS object</strong>. When <code>db = 'none'</code>
+  Garnett ignores the arguments for gene ID type.
+</p>
 
+<p>
+  More troubleshooting to come...
+</p>
       <h2>Citation </h2>
 
       If you use Garnett to analyze your experiments, please cite:
