@@ -22,7 +22,7 @@ out2 <- get_feature_genes(test_classifier, convert_ids = F, db=org.Hs.eg.db)
 out3 <- get_feature_genes(test_classifier, db=org.Hs.eg.db, node="T cells")
 
 test_that("get_feature_genes works", {
-  expect_error(get_feature_genes(test_classifier),
+  expect_error(get_feature_genes(test_classifier, convert_ids = TRUE),
                "If convert_ids = TRUE, db must be provided.")
   expect_is(out, "data.frame")
   expect_is(out2, "data.frame")
@@ -108,3 +108,29 @@ test_that("plot_markers works", {
                               fig = plot_markers(marker_check,
                                                  amb_marker_cutoff = .7))
 })
+
+marker_check <- check_markers(test_cds,
+                              "../pbmc_test.txt",
+                              db="none",
+                              cds_gene_id_type = "SYMBOL",
+                              marker_file_gene_id_type = "SYMBOL")
+
+marker_check2 <- check_markers(test_cds, use_tf_idf = F,
+                               "../pbmc_1mark.txt",
+                               db="none",
+                               cds_gene_id_type = "SYMBOL",
+                               marker_file_gene_id_type = "SYMBOL")
+
+test_that("check_markers works db='none'", {
+  expect_equal(sum(marker_check$marker_score), 414.3958, tol = 1e-3)
+  expect_equal(nrow(marker_check), 18)
+  expect_equal(sum(marker_check$summary != "Ok"), 3)
+  sub <- subset(marker_check, parent != "root")
+  expect_equal(sum(sub$nominates), 323)
+  expect_equal(sum(sub$exclusion_dismisses), 233)
+  expect_equal(sum(sub$inclusion_ambiguates), 63)
+  expect_equal(sub$most_overlap[5], "CD4 T cells")
+  expect_equal(sum(marker_check2$marker_score, na.rm=T), 388.5029, tol = 1e-4)
+  expect_equal(marker_check2[18, "total_nominated"], 46)
+})
+

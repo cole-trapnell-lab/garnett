@@ -10,8 +10,12 @@
 #' @param db Bioconductor AnnotationDb-class package for converting gene IDs.
 #'  For example, for humans use org.Hs.eg.db. See available packages at
 #'  \href{http://bioconductor.org/packages/3.8/data/annotation/}{Bioconductor}.
+#'  If your organism does not have an AnnotationDb-class database available,
+#'  you can specify "none", however then Garnett will not check/convert gene
+#'  IDs, so your CDS and marker file must have the same gene ID type.
 #' @param cds_gene_id_type The type of gene ID used in the CDS. Should be one
-#'  of the values in \code{columns(db)}. Default is "ENSEMBL".
+#'  of the values in \code{columns(db)}. Default is "ENSEMBL". Ignored if
+#'  db = "none".
 #' @param rank_prob_ratio Numeric value greater than 1. This is the minimum
 #'  odds ratio between the probability of the most likely cell type to the
 #'  second most likely cell type to allow assignment. Default is 1.5. Higher
@@ -72,14 +76,22 @@ classify_cells <- function(cds,
                           msg = paste("Must run estimateSizeFactors() on cds",
                                       "before calling classify_cells"))
   assertthat::assert_that(is(classifier, "garnett_classifier"))
-  assertthat::assert_that(is(db, "OrgDb"),
-                          msg = paste0("db must be an 'AnnotationDb' object ",
-                                       "see http://bioconductor.org/packages/",
-                                       "3.8/data/annotation/ for available"))
-  assertthat::assert_that(is.character(cds_gene_id_type))
-  assertthat::assert_that(cds_gene_id_type %in% AnnotationDbi::keytypes(db),
-                          msg = paste("cds_gene_id_type must be one of",
-                                      "keytypes(db)"))
+  if(is(db, "character") && db == "none") {
+    cds_gene_id_type <- 'custom'
+    classifier_gene_id_type <- 'custom'
+    marker_file_gene_id_type <- 'custom'
+  } else {
+    assertthat::assert_that(is(db, "OrgDb"),
+                            msg = paste0("db must be an 'AnnotationDb' object ",
+                                         "or 'none' see ",
+                                         "http://bioconductor.org/packages/",
+                                         "3.8/data/annotation/ for available"))
+    assertthat::assert_that(is.character(cds_gene_id_type))
+    assertthat::assert_that(cds_gene_id_type %in% AnnotationDbi::keytypes(db),
+                            msg = paste("cds_gene_id_type must be one of",
+                                        "keytypes(db)"))
+  }
+
   assertthat::assert_that(is.numeric(rank_prob_ratio))
   assertthat::assert_that(rank_prob_ratio > 1,
                           msg = "rank_prob_ratio must be greater than 1")

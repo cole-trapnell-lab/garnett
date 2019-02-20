@@ -14,10 +14,15 @@
 #' @param db Bioconductor AnnotationDb-class package for converting gene IDs.
 #'  For example, for humans use org.Hs.eg.db. See available packages at
 #'  \href{http://bioconductor.org/packages/3.8/data/annotation/}{Bioconductor}.
+#'  If your organism does not have an AnnotationDb-class database available,
+#'  you can specify "none", however then Garnett will not check/convert gene
+#'  IDs, so your CDS and marker file must have the same gene ID type.
 #' @param cds_gene_id_type The type of gene ID used in the CDS. Should be one
-#'  of the values in \code{columns(db)}. Default is "ENSEMBL".
+#'  of the values in \code{columns(db)}. Default is "ENSEMBL". Ignored if
+#'  db = "none".
 #' @param marker_file_gene_id_type The type of gene ID used in the marker file.
 #'  Should be one of the values in \code{columns(db)}. Default is "SYMBOL".
+#'  Ignored if db = "none".
 #' @param min_observations An integer. The minimum number of representative
 #'  cells per cell type required to include the cell type in the predictive
 #'  model. Default is 8.
@@ -36,7 +41,7 @@
 #'  preset lambda values are used.
 #' @param classifier_gene_id_type The type of gene ID that will be used in the
 #'  classifier. If possible for your organism, this should be "ENSEMBL", which
-#'  is the default.
+#'  is the default. Ignored if db = "none".
 #'
 #' @details This function has three major parts: 1) parsing the marker file 2)
 #'  choosing cell representatives and 3) training the classifier. Details on
@@ -108,22 +113,29 @@ train_cell_classifier <- function(cds,
                                       "before calling train_cell_classifier"))
   assertthat::assert_that(is.character(marker_file))
   assertthat::is.readable(marker_file)
-  assertthat::assert_that(is(db, "OrgDb"),
-                          msg = paste0("db must be an 'AnnotationDb' object ",
-                                       "see http://bioconductor.org/packages/",
-                                       "3.8/data/annotation/ for available"))
-  assertthat::assert_that(is.character(cds_gene_id_type))
-  assertthat::assert_that(is.character(marker_file_gene_id_type))
-  assertthat::assert_that(cds_gene_id_type %in% AnnotationDbi::keytypes(db),
-                          msg = paste("cds_gene_id_type must be one of",
-                                      "keytypes(db)"))
-  assertthat::assert_that(classifier_gene_id_type %in% AnnotationDbi::keytypes(db),
-                          msg = paste("classifier_gene_id_type must be one of",
-                                      "keytypes(db)"))
-  assertthat::assert_that(marker_file_gene_id_type %in%
+  if (is(db, "character") && db == "none") {
+    cds_gene_id_type <- 'custom'
+    classifier_gene_id_type <- 'custom'
+    marker_file_gene_id_type <- 'custom'
+  } else {
+    assertthat::assert_that(is(db, "OrgDb"),
+                            msg = paste0("db must be an 'AnnotationDb' object ",
+                                         "or 'none' see ",
+                                         "http://bioconductor.org/packages/",
+                                         "3.8/data/annotation/ for available"))
+    assertthat::assert_that(is.character(cds_gene_id_type))
+    assertthat::assert_that(is.character(marker_file_gene_id_type))
+    assertthat::assert_that(cds_gene_id_type %in% AnnotationDbi::keytypes(db),
+                            msg = paste("cds_gene_id_type must be one of",
+                                        "keytypes(db)"))
+    assertthat::assert_that(classifier_gene_id_type %in% AnnotationDbi::keytypes(db),
+                            msg = paste("classifier_gene_id_type must be one of",
+                                        "keytypes(db)"))
+    assertthat::assert_that(marker_file_gene_id_type %in%
                             AnnotationDbi::keytypes(db),
-                          msg = paste("marker_file_gene_id_type must be one of",
-                                      "keytypes(db)"))
+                            msg = paste("marker_file_gene_id_type must be one of",
+                                        "keytypes(db)"))
+  }
   assertthat::is.count(num_unknown)
   assertthat::is.count(cores)
   assertthat::assert_that(is.logical(propogate_markers))
@@ -205,6 +217,7 @@ train_cell_classifier <- function(cds,
   ##### Make garnett_classifier #####
   classifier <- new_garnett_classifier()
   classifier@gene_id_type <- classifier_gene_id_type
+  if(is(db, "character") && db == "none") classifier@gene_id_type <- "custom"
 
   for(i in name_order) {
     # check meta data exists

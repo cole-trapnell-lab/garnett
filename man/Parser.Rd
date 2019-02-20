@@ -56,7 +56,11 @@ The following are the potential descriptors:
   For example, for human, use \code{\link[org.Hs.eg.db]{org.Hs.eg.db}}. To
   see available gene ID types, you can run \code{columns(db)}. You will
   specify which gene ID type you used when calling
-  \code{\link{train_cell_classifier}}.} \item{not expressed:}{In addition to
+  \code{\link{train_cell_classifier}}.} If your species does not have an
+  annotation dataset of type \code{\link[AnnotationDbi]{AnnotationDb-class}},
+  you can set \code{db = 'none'}, however Garnett will then not convert gene
+  ID types, so CDS and marker file gene ID types need to be the same.
+  \item{not expressed:}{In addition to
   specifying genes that the cell type should express, you can also specify
   genes that your cell type should not express. Details on specifying genes
   are the same as for \code{expressed:}.}

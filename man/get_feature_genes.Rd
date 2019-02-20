@@ -4,7 +4,7 @@
 \alias{get_feature_genes}
 \title{Extract feature genes}
 \usage{
-get_feature_genes(classifier, node = "root", convert_ids = TRUE,
+get_feature_genes(classifier, node = "root", convert_ids = FALSE,
   db = NULL)
 }
 \arguments{

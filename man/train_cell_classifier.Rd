@@ -19,13 +19,18 @@ See details and documentation for \code{\link{Parser}} by running
 
 \item{db}{Bioconductor AnnotationDb-class package for converting gene IDs.
 For example, for humans use org.Hs.eg.db. See available packages at
-\href{http://bioconductor.org/packages/3.8/data/annotation/}{Bioconductor}.}
+\href{http://bioconductor.org/packages/3.8/data/annotation/}{Bioconductor}.
+If your organism does not have an AnnotationDb-class database available,
+you can specify "none", however then Garnett will not check/convert gene
+IDs, so your CDS and marker file must have the same gene ID type.}
 
 \item{cds_gene_id_type}{The type of gene ID used in the CDS. Should be one
-of the values in \code{columns(db)}. Default is "ENSEMBL".}
+of the values in \code{columns(db)}. Default is "ENSEMBL". Ignored if
+db = "none".}
 
 \item{marker_file_gene_id_type}{The type of gene ID used in the marker file.
-Should be one of the values in \code{columns(db)}. Default is "SYMBOL".}
+Should be one of the values in \code{columns(db)}. Default is "SYMBOL".
+Ignored if db = "none".}
 
 \item{min_observations}{An integer. The minimum number of representative
 cells per cell type required to include the cell type in the predictive
@@ -51,7 +56,7 @@ preset lambda values are used.}
 
 \item{classifier_gene_id_type}{The type of gene ID that will be used in the
 classifier. If possible for your organism, this should be "ENSEMBL", which
-is the default.}
+is the default. Ignored if db = "none".}
 }
 \description{
 This function takes single-cell expression data in the form of a CDS object

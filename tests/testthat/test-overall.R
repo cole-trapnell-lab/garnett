@@ -90,3 +90,30 @@ test_that("whole process is the same multi-core", {
   expect_equal(sum(pData(test_cds)$cluster_ext_type == "T cells"), 199)
 })
 
+data(test_cds)
+set.seed(260)
+test_classifier <- train_cell_classifier(cds = test_cds,
+                                         marker_file = "../pbmc_test.txt",
+                                         db='none',
+                                         min_observations = 10,
+                                         cds_gene_id_type = "SYMBOL",
+                                         num_unknown = 50,
+                                         cores = 2,
+                                         marker_file_gene_id_type = "SYMBOL")
+
+test_cds <- garnett::classify_cells(test_cds, test_classifier,
+                                    db = 'none',
+                                    rank_prob_ratio = 1.5,
+                                    cluster_extend = TRUE,
+                                    cds_gene_id_type = "SYMBOL")
+
+test_that("whole process is the same db = 'none'", {
+  expect_equal(sum(pData(test_cds)$cell_type == "B cells"), 211)
+  expect_equal(sum(pData(test_cds)$cell_type == "CD4 T cells"), 117)
+  expect_equal(sum(pData(test_cds)$cell_type == "CD8 T cells"), 62)
+  expect_equal(sum(pData(test_cds)$cell_type == "T cells"), 156)
+  expect_equal(sum(pData(test_cds)$cluster_ext_type == "B cells"), 401)
+  expect_equal(sum(pData(test_cds)$cluster_ext_type == "CD4 T cells"), 200)
+  expect_equal(sum(pData(test_cds)$cluster_ext_type == "T cells"), 199)
+})
+
