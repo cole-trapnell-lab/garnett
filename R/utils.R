@@ -325,6 +325,9 @@ check_markers <- function(cds,
 
   ranks <- lapply(orig_name_order, function(i) parse_list[[i]]@parenttype)
   names(ranks) <- orig_name_order
+  if(unlist(unique(ranks[which(!ranks %in% names(ranks) & lengths(ranks) != 0L)])) != 0) {
+    stop(paste("Subtype", unlist(unique(ranks[which(!ranks %in% names(ranks) & lengths(ranks) != 0L)])), "is not defined in marker file."))
+  }
 
   name_order <- names(ranks[lengths(ranks) == 0L])
   ranks <- ranks[!names(ranks) %in% name_order]
