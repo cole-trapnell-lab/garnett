@@ -196,7 +196,7 @@ train_cell_classifier <- function(cds,
   ranks <- lapply(orig_name_order, function(i) parse_list[[i]]@parenttype)
   names(ranks) <- orig_name_order
 
-  if(unlist(unique(ranks[which(!ranks %in% names(ranks) & lengths(ranks) != 0L)])) != 0) {
+  if(length(unlist(unique(ranks[which(!ranks %in% names(ranks) & lengths(ranks) != 0L)])) != 0)) {
     stop(paste("Subtype", unlist(unique(ranks[which(!ranks %in% names(ranks) & lengths(ranks) != 0L)])), "is not defined in marker file."))
   }
 
@@ -298,6 +298,12 @@ train_cell_classifier <- function(cds,
           as.matrix(new_assign[
             igraph::V(classifier@classification_tree)[v]$name][[1]])
         good_cells <- names(good_cells[good_cells[,1] != 0,])
+        if(length(good_cells) == 0) {
+          message(paste0("No cells classified as ",
+                         igraph::V(classifier@classification_tree) [ v ]$name,
+                         ". No subclassification"))
+          next
+        }
         cds_sub <- norm_cds[,good_cells]
         orig_sub <- orig_cds[,good_cells]
       }
@@ -453,6 +459,9 @@ add_cell_rule <- function(cell_type,
   if (length(logic_list) == 0) {
     warning (paste("Cell type", cell_type@name,
                    "has no valid rules and will be skipped"))
+    classifier <- add_cell_type(classifier, cell_type@name,
+                                classify_func = function(x) {rep(FALSE, ncol(x))},
+                                parent_type)
     return(classifier)
   }
   logic <- paste(unlist(logic_list), collapse = ' & ')
