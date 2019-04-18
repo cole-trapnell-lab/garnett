@@ -694,6 +694,45 @@ qplot(tsne_1, tsne_2, color = FACS_type, data = pData(pbmc_cds)) + theme_bw()
 </div>
 
 <h2>Troubleshooting </h2>
+<h3>Common marker file errors</h3>
+<div class= "text-center">
+  <img src= "/garnett/images/marker_errors.png">
+</div>
+<p>
+  Here, we provide examples of a few of the common marker file errors and potential outcomes in Garnett's classification.
+  For all panels, a classifier was trained on the 10x PBMC version 2 (V2) data 
+  and the classifier was then used to classify the 10x PBMC version 1 (V1) data shown above. The first panel is colored 
+  by the FACS-based 10x cell type assignments. The remaining panels are colored by the Garnett cluster-agnostic cell type 
+  assignment. 
+</p> 
+<ol>
+<li>
+  <strong>A cell type is missing from the marker file.</strong> For example, in the PBMC marker file, not including a 
+  T cell definition (Panel 2). We found that, in general, Garnett labels the 
+  missing cell type as ‘Unknown’. The exception to this, discussed in an addition to the manuscript, is when a feature 
+  describing an existing cell type is present in missing cell type (i.e. the NKT cells that express NK marker FCGR3A.
+</li>
+<li>
+  <strong>A cell type is defined but includes no good specific markers.</strong> For example, in the PBMC marker file, 
+  defining T cells using only CD4 and not CD3 (Panel 3). In this case, we found that Garnett labelled only 
+  a subset of the T cells as such and left the remaining cells unlabelled.
+</li>
+<li>
+  <strong>A gene that is not specific and widely expressed is used to define a cell type.</strong> For example, if we 
+  add MALAT1 (the most expressed transcript in the PBMC dataset) to the T cell definition (Panel 4). In 
+  this case, we find that each of the cell types ends up with mixed assignments between the true cell types and T cells.
+  In an alternative scenario, the inclusion of a widely expressed non-specific gene may cause Garnett not to find sufficient
+  training samples at all, because it will consider all cells to be ambiguous (i.e. they will express other marker plus the
+  non-specific one).
+</li>
+<li>
+  <strong>A cell type definition includes genes that are specific to another cell type.</strong> This is the case 
+  where a definition is truly ‘wrong’, i.e. if the best marker for B cells (CD79A) is add to the T cell definition 
+  (Panel 5). We found that the B cell clusters gets mixed cell type assignments of B cell and T cell, 
+  but that the remaining cell types’ labels are mostly unchanged.
+</li>
+</ol>
+
 <h3>My species doesn't have an AnnotationDbi-class database</h3>
 <p>
   If your species doesn't have an available AnnotationDbi-class database, then Garnett won't be able to convert among
@@ -701,6 +740,8 @@ qplot(tsne_1, tsne_2, color = FACS_type, data = pData(pbmc_cds)) + theme_bw()
   that <strong>you use the same gene ID type in your marker file as your CDS object</strong>. When <code>db = 'none'</code>
   Garnett ignores the arguments for gene ID type.
 </p>
+
+
 
 <p>
   More troubleshooting to come...
