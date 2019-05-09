@@ -104,12 +104,12 @@ train_cell_classifier <- function(cds,
                                   classifier_gene_id_type = "ENSEMBL") {
 
   ##### Check inputs #####
-  assertthat::assert_that(is(cds, "CellDataSet"))
-  assertthat::assert_that(assertthat::has_name(pData(cds), "Size_Factor"),
-                          msg = paste("Must run estimateSizeFactors() on cds",
+  assertthat::assert_that(is(cds, "cell_data_set"))
+  assertthat::assert_that(assertthat::has_name(colData(cds), "Size_Factor"),
+                          msg = paste("Must run estimate_size_factors() on cds",
                                       "before calling train_cell_classifier"))
-  assertthat::assert_that(sum(is.na(pData(cds)$Size_Factor)) == 0,
-                          msg = paste("Must run estimateSizeFactors() on cds",
+  assertthat::assert_that(sum(is.na(colData(cds)$Size_Factor)) == 0,
+                          msg = paste("Must run estimate_size_factors() on cds",
                                       "before calling train_cell_classifier"))
   assertthat::assert_that(is.character(marker_file))
   assertthat::is.readable(marker_file)
@@ -154,27 +154,25 @@ train_cell_classifier <- function(cds,
   # assignment
 
   ##### Normalize and rename CDS #####
-  if (!is(exprs(cds), "dgCMatrix")) {
-    sf <- pData(cds)$Size_Factor
-    pd <- new("AnnotatedDataFrame", data = pData(cds))
-    fd <- new("AnnotatedDataFrame", data = fData(cds))
-    cds <- suppressWarnings(newCellDataSet(as(exprs(cds), "dgCMatrix"),
-                          phenoData = pd,
-                          featureData = fd))
-    pData(cds)$Size_Factor <- sf
+  if (!is(counts(cds), "dgCMatrix")) {
+    sf <- colData(cds)$Size_Factor
+    cds <- suppressWarnings(new_cell_data_set(as(counts(cds), "dgCMatrix"),
+                                       cell_metadata = colData(cds),
+                                       gene_metadata = rowData(cds)))
+    colData(cds)$Size_Factor <- sf
   }
 
-  pData(cds)$num_genes_expressed <- Matrix::colSums(as(exprs(cds),
+  colData(cds)$num_genes_expressed <- Matrix::colSums(as(counts(cds),
                                                        "lgCMatrix"))
-  cell_totals <-  Matrix::colSums(exprs(cds))
-  sf <- pData(cds)$Size_Factor
+  cell_totals <-  Matrix::colSums(counts(cds))
+  sf <- colData(cds)$Size_Factor
 
-  pd <- new("AnnotatedDataFrame", data = pData(cds))
-  fd <- new("AnnotatedDataFrame", data = fData(cds))
-  temp <- exprs(cds)
-  temp@x <- temp@x / rep.int(pData(cds)$Size_Factor, diff(temp@p))
-  norm_cds <- suppressWarnings(newCellDataSet(temp,
-                             phenoData = pd, featureData = fd))
+  temp <- counts(cds)
+  temp@x <- temp@x / rep.int(colData(cds)$Size_Factor, diff(temp@p))
+  norm_cds <- suppressWarnings(new_cell_data_set(temp,
+                                     cell_metadata = colData(cds),
+                                     gene_metadata = rowData(cds)))
+
   orig_cds <- cds
   if(cds_gene_id_type != classifier_gene_id_type)  {
     norm_cds <- cds_to_other_id(norm_cds, db=db, cds_gene_id_type,
@@ -182,7 +180,7 @@ train_cell_classifier <- function(cds,
     orig_cds <- cds_to_other_id(cds, db=db, cds_gene_id_type,
                                 classifier_gene_id_type)
   }
-  pData(norm_cds)$Size_Factor <- sf
+  colData(norm_cds)$Size_Factor <- sf
 
 
   ##### Parse Marker File #####
@@ -213,7 +211,7 @@ train_cell_classifier <- function(cds,
 
   # Check gene names and keywords
   gene_table <- make_name_map(parse_list,
-                              as.character(row.names(fData(norm_cds))),
+                              as.character(row.names(rowData(norm_cds))),
                               classifier_gene_id_type,
                               marker_file_gene_id_type,
                               db)
@@ -226,12 +224,12 @@ train_cell_classifier <- function(cds,
   for(i in name_order) {
     # check meta data exists
     if (nrow(parse_list[[i]]@meta) != 0) {
-      if (!all(parse_list[[i]]@meta$name %in% colnames(pData(norm_cds)))) {
+      if (!all(parse_list[[i]]@meta$name %in% colnames(colData(norm_cds)))) {
         bad_meta <- parse_list[[i]]@meta$name[!parse_list[[i]]@meta$name %in%
-                                                colnames(pData(norm_cds))]
+                                                colnames(colData(norm_cds))]
         stop(paste0("Cell type '", parse_list[[i]]@name,
                     "' has a meta data specification '", bad_meta ,
-                    "' that's not in the pData table."))
+                    "' that's not in the colData table."))
       }
     }
     logic_list <- assemble_logic(parse_list[[i]], gene_table)
@@ -239,7 +237,7 @@ train_cell_classifier <- function(cds,
   }
 
   classifier@cell_totals <- exp(mean(log(cell_totals)))/
-    stats::median(pData(norm_cds)$num_genes_expressed)
+    stats::median(colData(norm_cds)$num_genes_expressed)
 
   ##### Create transformed marker table #####
   if(propogate_markers) {
@@ -337,7 +335,7 @@ train_cell_classifier <- function(cds,
         rm$num_3q <- rowSums(rm > apply(rm, 2, stats::quantile,
                                         p = rel_gene_quantile))
         exclude <- row.names(rm[rm$num_3q == max(rm$num_3q),])
-        cds_sub <- cds_sub[setdiff(row.names(fData(cds_sub)), exclude),]
+        cds_sub <- cds_sub[setdiff(row.names(rowData(cds_sub)), exclude),]
 
         classifier <- train_glmnet(cds_sub,
                                    classifier,
@@ -559,7 +557,7 @@ propogate_func <- function(curr_node,
 }
 
 tfidf <- function(input_cds) {
-  ncounts <- exprs(input_cds)
+  ncounts <- counts(input_cds)
   ncounts <- ncounts[Matrix::rowSums(ncounts) != 0,]
   nfreqs <- ncounts
   nfreqs@x <- ncounts@x / rep.int(Matrix::colSums(ncounts), diff(ncounts@p))
@@ -626,7 +624,7 @@ train_glmnet <- function(cds,
     candidate_model_genes = c()
     for (cell_type in levels(y)){
       genes_in_cell_type = names(which(Matrix::rowSums(
-        exprs(cds_sub[,y == cell_type]) > 0) >
+        counts(cds_sub[,y == cell_type]) > 0) >
           perc_cells * sum(y == cell_type)))
       candidate_model_genes = append(candidate_model_genes, genes_in_cell_type)
     }
@@ -634,7 +632,7 @@ train_glmnet <- function(cds,
 
     cds_sub = cds_sub[candidate_model_genes,]
 
-    x = Matrix::t(exprs(cds_sub))
+    x = Matrix::t(counts(cds_sub))
 
     if (length(which(table(y ) < 8)) > 0) {
       message(paste("The following cell types have few training examples.",

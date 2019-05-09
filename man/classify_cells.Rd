@@ -32,10 +32,10 @@ values are more conservative.}
 \item{cluster_extend}{Logical. When \code{TRUE}, the classifier
 provides a secondary cluster-extended classification, which assigns type
 for the entire cluster based on the assignments of the cluster members. If
-the pData table of the input CDS has a column called "garnett_cluster",
+the colData table of the input CDS has a column called "garnett_cluster",
 this will be used for cluster-extended assignments. Otherwise, assignments
 are calculated using Louvain community detection in PCA space. This
-assignment is returned as a column in the output CDS pData table. For large
+assignment is returned as a column in the output CDS colData table. For large
 datasets, if the "garnett_cluster" column is not provided and
 \code{cluster_extend = TRUE}, the function can be significantly slower the
 first time it is run. See details for more information.}
@@ -43,7 +43,7 @@ first time it is run. See details for more information.}
 \item{verbose}{Logical. Should progress messages be printed.}
 }
 \value{
-CDS object with classifications in the \code{pData} table.
+CDS object with classifications in the \code{colData} table.
 }
 \description{
 This function uses a previously trained \code{\link{garnett_classifier}}
@@ -54,7 +54,7 @@ in a CDS object.
 This function applies a previously trained multinomial glmnet
  classifier at each node of a previously defined garnett_classifier tree.
  The output is a CDS object with cell type classifications added to the
- pData table.
+ colData table.
 
  When \code{cluster_extend = TRUE}, louvain communities are calculated in
  PCA space. Any cluster where >90% of classified cells are of a single type,

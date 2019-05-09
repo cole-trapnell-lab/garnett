@@ -6,7 +6,7 @@
 \alias{garnett-package}
 \title{garnett}
 \description{
-Garnett faciliates automated cell type classification from 
+Garnett facilitates automated cell type classification from 
     single-cell expression (and other genomic) data. Garnett works by taking 
     single-cell data, along with a cell type definition (marker) file, and 
     training a regression-based classifier. Once a classifier is trained for a 

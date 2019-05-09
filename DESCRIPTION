@@ -17,7 +17,7 @@ Encoding: UTF-8
 LazyData: true
 Depends:
     R (>= 3.5.0),
-    monocle
+    monocle3
 Imports:
     AnnotationDbi (>= 1.44.0),
     assertthat (>= 0.2.0),

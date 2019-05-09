@@ -3,8 +3,8 @@ cds_to_other_id <- function(cds,
                             input_file_gene_id_type,
                             new_gene_id_type,
                             verbose = FALSE) {
-  matrix <- exprs(cds)
-  fdata <- fData(cds)
+  matrix <- counts(cds)
+  fdata <- rowData(cds)
 
   new_g <- convert_gene_ids(row.names(fdata),
                             db,
@@ -24,16 +24,12 @@ cds_to_other_id <- function(cds,
 
   matrix <- matrix[names(new_g),]
   fdata <- fdata[names(new_g),, drop=FALSE]
-  row.names(matrix) <- new_g
-  row.names(fdata) <- new_g
+  row.names(matrix) <- as.character(new_g)
+  row.names(fdata) <- as.character(new_g)
 
-  pd = new("AnnotatedDataFrame", data = pData(cds))
-  fd = new("AnnotatedDataFrame", data = fdata)
-  cds = suppressWarnings(newCellDataSet(matrix,
-                       phenoData=pd,
-                       featureData=fd,
-                       expressionFamily=cds@expressionFamily,
-                       lowerDetectionLimit=cds@lowerDetectionLimit))
+  cds <- suppressWarnings(new_cell_data_set(matrix,
+                                           cell_metadata = colData(cds),
+                                           gene_metadata = fdata))
 
   return(cds)
 }
@@ -225,7 +221,7 @@ get_classifier_references <- function(classifier,
 #' data(test_cds)
 #'
 #' # generate size factors for normalization later
-#' test_cds <- estimateSizeFactors(test_cds)
+#' test_cds <- estimate_size_factors(test_cds)
 #' marker_file_path <- system.file("extdata", "pbmc_bad_markers.txt",
 #'                                 package = "garnett")
 #' marker_check <- check_markers(test_cds, marker_file_path,
@@ -243,12 +239,12 @@ check_markers <- function(cds,
                           classifier_gene_id_type = "ENSEMBL") {
 
   ##### Check inputs #####
-  assertthat::assert_that(is(cds, "CellDataSet"))
-  assertthat::assert_that(assertthat::has_name(pData(cds), "Size_Factor"),
-                          msg = paste("Must run estimateSizeFactors() on cds",
+  assertthat::assert_that(is(cds, "cell_data_set"))
+  assertthat::assert_that(assertthat::has_name(colData(cds), "Size_Factor"),
+                          msg = paste("Must run estimate_size_factors() on cds",
                                       "before calling check_markers"))
-  assertthat::assert_that(sum(is.na(pData(cds)$Size_Factor)) == 0,
-                          msg = paste("Must run estimateSizeFactors() on cds",
+  assertthat::assert_that(sum(is.na(colData(cds)$Size_Factor)) == 0,
+                          msg = paste("Must run estimate_size_factors() on cds",
                                       "before calling check_markers"))
   assertthat::assert_that(is.character(marker_file))
   assertthat::is.readable(marker_file)
@@ -281,37 +277,33 @@ check_markers <- function(cds,
   ##### Set internal parameters #####
   back_cutoff <- 0.25
 
-  sf <- pData(cds)$Size_Factor
+  sf <- colData(cds)$Size_Factor
 
   ##### Normalize and rename CDS #####
-  if (!is(exprs(cds), "dgCMatrix")) {
-    pd <- new("AnnotatedDataFrame", data = pData(cds))
-    fd <- new("AnnotatedDataFrame", data = fData(cds))
-    cds <- suppressWarnings(newCellDataSet(as(exprs(cds), "dgCMatrix"),
-                          phenoData = pd,
-                          featureData = fd))
-    pData(cds)$Size_Factor <- sf
+  if (!is(counts(cds), "dgCMatrix")) {
+    cds <- suppressWarnings(new_cell_data_set(as(counts(cds), "dgCMatrix"),
+                          cell_metadata = colData(cds),
+                          gene_metadata = rowData(cds)))
+    colData(cds)$Size_Factor <- sf
   }
 
 
   if(cds_gene_id_type != classifier_gene_id_type)  {
     cds <- cds_to_other_id(cds, db=db, cds_gene_id_type,
                            classifier_gene_id_type)
-    pData(cds)$Size_Factor <- sf
+    colData(cds)$Size_Factor <- sf
   }
-  pData(cds)$num_genes_expressed <- Matrix::colSums(as(exprs(cds), "lgCMatrix"))
-  cell_totals <-  Matrix::colSums(exprs(cds))
+  colData(cds)$num_genes_expressed <- Matrix::colSums(as(counts(cds), "lgCMatrix"))
+  cell_totals <-  Matrix::colSums(counts(cds))
 
-
-  pd <- new("AnnotatedDataFrame", data = pData(cds))
-  fd <- new("AnnotatedDataFrame", data = fData(cds))
   orig_cds <- cds
-  temp <- exprs(cds)
-  temp@x <- temp@x / rep.int(pData(cds)$Size_Factor, diff(temp@p))
-  cds <- suppressWarnings(newCellDataSet(temp,
-                        phenoData = pd, featureData = fd))
+  temp <- counts(cds)
+  temp@x <- temp@x / rep.int(colData(cds)$Size_Factor, diff(temp@p))
+  cds <- suppressWarnings(new_cell_data_set(temp,
+                                            cell_metadata = colData(cds),
+                                            gene_metadata = rowData(cds)))
 
-  pData(cds)$Size_Factor <- sf
+  colData(cds)$Size_Factor <- sf
 
   ##### Parse Marker File #####
   file_str = paste0(readChar(marker_file, file.info(marker_file)$size),"\n")
@@ -325,7 +317,7 @@ check_markers <- function(cds,
 
   ranks <- lapply(orig_name_order, function(i) parse_list[[i]]@parenttype)
   names(ranks) <- orig_name_order
-  if(unlist(unique(ranks[which(!ranks %in% names(ranks) & lengths(ranks) != 0L)])) != 0) {
+  if(sum(!ranks %in% names(ranks) & lengths(ranks) != 0L) != 0) {
     stop(paste("Subtype", unlist(unique(ranks[which(!ranks %in% names(ranks) & lengths(ranks) != 0L)])), "is not defined in marker file."))
   }
 
@@ -339,7 +331,7 @@ check_markers <- function(cds,
 
   # Check gene names and keywords
   gene_table <- check_marker_conversion(parse_list,
-                                        as.character(row.names(fData(cds))),
+                                        as.character(row.names(rowData(cds))),
                                         classifier_gene_id_type,
                                         marker_file_gene_id_type,
                                         db)
@@ -365,7 +357,7 @@ check_markers <- function(cds,
   if(propogate_markers) {
     root <- propogate_func(curr_node = "root", parse_list, classifier)
     gene_table <- check_marker_conversion(parse_list,
-                                          as.character(row.names(fData(cds))),
+                                          as.character(row.names(rowData(cds))),
                                           classifier_gene_id_type,
                                           marker_file_gene_id_type,
                                           db)
@@ -379,7 +371,7 @@ check_markers <- function(cds,
   if(use_tf_idf) {
     dat <- tfidf(cds)
   } else{
-    dat <- Matrix::t(exprs(cds))
+    dat <- Matrix::t(counts(cds))
   }
 
   ##### For each node #####
@@ -516,11 +508,12 @@ get_rule_multiplier <- function(i, classifier, orig_cds) {
     parent <- emptyenv()
   e1 <- new.env(parent=parent)
 
-  pData(orig_cds)$assigns <- igraph::V(classifier@classification_tree)[i]$name
-  Biobase::multiassign(names(pData(orig_cds)), pData(orig_cds), envir=e1)
+  colData(orig_cds)$assigns <- igraph::V(classifier@classification_tree)[i]$name
+  Biobase::multiassign(names(colData(orig_cds)),
+                       as.data.frame(colData(orig_cds)), envir=e1)
   environment(cell_class_func) <- e1
 
-  type_res <- cell_class_func(exprs(orig_cds))
+  type_res <- cell_class_func(counts(orig_cds))
   if (length(type_res)!= ncol(orig_cds)){
     message(paste("Error: classification function for",
                   igraph::V(classifier@classification_tree)[i]$name,
@@ -528,8 +521,8 @@ get_rule_multiplier <- function(i, classifier, orig_cds) {
     stop()
   }
 
-  type_res <- as(as(type_res,"sparseVector"), "sparseMatrix")
-  row.names(type_res) <- row.names(pData(orig_cds))
+  type_res <- as(as(type_res,"colData"), "sparseMatrix")
+  row.names(type_res) <- row.names(colData(orig_cds))
   colnames(type_res) <- i
   type_res
 }

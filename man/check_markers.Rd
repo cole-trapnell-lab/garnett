@@ -91,7 +91,7 @@ library(org.Hs.eg.db)
 data(test_cds)
 
 # generate size factors for normalization later
-test_cds <- estimateSizeFactors(test_cds)
+test_cds <- estimate_size_factors(test_cds)
 marker_file_path <- system.file("extdata", "pbmc_bad_markers.txt",
                                 package = "garnett")
 marker_check <- check_markers(test_cds, marker_file_path,

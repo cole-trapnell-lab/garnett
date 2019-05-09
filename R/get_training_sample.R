@@ -31,9 +31,9 @@ get_training_sample <- function(cds,
   assigns <- as.data.frame(assigns)
 
   names(assigns) <- "assigns"
-  pData(orig_cds)$assigns <- assigns[row.names(pData(orig_cds)),"assigns"]
-  pData(orig_cds)$assigns <- as.character(pData(orig_cds)$assigns)
-  pData(orig_cds)$assigns[is.na(pData(orig_cds)$assigns)] <- "None"
+  colData(orig_cds)$assigns <- assigns[row.names(colData(orig_cds)),"assigns"]
+  colData(orig_cds)$assigns <- as.character(colData(orig_cds)$assigns)
+  colData(orig_cds)$assigns[is.na(colData(orig_cds)$assigns)] <- "None"
 
   ##### Exclude possibles using other definitions #####
   child_rules <- list()
@@ -46,10 +46,11 @@ get_training_sample <- function(cds,
       parent <- emptyenv()
     e1 <- new.env(parent=parent)
 
-    Biobase::multiassign(names(pData(orig_cds)), pData(orig_cds), envir=e1)
+    Biobase::multiassign(names(colData(orig_cds)),
+                         as.data.frame(colData(orig_cds)), envir=e1)
     environment(cell_class_func) <- e1
 
-    type_res <- cell_class_func(exprs(orig_cds))
+    type_res <- cell_class_func(counts(orig_cds))
     if (length(type_res)!= ncol(orig_cds)){
       message(paste("Error: classification function for",
                     igraph::V(classifier@classification_tree)[child]$name,
@@ -58,7 +59,7 @@ get_training_sample <- function(cds,
     }
 
     type_res <- as(as(type_res,"sparseVector"), "sparseMatrix")
-    row.names(type_res) <- row.names(pData(orig_cds))
+    row.names(type_res) <- row.names(colData(orig_cds))
     colnames(type_res) <- child
     child_rules[[ child ]] <- type_res
   }
@@ -89,18 +90,18 @@ get_training_sample <- function(cds,
     outgroup_samples <- ctf_cell_type[outgroup_samples]
 
     out_group_cds <- cds[,names(outgroup_samples)]
-    out_group_cds <- out_group_cds[,sample(row.names(pData(out_group_cds)),
-                                           min(nrow(pData(out_group_cds)),
+    out_group_cds <- out_group_cds[,sample(row.names(colData(out_group_cds)),
+                                           min(nrow(colData(out_group_cds)),
                                                num_unknown * 10),
                                            replace = F)]
 
     out_group_cds <- get_communities(out_group_cds)
 
     per_clust <-
-      floor(num_unknown/length(unique(pData(out_group_cds)$louv_cluster)))
+      floor(num_unknown/length(unique(colData(out_group_cds)$louv_cluster)))
 
-    outg <- lapply(unique(pData(out_group_cds)$louv_cluster), function(x) {
-      sub <- pData(out_group_cds)[pData(out_group_cds)$louv_cluster == x,]
+    outg <- lapply(unique(colData(out_group_cds)$louv_cluster), function(x) {
+      sub <- colData(out_group_cds)[colData(out_group_cds)$louv_cluster == x,]
       sample(row.names(sub), min(nrow(sub), per_clust))
     })
 

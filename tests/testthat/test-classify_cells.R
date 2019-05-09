@@ -10,12 +10,12 @@ new_cds <- garnett:::get_communities(test_cds)
 
 test_that("get_communities works", {
   skip_on_travis()
-  expect_identical(exprs(new_cds), exprs(test_cds))
-  expect_equal(ncol(pData(new_cds)) - 1, ncol(pData(test_cds)))
-  expect_identical(fData(new_cds), fData(test_cds))
-  expect_equal(length(unique(pData(new_cds)$louv_cluster)), 6)
-  expect_equal(sum(pData(new_cds)$louv_cluster == 2), 240)
-  expect_equal(as.character(pData(new_cds)$louv_cluster[5]), "3")
+  expect_identical(counts(new_cds), counts(test_cds))
+  expect_equal(ncol(colData(new_cds)) - 1, ncol(colData(test_cds)))
+  expect_identical(rowData(new_cds), rowData(test_cds))
+  expect_equal(length(unique(colData(new_cds)$louv_cluster)), 6)
+  expect_equal(sum(colData(new_cds)$louv_cluster == 2), 240)
+  expect_equal(as.character(colData(new_cds)$louv_cluster[5]), "3")
 })
 
 # classify cells
@@ -27,18 +27,18 @@ new_cds <- classify_cells(test_cds, test_classifier,
                           cds_gene_id_type = "SYMBOL")
 
 test_that("classify_cells works", {
-  expect_identical(exprs(new_cds), exprs(test_cds))
-  expect_identical(fData(new_cds), fData(test_cds))
-  expect_equal(sum(pData(new_cds)$cell_type == "B cells"), 207)
-  expect_equal(sum(pData(new_cds)$cell_type == "CD4 T cells"), 129)
-  expect_equal(sum(pData(new_cds)$cell_type == "CD8 T cells"), 61)
-  expect_equal(sum(pData(new_cds)$cell_type == "T cells"), 164)
-  expect_equal(sum(pData(new_cds)$cluster_ext_type == "B cells"), 401)
-  expect_equal(sum(pData(new_cds)$cluster_ext_type == "CD4 T cells"), 200)
-  expect_equal(sum(pData(new_cds)$cluster_ext_type == "T cells"), 199)
+  expect_identical(counts(new_cds), counts(test_cds))
+  expect_identical(rowData(new_cds), rowData(test_cds))
+  expect_equal(sum(colData(new_cds)$cell_type == "B cells"), 207)
+  expect_equal(sum(colData(new_cds)$cell_type == "CD4 T cells"), 129)
+  expect_equal(sum(colData(new_cds)$cell_type == "CD8 T cells"), 61)
+  expect_equal(sum(colData(new_cds)$cell_type == "T cells"), 164)
+  expect_equal(sum(colData(new_cds)$cluster_ext_type == "B cells"), 401)
+  expect_equal(sum(colData(new_cds)$cluster_ext_type == "CD4 T cells"), 200)
+  expect_equal(sum(colData(new_cds)$cluster_ext_type == "T cells"), 199)
 })
 
-pData(test_cds)$garnett_cluster <- c(rep(1, times=200), rep(2, times=200),
+colData(test_cds)$garnett_cluster <- c(rep(1, times=200), rep(2, times=200),
                                      rep(3, times=200), rep(4, times=200))
 set.seed(10)
 new_cds <- classify_cells(test_cds, test_classifier,
@@ -48,15 +48,15 @@ new_cds <- classify_cells(test_cds, test_classifier,
                           cds_gene_id_type = "SYMBOL")
 
 test_that("classify_cells works with provided clusters", {
-  expect_identical(exprs(new_cds), exprs(test_cds))
-  expect_identical(fData(new_cds), fData(test_cds))
-  expect_equal(sum(pData(new_cds)$cell_type == "B cells"), 207)
-  expect_equal(sum(pData(new_cds)$cell_type == "CD4 T cells"), 129)
-  expect_equal(sum(pData(new_cds)$cell_type == "CD8 T cells"), 61)
-  expect_equal(sum(pData(new_cds)$cell_type == "T cells"), 164)
-  expect_equal(sum(pData(new_cds)$cluster_ext_type == "B cells"), 400)
-  expect_equal(sum(pData(new_cds)$cluster_ext_type == "CD4 T cells"), 0)
-  expect_equal(sum(pData(new_cds)$cluster_ext_type == "T cells"), 400)
+  expect_identical(counts(new_cds), counts(test_cds))
+  expect_identical(rowData(new_cds), rowData(test_cds))
+  expect_equal(sum(colData(new_cds)$cell_type == "B cells"), 207)
+  expect_equal(sum(colData(new_cds)$cell_type == "CD4 T cells"), 129)
+  expect_equal(sum(colData(new_cds)$cell_type == "CD8 T cells"), 61)
+  expect_equal(sum(colData(new_cds)$cell_type == "T cells"), 164)
+  expect_equal(sum(colData(new_cds)$cluster_ext_type == "B cells"), 400)
+  expect_equal(sum(colData(new_cds)$cluster_ext_type == "CD4 T cells"), 0)
+  expect_equal(sum(colData(new_cds)$cluster_ext_type == "T cells"), 400)
 })
 
 test_that("classify_cells error messages work", {

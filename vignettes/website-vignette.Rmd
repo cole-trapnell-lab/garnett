@@ -34,14 +34,10 @@ pdata <- read.table(system.file("extdata", "pdata.txt", package = "garnett"),
 row.names(mat) <- row.names(fdata)
 colnames(mat) <- row.names(pdata)
 # create a new CDS object
-pd <- new("AnnotatedDataFrame", data = pdata)
-fd <- new("AnnotatedDataFrame", data = fdata)
-pbmc_cds <- newCellDataSet(as(mat, "dgCMatrix"),
-                             phenoData = pd,
-                             featureData = fd)
+pbmc_cds <- new_cell_data_set(as(mat, "dgCMatrix"),cell_metadata = pdata, gene_metadata = fdata)
 
 # generate size factors for normalization later
-pbmc_cds <- estimateSizeFactors(pbmc_cds)
+pbmc_cds <- estimate_size_factors(pbmc_cds)
 ```
 
 ```{r}
@@ -66,7 +62,7 @@ pbmc_classifier <- train_cell_classifier(cds = pbmc_cds,
                                          cds_gene_id_type = "SYMBOL",
                                          num_unknown = 50,
                                          marker_file_gene_id_type = "SYMBOL")
-head(pData(pbmc_cds))
+head(colData(pbmc_cds))
 ```
 
 
@@ -84,7 +80,7 @@ pbmc_cds <- classify_cells(pbmc_cds, pbmc_classifier,
                            cluster_extend = TRUE,
                            cds_gene_id_type = "SYMBOL")
 
-table(pData(pbmc_cds)$cell_type)
-table(pData(pbmc_cds)$cluster_ext_type)
+table(colData(pbmc_cds)$cell_type)
+table(colData(pbmc_cds)$cluster_ext_type)
 ```
 

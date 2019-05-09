@@ -95,12 +95,12 @@ Lexer <- R6::R6Class(
 #'   origins of the markers/ }
 #'   \item{*meta data:}{This wildcard descriptor allows you to specify any
 #'   other property of a cell type that you wish to specify. The keyword will
-#'   be the name of the column in your \code{pData} (meta data) table that you
+#'   be the name of the column in your \code{colData} (meta data) table that you
 #'   wish to specify, and the specifications will be a list of acceptable
 #'   values for that meta data. An example use of this would be
 #'   \code{tissue: liver, kidney}, which would specify that training cells for
 #'   this cell type must have "liver" or "kidney" as their entry in the
-#'   "tissue" column of the \code{pData} table.}
+#'   "tissue" column of the \code{colData} table.}
 #'   \item{expressed below:}{While we recommend that you use \code{expressed:}
 #'   and \code{not expressed:} to specify the cell type's marker genes, because
 #'   these terms utilize the entirety of Garnett's built-in normalization and

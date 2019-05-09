@@ -23,10 +23,10 @@
 #' @param cluster_extend Logical. When \code{TRUE}, the classifier
 #'  provides a secondary cluster-extended classification, which assigns type
 #'  for the entire cluster based on the assignments of the cluster members. If
-#'  the pData table of the input CDS has a column called "garnett_cluster",
+#'  the colData table of the input CDS has a column called "garnett_cluster",
 #'  this will be used for cluster-extended assignments. Otherwise, assignments
 #'  are calculated using Louvain community detection in PCA space. This
-#'  assignment is returned as a column in the output CDS pData table. For large
+#'  assignment is returned as a column in the output CDS colData table. For large
 #'  datasets, if the "garnett_cluster" column is not provided and
 #'  \code{cluster_extend = TRUE}, the function can be significantly slower the
 #'  first time it is run. See details for more information.
@@ -35,7 +35,7 @@
 #' @details This function applies a previously trained multinomial glmnet
 #'  classifier at each node of a previously defined garnett_classifier tree.
 #'  The output is a CDS object with cell type classifications added to the
-#'  pData table.
+#'  colData table.
 #'
 #'  When \code{cluster_extend = TRUE}, louvain communities are calculated in
 #'  PCA space. Any cluster where >90% of classified cells are of a single type,
@@ -43,7 +43,7 @@
 #'  be assigned that cluster-extended type. Both cluster-extended type and
 #'  originally calculated cell type are reported.
 #'
-#' @return CDS object with classifications in the \code{pData} table.
+#' @return CDS object with classifications in the \code{colData} table.
 #' @export
 #'
 #' @examples
@@ -68,12 +68,12 @@ classify_cells <- function(cds,
   if(verbose) message("Starting classification")
   ##### Check inputs #####
   if(verbose) message("Checking inputs")
-  assertthat::assert_that(is(cds, "CellDataSet"))
-  assertthat::assert_that(assertthat::has_name(pData(cds), "Size_Factor"),
-                          msg = paste("Must run estimateSizeFactors() on cds",
+  assertthat::assert_that(is(cds, "cell_data_set"))
+  assertthat::assert_that(assertthat::has_name(colData(cds), "Size_Factor"),
+                          msg = paste("Must run estimate_size_factors() on cds",
                                       "before calling classify_cells"))
-  assertthat::assert_that(sum(is.na(pData(cds)$Size_Factor)) == 0,
-                          msg = paste("Must run estimateSizeFactors() on cds",
+  assertthat::assert_that(sum(is.na(colData(cds)$Size_Factor)) == 0,
+                          msg = paste("Must run estimate_size_factors() on cds",
                                       "before calling classify_cells"))
   assertthat::assert_that(is(classifier, "garnett_classifier"))
   if(is(db, "character") && db == "none") {
@@ -106,30 +106,27 @@ classify_cells <- function(cds,
 
   if(verbose) message("Normalizing CDS object\n")
 
-  if (!is(exprs(cds), "dgCMatrix")) {
-    sf <- pData(cds)$Size_Factor
-    pd <- new("AnnotatedDataFrame", data = pData(cds))
-    fd <- new("AnnotatedDataFrame", data = fData(cds))
-    cds <- suppressWarnings(newCellDataSet(as(exprs(cds), "dgCMatrix"),
-                          phenoData = pd,
-                          featureData = fd))
-    pData(cds)$Size_Factor <- sf
+  if (!is(counts(cds), "dgCMatrix")) {
+    sf <- colData(cds)$Size_Factor
+    cds <- suppressWarnings(new_cell_data_set(as(counts(cds), "dgCMatrix"),
+                                       cell_metadata = colData(cds),
+                                       gene_metadata = rowData(cds)))
+    colData(cds)$Size_Factor <- sf
   }
 
-  pData(cds)$num_genes_expressed <- Matrix::colSums(as(exprs(cds),
+  colData(cds)$num_genes_expressed <- Matrix::colSums(as(counts(cds),
                                                        "lgCMatrix"))
-  new_cell_totals <- Matrix::colSums(exprs(cds))
+  new_cell_totals <- Matrix::colSums(counts(cds))
   sfs <- new_cell_totals/(classifier@cell_totals *
-                            stats::median(pData(cds)$num_genes_expressed))
+                            stats::median(colData(cds)$num_genes_expressed))
   sfs[is.na(sfs)] <- 1
-  save_sf <- pData(cds)$Size_Factor
-  pData(cds)$Size_Factor <- sfs
-  pd <- new("AnnotatedDataFrame", data = pData(cds))
-  fd <- new("AnnotatedDataFrame", data = fData(cds))
-  temp <- exprs(cds)
-  temp@x <- temp@x / rep.int(pData(cds)$Size_Factor, diff(temp@p))
-  norm_cds <- suppressWarnings(newCellDataSet(temp,
-                             phenoData = pd, featureData = fd))
+  save_sf <- colData(cds)$Size_Factor
+  colData(cds)$Size_Factor <- sfs
+  temp <- counts(cds)
+  temp@x <- temp@x / rep.int(colData(cds)$Size_Factor, diff(temp@p))
+  norm_cds <- suppressWarnings(new_cell_data_set(temp,
+                             cell_metadata = colData(cds),
+                             gene_metadata = rowData(cds)))
 
   if (.hasSlot(classifier, "gene_id_type")) {
     classifier_gene_id_type <- classifier@gene_id_type
@@ -141,27 +138,27 @@ classify_cells <- function(cds,
   if(cds_gene_id_type != classifier_gene_id_type) {
     if (verbose) message(paste("Converting CDS IDs to",
                                classifier_gene_id_type, "\n"))
-    lstart <- nrow(fData(norm_cds))
+    lstart <- nrow(rowData(norm_cds))
     norm_cds <- cds_to_other_id(norm_cds,
                                 db=db,
                                 cds_gene_id_type,
                                 classifier_gene_id_type,
                                 verbose = FALSE)
-    lend <- nrow(fData(norm_cds))
+    lend <- nrow(rowData(norm_cds))
   }
 
-  pData(norm_cds)$Size_Factor <- sfs
+  colData(norm_cds)$Size_Factor <- sfs
   cds <- orig_cds
 
   ##### Calculate cell communities #####
   if (cluster_extend) {
-    if ("garnett_cluster" %in% names(pData(cds))) {
-      pData(norm_cds)$louv_cluster <- pData(cds)$garnett_cluster
+    if ("garnett_cluster" %in% names(colData(cds))) {
+      colData(norm_cds)$louv_cluster <- colData(cds)$garnett_cluster
     } else {
       if(verbose) message(paste("No garnett_cluster column provided,",
                                 "generating clusters for classification\n"))
       norm_cds <- get_communities(norm_cds)
-      pData(cds)$garnett_cluster <- pData(norm_cds)$louv_cluster
+      colData(cds)$garnett_cluster <- colData(norm_cds)$louv_cluster
     }
   }
 
@@ -172,12 +169,12 @@ classify_cells <- function(cds,
                              s=s,
                              rank_prob_ratio = rank_prob_ratio)
 
-  pData(cds)$cell_type <- NULL
-  if("cluster_ext_type" %in% names(pData(cds)))
-    pData(cds)$cluster_ext_type <- NULL
+  colData(cds)$cell_type <- NULL
+  if("cluster_ext_type" %in% names(colData(cds)))
+    colData(cds)$cluster_ext_type <- NULL
 
-  pData(cds)$Size_Factor <- save_sf
-  pData(cds) <- cbind(pData(cds), class_df)
+  colData(cds)$Size_Factor <- save_sf
+  colData(cds) <- cbind(colData(cds), class_df)
   if(verbose) message("Complete!\n")
   cds
 }
@@ -262,8 +259,8 @@ run_classifier <- function(classifier,
   cell_type <- as.data.frame(cell_type)
 
   if (cluster_extend) {
-    level_table$cluster <- pData(cds)$louv_cluster
-    community_assign <- data.frame(cluster = unique(pData(cds)$louv_cluster),
+    level_table$cluster <- colData(cds)$louv_cluster
+    community_assign <- data.frame(cluster = unique(colData(cds)$louv_cluster),
                                    assign = "Unknown",
                                    stringsAsFactors = FALSE)
     for(col in names(level_table)[2:(ncol(level_table)-1)]) {
@@ -283,10 +280,10 @@ run_classifier <- function(classifier,
       }
     }
 
-    pData(cds)$louv_cluster <- plyr::mapvalues(x = pData(cds)$louv_cluster,
+    colData(cds)$louv_cluster <- plyr::mapvalues(x = colData(cds)$louv_cluster,
                                                from = community_assign$cluster,
                                                to = community_assign$assign)
-    cell_type$cluster_ext_type <- as.character(pData(cds)$louv_cluster)
+    cell_type$cluster_ext_type <- as.character(colData(cds)$louv_cluster)
     cell_type$cell_type <- as.character(cell_type$cell_type)
     cell_type$cluster_ext_type[cell_type$cluster_ext_type == "Unknown"] <-
       cell_type$cell_type[cell_type$cluster_ext_type == "Unknown"]
@@ -307,9 +304,9 @@ make_predictions <- function(cds,
     if(is.null(cvfit)) {
       child_cell_types <- igraph::V(classifier@classification_tree)[
         suppressWarnings(outnei(curr_node)) ]$name
-      predictions <- matrix(FALSE, nrow=nrow(pData(cds)),
+      predictions <- matrix(FALSE, nrow=nrow(colData(cds)),
                             ncol=length(child_cell_types),
-                            dimnames=list(row.names(pData(cds)),
+                            dimnames=list(row.names(colData(cds)),
                                           child_cell_types))
       predictions <- split(predictions, rep(1:ncol(predictions),
                                             each = nrow(predictions)))
@@ -317,14 +314,14 @@ make_predictions <- function(cds,
       predictions
     } else {
       candidate_model_genes <- cvfit$glmnet.fit$beta[[1]]@Dimnames[[1]]
-      good_genes <- intersect(row.names(exprs(cds)),
+      good_genes <- intersect(row.names(counts(cds)),
                               candidate_model_genes)
       if (length(good_genes) == 0) stop(paste("None of the model genes are in",
                                               "your CDS object. Did you",
                                               "specify the correct",
                                               "cds_gene_id_type and the",
                                               "correct db?"))
-      x <- Matrix::t(exprs(cds[intersect(row.names(exprs(cds)),
+      x <- Matrix::t(counts(cds[intersect(row.names(counts(cds)),
                                          candidate_model_genes),])) #slow
 
       extra <- as(matrix(0, nrow = nrow(x),
@@ -342,10 +339,10 @@ make_predictions <- function(cds,
                                                              s="lambda.min")))
       nonz <- names(nonz[nonz != 0])
       nonz <- nonz[2:length(nonz)]
-      if (sum(!nonz %in% row.names(exprs(cds))) > 0) {
+      if (sum(!nonz %in% row.names(counts(cds))) > 0) {
         warning(paste("The following genes used in the classifier are not",
                       "present in the input CDS. Interpret with caution.",
-                      nonz[!nonz %in% row.names(exprs(cds))]))
+                      nonz[!nonz %in% row.names(counts(cds))]))
       }
 
       temp <- stats::predict(cvfit, #slow
@@ -379,7 +376,7 @@ make_predictions <- function(cds,
       random_guess_thresh <- 1.0 / length(cvfit$glmnet.fit$beta)
       assignments <- assignments[assignments$odds_ratio > random_guess_thresh,]
 
-      not_assigned <- row.names(pData(cds))[ !row.names(pData(cds)) %in%
+      not_assigned <- row.names(colData(cds))[ !row.names(colData(cds)) %in%
                                                assignments$cell_name]
       if(length(not_assigned) > 0) {
         assignments <- rbind(assignments,
@@ -399,7 +396,7 @@ make_predictions <- function(cds,
       if (ncol(predictions) > 2){
         predictions <- predictions[,setdiff(colnames(predictions), "NA")]
         predictions <- predictions[,-1, drop=FALSE]
-        predictions <- predictions[rownames(pData(cds)),,drop=FALSE]
+        predictions <- predictions[rownames(colData(cds)),,drop=FALSE]
         predictions <- as.matrix(predictions)
         predictions[is.na(predictions)] <- FALSE
         predictions[predictions != 0] <- TRUE
@@ -416,9 +413,9 @@ make_predictions <- function(cds,
           names(predictions)[2] <- "Unknown"
           one_type <- "Unknown"
         }
-        predictions <- matrix(FALSE, nrow=nrow(pData(cds)),
+        predictions <- matrix(FALSE, nrow=nrow(colData(cds)),
                               ncol=length(cell_type_names),
-                              dimnames=list(row.names(pData(cds)),
+                              dimnames=list(row.names(colData(cds)),
                                             cell_type_names))
         predictions[,one_type] <- TRUE
 
@@ -438,9 +435,9 @@ make_predictions <- function(cds,
       stop(e)
     print (e)
     cell_type_names <- names(cvfit$glmnet.fit$beta)
-    predictions <- matrix(FALSE, nrow=nrow(pData(cds)),
+    predictions <- matrix(FALSE, nrow=nrow(colData(cds)),
                           ncol=length(cell_type_names),
-                          dimnames=list(row.names(pData(cds)),
+                          dimnames=list(row.names(colData(cds)),
                                         cell_type_names))
     predictions <- split(predictions, rep(1:ncol(predictions),
                                           each = nrow(predictions)))
@@ -450,7 +447,7 @@ make_predictions <- function(cds,
 
   for (i in 1:length(predictions)){
     p <- as(as(predictions[[i]], "sparseVector"), "sparseMatrix")
-    row.names(p) <- row.names(pData(cds))
+    row.names(p) <- row.names(colData(cds))
     predictions[[i]] <- p
   }
 
@@ -461,8 +458,8 @@ make_predictions <- function(cds,
 get_communities <- function(cds) {
   k <- 20
 
-  fm_rowsums <- Matrix::rowSums(exprs(cds))
-  FM <- exprs(cds)[is.finite(fm_rowsums) & fm_rowsums != 0, ]
+  fm_rowsums <- Matrix::rowSums(counts(cds))
+  FM <- counts(cds)[is.finite(fm_rowsums) & fm_rowsums != 0, ]
 
   x <- Matrix::t(FM)
   n <- min(50, min(dim(FM)) - 1)
@@ -501,7 +498,7 @@ get_communities <- function(cds) {
 
   Q <- igraph::cluster_louvain(g)
 
-  pData(cds)$louv_cluster <- factor(igraph::membership(Q))
+  colData(cds)$louv_cluster <- factor(igraph::membership(Q))
   cds
 }
 

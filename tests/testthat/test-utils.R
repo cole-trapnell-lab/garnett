@@ -7,12 +7,12 @@ ensembl <- garnett:::cds_to_other_id(test_cds, db=org.Hs.eg.db,
                                      "SYMBOL", "ENSEMBL")
 
 test_that("cds_to_other_id works", {
-  expect_is(ensembl, "CellDataSet")
-  expect_equal(nrow(fData(ensembl)), 19570)
-  expect_equal(row.names(fData(ensembl)[
-    fData(ensembl)$gene_short_name == "FAM87B",]), "ENSG00000177757")
-  expect_identical(exprs(test_cds)["FAM87B",],
-                   exprs(ensembl)["ENSG00000177757",])
+  expect_is(ensembl, "cell_data_set")
+  expect_equal(nrow(rowData(ensembl)), 19570)
+  expect_equal(row.names(rowData(ensembl)[
+    rowData(ensembl)$gene_short_name == "FAM87B",]), "ENSG00000177757")
+  expect_identical(counts(test_cds)["FAM87B",],
+                   counts(ensembl)["ENSG00000177757",])
 })
 
 data(test_classifier)
