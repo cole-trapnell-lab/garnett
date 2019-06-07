@@ -521,7 +521,7 @@ get_rule_multiplier <- function(i, classifier, orig_cds) {
     stop()
   }
 
-  type_res <- as(as(type_res,"colData"), "sparseMatrix")
+  type_res <- as(as(type_res,"sparseVector"), "sparseMatrix")
   row.names(type_res) <- row.names(colData(orig_cds))
   colnames(type_res) <- i
   type_res
