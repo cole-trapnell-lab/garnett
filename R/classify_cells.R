@@ -486,7 +486,7 @@ get_communities <- function(cds) {
   tmp <- RANN::nn2(pcs, pcs, k + 1, searchtype = "standard")
   neighborMatrix <- tmp[[1]][, -1]
 
-  links <- monocle:::jaccard_coeff(neighborMatrix, FALSE)
+  links <- monocle3:::jaccard_coeff(neighborMatrix, FALSE)
 
   links <- links[links[, 1] > 0, ]
   relations <- as.data.frame(links)
