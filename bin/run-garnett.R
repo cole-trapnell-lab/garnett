@@ -1,7 +1,9 @@
 #!/usr/bin/env Rscript
-predict_immune_cell_types <- function(input.path,markers, output.path){
+predict_immune_cell_types <- function(input.path,marker.path, output.path){
   dat <- read.table(input.path)
-  markers <- load(markers)
+  temp <- load(marker.path)
+  markers <- get(temp)
+  rm(temp)
   
   dat_cds <- newCellDataSet(as.matrix(dat))
   dat_cds <- estimateSizeFactors(dat_cds)
@@ -21,7 +23,7 @@ getArgs<-function(){
   option_list <- list(
     make_option(c("-i", "--input"), dest='input',default='inst/immClassifierTestMatrix.tsv', help="Path to tab-delimited input matrix"),
     make_option(c("-o", "--output"), default="testout.csv", dest='output',help = "Path to output file"),
-    make_option(c('-m','--marker'),default=NULL, dest='marker',help="Path to markers file"),
+    make_option(c('-m','--marker'),default=NULL, dest='marker',help="Path to markers file")#,
 #    make_option(c('-t','--testmode'),default=FALSE,dest='testmode',action='store_true',help='Run in test mode')
   )
   
