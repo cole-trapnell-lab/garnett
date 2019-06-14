@@ -11,7 +11,7 @@ RUN Rscript -e "BiocManager::install(c('DelayedArray', 'DelayedMatrixStats', 'or
 RUN Rscript -e "devtools::install_github('cole-trapnell-lab/garnett')"
 
 COPY bin/run-ic.R /usr/local/bin/
-RUN chmod a+x /usr/local/bin/run-ic.R
+RUN chmod a+x /usr/local/bin/run-garnett.R
 
 COPY . garnett
 WORKDIR garnett
