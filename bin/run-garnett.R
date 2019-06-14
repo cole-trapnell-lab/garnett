@@ -21,8 +21,8 @@ predict_immune_cell_types <- function(input.path,marker.path, output.path){
 getArgs<-function(){
   require(optparse)
   option_list <- list(
-    make_option(c("-i", "--input"), dest='input',default='inst/immClassifierTestMatrix.tsv', help="Path to tab-delimited input matrix"),
-    make_option(c("-o", "--output"), default="testout.csv", dest='output',help = "Path to output file"),
+    make_option(c("-i", "--input"), dest='input',default=NULL, help="Path to tab-delimited input matrix"),
+    make_option(c("-o", "--output"), default="output.csv", dest='output',help = "Path to output file"),
     make_option(c('-m','--marker'),default=NULL, dest='marker',help="Path to markers file")#,
 #    make_option(c('-t','--testmode'),default=FALSE,dest='testmode',action='store_true',help='Run in test mode')
   )
