@@ -1,0 +1,7 @@
+synapse_config:
+    class: File
+    path: /home/xguo/.synapseConfig
+input_id: syn19122546
+marker_id: syn19122503
+output_name: test_garnett_output.csv
+folder_id: syn19122489
