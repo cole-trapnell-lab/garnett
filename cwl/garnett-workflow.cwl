@@ -1,6 +1,6 @@
 class: Workflow
-label: imm-class-workflow
-id: imm-class-workflow
+label: garnett-workflow
+id: garnett-workflow
 cwlVersion: v1.0
 
 inputs:

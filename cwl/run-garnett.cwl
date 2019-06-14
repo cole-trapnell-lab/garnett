@@ -1,7 +1,7 @@
 #!/usr/bin/env cwl-runner
 class: CommandLineTool
-id: run-immclassifier
-label: run-immclassifier
+id: run-garnett
+label: run-garnett
 cwlVersion: v1.0
 
 requirements:
