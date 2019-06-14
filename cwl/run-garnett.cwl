@@ -38,4 +38,4 @@ outputs:
   predictions:
     type: File
     outputBinding:
-      glob: "*.csv"
+      glob: $(inputs.output_path)
