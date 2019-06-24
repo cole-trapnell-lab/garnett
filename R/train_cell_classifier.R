@@ -42,6 +42,8 @@
 #' @param classifier_gene_id_type The type of gene ID that will be used in the
 #'  classifier. If possible for your organism, this should be "ENSEMBL", which
 #'  is the default. Ignored if db = "none".
+#' @param perc_cells percent of training cells a gene is expressed to be included in glmnet
+#'  training. defaults to 0.05 (5%)
 #'
 #' @details This function has three major parts: 1) parsing the marker file 2)
 #'  choosing cell representatives and 3) training the classifier. Details on
@@ -101,8 +103,8 @@ train_cell_classifier <- function(cds,
                                   propogate_markers = TRUE,
                                   cores=1,
                                   lambdas = NULL,
-                                  classifier_gene_id_type = "ENSEMBL") {
-
+                                  classifier_gene_id_type = "ENSEMBL",
+                                  perc_cells = 0.05) { 
   ##### Check inputs #####
   assertthat::assert_that(is(cds, "CellDataSet"))
   assertthat::assert_that(assertthat::has_name(pData(cds), "Size_Factor"),
@@ -148,8 +150,6 @@ train_cell_classifier <- function(cds,
   # than rel_gene_quantile in all training cell subsets
   back_cutoff <- 0.25 # percent of 95th percentile of expression that marks the
   # cutoff between "expressed" and "not expressed"
-  perc_cells <- 0.05 # percent of training cells a gene is expressed to be
-  # included in glmnet training
   training_cutoff <- .75 # percentile of marker score required for training
   # assignment
 
