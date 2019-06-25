@@ -20,40 +20,40 @@ test_that("get_communities works", {
 
 # classify cells
 set.seed(10)
-new_cds <- classify_cells(test_cds, test_classifier,
+new_cds <- suppressWarnings(classify_cells(test_cds, test_classifier,
                           db = org.Hs.eg.db,
                           rank_prob_ratio = 1.5,
                           cluster_extend = TRUE,
-                          cds_gene_id_type = "SYMBOL")
+                          cds_gene_id_type = "SYMBOL"))
 
 test_that("classify_cells works", {
   expect_identical(exprs(new_cds), exprs(test_cds))
   expect_identical(fData(new_cds), fData(test_cds))
-  expect_equal(sum(pData(new_cds)$cell_type == "B cells"), 207)
-  expect_equal(sum(pData(new_cds)$cell_type == "CD4 T cells"), 129)
-  expect_equal(sum(pData(new_cds)$cell_type == "CD8 T cells"), 61)
-  expect_equal(sum(pData(new_cds)$cell_type == "T cells"), 164)
-  expect_equal(sum(pData(new_cds)$cluster_ext_type == "B cells"), 401)
-  expect_equal(sum(pData(new_cds)$cluster_ext_type == "CD4 T cells"), 200)
-  expect_equal(sum(pData(new_cds)$cluster_ext_type == "T cells"), 199)
+  expect_equal(sum(pData(new_cds)$cell_type == "B cells"), 160)
+  expect_equal(sum(pData(new_cds)$cell_type == "CD4 T cells"), 82)
+  expect_equal(sum(pData(new_cds)$cell_type == "CD8 T cells"), 48)
+  expect_equal(sum(pData(new_cds)$cell_type == "T cells"), 142)
+  expect_equal(sum(pData(new_cds)$cluster_ext_type == "B cells"), 402)
+  expect_equal(sum(pData(new_cds)$cluster_ext_type == "CD4 T cells"), 203)
+  expect_equal(sum(pData(new_cds)$cluster_ext_type == "T cells"), 195)
 })
 
 pData(test_cds)$garnett_cluster <- c(rep(1, times=200), rep(2, times=200),
                                      rep(3, times=200), rep(4, times=200))
 set.seed(10)
-new_cds <- classify_cells(test_cds, test_classifier,
+new_cds <- suppressWarnings(classify_cells(test_cds, test_classifier,
                           db = org.Hs.eg.db,
                           rank_prob_ratio = 1.5,
                           cluster_extend = TRUE,
-                          cds_gene_id_type = "SYMBOL")
+                          cds_gene_id_type = "SYMBOL"))
 
 test_that("classify_cells works with provided clusters", {
   expect_identical(exprs(new_cds), exprs(test_cds))
   expect_identical(fData(new_cds), fData(test_cds))
-  expect_equal(sum(pData(new_cds)$cell_type == "B cells"), 207)
-  expect_equal(sum(pData(new_cds)$cell_type == "CD4 T cells"), 129)
-  expect_equal(sum(pData(new_cds)$cell_type == "CD8 T cells"), 61)
-  expect_equal(sum(pData(new_cds)$cell_type == "T cells"), 164)
+  expect_equal(sum(pData(new_cds)$cell_type == "B cells"), 160)
+  expect_equal(sum(pData(new_cds)$cell_type == "CD4 T cells"), 82)
+  expect_equal(sum(pData(new_cds)$cell_type == "CD8 T cells"), 48)
+  expect_equal(sum(pData(new_cds)$cell_type == "T cells"), 142)
   expect_equal(sum(pData(new_cds)$cluster_ext_type == "B cells"), 400)
   expect_equal(sum(pData(new_cds)$cluster_ext_type == "CD4 T cells"), 0)
   expect_equal(sum(pData(new_cds)$cluster_ext_type == "T cells"), 400)
