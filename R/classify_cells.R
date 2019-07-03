@@ -116,11 +116,20 @@ classify_cells <- function(cds,
 
   colData(cds)$num_genes_expressed <- Matrix::colSums(as(counts(cds),
                                                        "lgCMatrix"))
+  save_sf <- colData(cds)$Size_Factor
   new_cell_totals <- Matrix::colSums(counts(cds))
+
+  excluded_cells <- NULL
+  if(sum(new_cell_totals == 0) != 0) {
+    warning(paste0(sum(new_cell_totals == 0), " cells in cds have no reads. These cells will be excluded from classification."))
+    excluded_cells <- names(new_cell_totals == 0)
+    cds <- cds[,new_cell_totals != 0]
+    new_cell_totals <- new_cell_totals[new_cell_totals != 0]
+  }
   sfs <- new_cell_totals/(classifier@cell_totals *
                             stats::median(colData(cds)$num_genes_expressed))
   sfs[is.na(sfs)] <- 1
-  save_sf <- colData(cds)$Size_Factor
+
   colData(cds)$Size_Factor <- sfs
   temp <- counts(cds)
   temp@x <- temp@x / rep.int(colData(cds)$Size_Factor, diff(temp@p))
@@ -158,7 +167,8 @@ classify_cells <- function(cds,
       if(verbose) message(paste("No garnett_cluster column provided,",
                                 "generating clusters for classification\n"))
       norm_cds <- get_communities(norm_cds)
-      colData(cds)$garnett_cluster <- colData(norm_cds)$louv_cluster
+      colData(cds)$garnett_cluster <- NA
+      colData(cds)[row.names(colData(norm_cds)),]$garnett_cluster <- colData(norm_cds)$louv_cluster
     }
   }
 
@@ -168,6 +178,12 @@ classify_cells <- function(cds,
                              cluster_extend = cluster_extend,
                              s=s,
                              rank_prob_ratio = rank_prob_ratio)
+  if(!is.null(excluded_cells)) {
+    ext <- matrix(ncol=ncol(class_df), nrow = length(excluded_cells), dimnames = list(excluded_cells))
+    colnames(ext) <- colnames(class_df)
+    class_df <- rbind(class_df, ext)
+    class_df <- class_df[row.names(colData(cds)),]
+  }
 
   colData(cds)$cell_type <- NULL
   if("cluster_ext_type" %in% names(colData(cds)))
