@@ -491,6 +491,18 @@ check_marker_conversion <- function(parse_list,
     bad_convert <- sum(is.na(gene_table$fgenes))
   }
 
+  if(cds_gene_id_type == "ENSEMBL" | marker_file_gene_id_type == "ENSEMBL") {
+    possibles <- data.frame(cds = possible_genes,
+                            ensembl = as.character(
+                              stringr::str_split_fixed(possible_genes,
+                                                       "\\.",
+                                                       2)[,1]))
+    gene_table <- merge(gene_table, possibles, all.x=T,
+                        by.x="fgenes", by.y="ensembl")
+    gene_table$fgenes <- gene_table$cds
+  }
+
+  gene_table$cds <- NULL
   gene_table$in_cds <- gene_table$fgenes %in% possible_genes
   gene_table$in_cds[is.na(gene_table$in_cds)] <- FALSE
 

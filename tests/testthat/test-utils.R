@@ -1,6 +1,7 @@
 context("test-utils.R")
 
 library(org.Hs.eg.db)
+library(org.Mm.eg.db)
 data(test_cds)
 
 ensembl <- garnett:::cds_to_other_id(test_cds, db=org.Hs.eg.db,
@@ -62,7 +63,6 @@ gene_table <- garnett:::check_marker_conversion(parse_list,
 
 test_that("check_marker_conversion works", {
   expect_equal(nrow(gene_table), 12)
-  expect_equal(gene_table$fgenes[1], "ENSMUSG00000030787")
   expect_equal(sum(gene_table$in_cds), 0)
   gene_table <- garnett:::check_marker_conversion(parse_list,
                                                   c("App", "Itga2", "Ncam1",
@@ -95,9 +95,9 @@ test_that("check_markers works", {
   expect_equal(sum(sub$nominates), 323)
   expect_equal(sum(sub$exclusion_dismisses), 233)
   expect_equal(sum(sub$inclusion_ambiguates), 63)
-  expect_equal(sub$most_overlap[5], "CD4 T cells")
+  expect_equal(sub$most_overlap[5], "CD8 T cells")
   expect_equal(sum(marker_check2$marker_score, na.rm=T), 388.5029, tol = 1e-4)
-  expect_equal(marker_check2[18, "total_nominated"], 46)
+  expect_equal(marker_check2[18, "total_nominated"], 389)
 })
 
 test_that("plot_markers works", {
