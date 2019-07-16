@@ -179,6 +179,9 @@ train_cell_classifier <- function(cds,
                                 classifier_gene_id_type)
     orig_cds <- cds_to_other_id(cds, db=db, cds_gene_id_type,
                                 classifier_gene_id_type)
+  } else if(cds_gene_id_type == "ENSEMBL") {
+    norm_cds <- fix_ensembl_id(norm_cds)
+    orig_cds <- fix_ensembl_id(cds)
   }
   colData(norm_cds)$Size_Factor <- sf
 
@@ -407,7 +410,7 @@ make_name_map <- function(parse_list,
                                                        2)[,1]))
     gene_table <- merge(gene_table, possibles, all.x=T,
                         by.x="fgenes", by.y="ensembl")
-    gene_table$fgenes <- gene_table$cds
+    #gene_table$fgenes <- gene_table$cds
   } else {
     gene_table$cds <- gene_table$fgenes
   }
@@ -429,6 +432,16 @@ make_name_map <- function(parse_list,
   gene_table$cds <- as.character(gene_table$cds)
 
   gene_table
+}
+
+fix_ensembl_id <- function(cds) {
+  new_names <- as.character(stringr::str_split_fixed(row.names(rowData(cds)),
+                                                     "\\.", 2)[,1])
+  expr <- exprs(cds)
+  row.names(expr) <- new_names
+  fd <- rowData(cds)
+  row.names(fd) <- new_names
+  new_cell_data_set(expr, cell_metadata = colData(cds), gene_metadata = fd)
 }
 
 add_cell_rule <- function(cell_type,
