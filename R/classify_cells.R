@@ -352,10 +352,13 @@ make_predictions <- function(cds,
                              newx = x,
                              s = s,
                              type = "response")
+      temp[is.nan(temp)] <- 0
       prediction_probs <- as.matrix(as.data.frame(temp))
 
       # normalize probabilities by dividing by max
       prediction_probs <- prediction_probs/Biobase::rowMax(prediction_probs)
+
+      prediction_probs[is.nan(prediction_probs)] <- 0
 
       # find the odds ratio of top prob over second best
       prediction_probs <- apply(prediction_probs, 1, function(x) {
@@ -394,6 +397,7 @@ make_predictions <- function(cds,
       # reformat predictions
       predictions <- reshape2::dcast(assignments, cell_name ~ cell_type,
                                      value.var = "odds_ratio")
+      predictions <- predictions[!is.na(predictions$cell_name),]
       row.names(predictions) <- predictions$cell_name
 
       if (ncol(predictions) > 2){
