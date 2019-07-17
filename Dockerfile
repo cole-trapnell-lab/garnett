@@ -8,6 +8,7 @@ RUN Rscript -e "BiocManager::install()"
 RUN Rscript -e "BiocManager::install(c('monocle'))"
 RUN Rscript -e "BiocManager::install(c('DelayedArray', 'DelayedMatrixStats', 'org.Hs.eg.db', 'org.Mm.eg.db'))"
 RUN Rscript -e "devtools::install_github('cole-trapnell-lab/garnett')"
+RUN Rscript -e "install.packages('optparse')"
 
 COPY bin/run-garnett.R /usr/local/bin/
 RUN chmod a+x /usr/local/bin/run-garnett.R
