@@ -402,6 +402,7 @@ make_name_map <- function(parse_list,
   }
 
   if(cds_gene_id_type == "ENSEMBL" | marker_file_gene_id_type == "ENSEMBL") {
+    gene_table$cds <- NULL
     possibles <- data.frame(cds = possible_genes,
                             ensembl = as.character(
                               stringr::str_split_fixed(possible_genes,
