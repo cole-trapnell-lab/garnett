@@ -49,5 +49,53 @@ test_that("logic is assembled correctly", {
   expect_equal(logic[9], "mouse.sex %in% c('F')")
   expect_equal(logic[10], "tissue %in% c('liver', 'kidney', 'brain')")
 })
+library(org.Hs.eg.db)
+data(test_cds)
+
+set.seed(260)
+test_classifier <- train_cell_classifier(cds = test_cds,
+                                         marker_file = "../ensembl_test.txt",
+                                         db=org.Hs.eg.db,
+                                         min_observations = 10,
+                                         cds_gene_id_type = "SYMBOL",
+                                         num_unknown = 50,
+                                         marker_file_gene_id_type = "ENSEMBL")
+
+test_that("training works with ensembl ids", {
+  expect_is(test_classifier, "garnett_classifier")
+  expect_equal(length(test_classifier@classification_tree), 10)
+})
+
+data(test_cds)
+ens_cds <- garnett:::cds_to_other_id(test_cds, db = org.Hs.eg.db,
+                                     new_gene_id_type = "ENSEMBL",
+                                     input_file_gene_id_type = "SYMBOL")
+
+set.seed(260)
+test_classifier <- train_cell_classifier(cds = ens_cds,
+                                         marker_file = "../ensembl_test.txt",
+                                         db=org.Hs.eg.db,
+                                         min_observations = 10,
+                                         cds_gene_id_type = "ENSEMBL",
+                                         num_unknown = 50,
+                                         marker_file_gene_id_type = "ENSEMBL")
+
+test_that("training works with both ids", {
+  expect_is(test_classifier, "garnett_classifier")
+  expect_equal(length(test_classifier@classification_tree), 10)
+})
 
 
+set.seed(260)
+test_classifier <- train_cell_classifier(cds = test_cds,
+                                         marker_file = "../pbmc_test.txt",
+                                         db=org.Hs.eg.db,
+                                         min_observations = 10,
+                                         cds_gene_id_type = "SYMBOL",
+                                         num_unknown = 50,
+                                         marker_file_gene_id_type = "SYMBOL")
+
+test_that("training works with symbol ids", {
+  expect_is(test_classifier, "garnett_classifier")
+  expect_equal(length(test_classifier@classification_tree), 10)
+})

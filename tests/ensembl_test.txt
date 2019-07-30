@@ -1,0 +1,7 @@
+>B cells
+expressed: ENSG00000177455
+references: https://www.ncbi.nlm.nih.gov/pubmed/?term=23688120, https://www.ncbi.nlm.nih.gov/pubmed/?term=21149806
+
+>T cells
+expressed: ENSG00000167286
+references: https://www.ncbi.nlm.nih.gov/pubmed/?term=1534551
