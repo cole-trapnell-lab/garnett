@@ -26,7 +26,7 @@ library(org.Hs.eg.db)
 # NOTE: the 'system.file' file name is only necessary to read in 
 # included package data
 #
-mat <- readMM(system.file("extdata", "exprs_sparse.mtx", package = "garnett"))
+mat <- Matrix::readMM(system.file("extdata", "exprs_sparse.mtx", package = "garnett"))
 fdata <- read.table(system.file("extdata", "fdata.txt", package = "garnett"))
 pdata <- read.table(system.file("extdata", "pdata.txt", package = "garnett"), 
                     sep="\t")
