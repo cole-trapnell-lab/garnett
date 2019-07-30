@@ -9,6 +9,10 @@ language: r
 r:
 - bioc-devel
 - bioc-release
+
+r_github_packages:
+- cole-trapnell-lab/monocle3
+
 r_binary_packages:
 - assertthat
 - doParallel
