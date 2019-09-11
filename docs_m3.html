@@ -129,7 +129,7 @@ devtools::install_github("cole-trapnell-lab/garnett", ref="monocle3")
 
       <p>To use a pre-trained classifier, first download the classifier, and then load it into your R session using:</p>
 {% highlight R %}
-load("classifier_name")
+classifier <- readRDS("path/to/classifier.RDS")
 {% endhighlight %}
 
       <p>Once you've loaded the classifier, go on to part 2,
