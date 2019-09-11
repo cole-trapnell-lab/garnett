@@ -1,0 +1,577 @@
+>Neurons
+expressed: Gabra6
+
+>Cerebellum neurons
+subtype of: Neurons
+expressed: Gabra6
+
+>Granule neurons cerebellum
+subtype of: Cerebellum neurons
+expressed: Gabra6
+
+>Molecular layer interneurons cerebellum
+subtype of: Cerebellum neurons
+expressed: Cnpy1
+
+>Granular layer interneurons cerebellum
+subtype of: Cerebellum neurons
+expressed: Lgi2
+
+>Neuroblasts cerebellum
+subtype of: Cerebellum neurons
+expressed: Neurod1
+
+>Purkinje cells
+subtype of: Cerebellum neurons
+expressed: Slc1a6, Car8
+
+>Inhibitory neurons midbrain
+subtype of: Cerebellum neurons
+expressed: Il22
+
+>Cholinergic monoaminergic and peptidergic neurons
+subtype of: Neurons
+expressed: Trh
+
+>Cholinergic and monoaminergic neurons
+subtype of: Cholinergic monoaminergic and peptidergic neurons
+expressed: Tbx20
+
+>Cholinergic neurons septal nucleus Meissnert and diagonal band
+subtype of: Cholinergic and monoaminergic neurons
+expressed: Cox6a2
+
+>Adrenergic cell groups of the medulla
+subtype of: Cholinergic and monoaminergic neurons
+expressed: Npff, Pnmt
+
+>Afferent nuclei of cranial nerves VI-XII
+subtype of: Cholinergic and monoaminergic neurons
+expressed: Adcyap1, Tmem26
+
+>Afferent nuclei of cranial nerves III-V
+subtype of: Cholinergic and monoaminergic neurons
+expressed: Irx4
+
+>Noradrenergic neurons of the medulla
+subtype of: Cholinergic and monoaminergic neurons
+expressed: Prlh, Casr, Afp
+
+>Serotonergic neurons
+subtype of: Cholinergic and monoaminergic neurons
+expressed: Slc6a4, Wfdc12, Slc18a2,	Tph2, Maob, Gchfr, Pgr15l, 5031425F14Rik
+
+>Orexin-producing neurons hypothalamus
+subtype of: Cholinergic and monoaminergic neurons
+expressed:	Hcrt 
+
+>Pmch neurons hypothalamus
+subtype of: Cholinergic and monoaminergic neurons
+expressed:	Pmch
+
+>Dopaminergic neurons periaqueductal grey
+subtype of: Cholinergic and monoaminergic neurons
+expressed: En1, Npw
+
+>Dopaminergic neurons ventral midbrain
+subtype of: Cholinergic and monoaminergic neurons
+expressed: Slc6a3 
+
+>Glutamatergic projection neurons of the raphe nucleus
+subtype of: Cholinergic and monoaminergic neurons
+expressed: Ucn 
+
+>Cholinergic interneurons telencephalon
+subtype of: Cholinergic and monoaminergic neurons
+expressed: Chat
+
+>Peptidergic neurons
+subtype of: Cholinergic monoaminergic and peptidergic neurons
+expressed: Avp, Sim1 
+
+>Inhibitory neurons thalamus
+subtype of: Peptidergic neurons
+expressed: Dgkk 
+
+>Peptidergic neurons hypothalamus
+subtype of: Peptidergic neurons
+expressed: Dlk1, Otp, Fezf1, Gnrh1 
+
+>Inhibitory neurons hypothalamus
+subtype of: Peptidergic neurons
+expressed: Six6 
+
+>Oxytocin-producing cells hypothalamus
+subtype of: Peptidergic neurons
+expressed: Oxt
+
+>Vasopressin-producing cells hypothalamus
+subtype of: Peptidergic neurons
+expressed: H2-DMb2
+
+>Inhibitory neurons midbrain pept
+subtype of: Peptidergic neurons
+expressed: Rln3
+
+>Central canal neurons spinal cord
+subtype of: Peptidergic neurons
+expressed: Pdzk1ip1, Pkd1l2
+
+>Inhibitory neurons septal nucleus
+subtype of: Peptidergic neurons
+expressed: Lbhd2 
+
+>Inhibitory neurons telencephalon
+subtype of: Peptidergic neurons
+expressed: Ecel1, Tmem215
+
+>Di- and mesencephalon neurons
+subtype of: Neurons
+expressed: Gm5741
+
+>Di- and mesencephalon excitatory neurons
+subtype of: Di- and mesencephalon neurons
+expressed: 	Gm5741, Foxp2, Slc17a6
+
+>Cajal-Retzius cells hippocampus
+subtype of: Di- and mesencephalon excitatory neurons
+expressed: 	Ndnf
+
+>Cholinergic neurons habenula
+subtype of: Di- and mesencephalon excitatory neurons
+expressed: Gm5741
+
+>Excitatory neurons thalamus
+subtype of: Di- and mesencephalon excitatory neurons
+expressed: Adamts15, Gbx2 
+
+>Excitatory neurons hypothalamus
+subtype of: Di- and mesencephalon excitatory neurons
+expressed: Shox2, Ramp3
+
+>Excitatory neurons midbrain
+subtype of: Di- and mesencephalon excitatory neurons
+expressed: 	Gpr101, Barhl1, Tfap2d, Gpc3, Lhx9, Pou4f2 
+
+>Cholinergic neurons midbrain red nucleus
+subtype of: Di- and mesencephalon excitatory neurons
+expressed: Evx1os, Drd5 
+
+>Excitatory neurons hindbrain
+subtype of: Di- and mesencephalon excitatory neurons
+expressed: Pou4f1, Htr5b 
+
+>Di- and mesencephalon inhibitory neurons
+subtype of: Di- and mesencephalon neurons
+expressed: Smim17
+
+>Inhibitory neurons hypothalamus di
+subtype of: Di- and mesencephalon inhibitory neurons
+expressed: Nfatc2
+
+>Inhibitory neurons hindbrain di
+subtype of: Di- and mesencephalon inhibitory neurons
+expressed: Chrna2, Slc6a5 
+
+>Inhibitory neurons midbrain di
+subtype of: Di- and mesencephalon inhibitory neurons
+expressed: Otx2, Gabrr2, Sox14, Pax5, Gata3, Tnni3, Npffr1, Pax7 
+
+>Inhibitory neurons pallidum
+subtype of: Di- and mesencephalon inhibitory neurons
+expressed: Gbx1 
+
+>Hindbrain neurons
+subtype of: Neurons
+expressed: Defa24
+
+>Cholinergic neurons hindbrain
+subtype of: Hindbrain neurons
+expressed: Defa24 
+
+>Excitatory neurons hindbrain hind
+subtype of: Hindbrain neurons
+expressed: Irx2, Fcmr, Ly6d 
+
+>Inhibitory neurons hindbrain hind
+subtype of: Hindbrain neurons
+expressed: 	Irs4, Lingo4 
+
+>Inhibitory neurons spinal cord
+subtype of: Hindbrain neurons
+expressed: Tnfrsf13c 
+
+>Spinal cord neurons
+subtype of: Neurons
+expressed: 	Hoxc10, Glra1, Hoxb6
+
+>Spinal cord excitatory neurons
+subtype of: Spinal cord neurons
+expressed: 	Hoxc10
+
+>Excitatory neurons hindbrain spin
+subtype of: Spinal cord excitatory neurons
+expressed: 	Ebf2, Zmym1 
+
+>Excitatory neurons spinal cord
+subtype of: Spinal cord excitatory neurons
+expressed: Hoxb8, Hoxb7, Hoxc10  
+
+>Spinal cord inhibitory neurons
+subtype of: Spinal cord neurons
+expressed: Pax2
+
+>Inhibitory neurons hindbrain
+subtype of: Spinal cord inhibitory neurons
+expressed: Pax2 
+
+>Inhibitory neurons spinal cord spin
+subtype of: Spinal cord inhibitory neurons
+expressed: Hoxb8, Krt17, Skor1 
+
+>Immature neural
+subtype of: Neurons
+expressed: Ms4a15
+
+>Glutamatergic neuroblasts
+subtype of: Immature neural
+expressed: Ms4a15
+
+>Non-glutamatergic neuroblasts 
+subtype of: Immature neural
+expressed: Pde6g
+
+>Neuroblast-like habenula
+subtype of: Non-glutamatergic neuroblasts
+expressed: Pde6g 
+
+>Granule neuroblasts dentate gyrus
+subtype of: Non-glutamatergic neuroblasts
+expressed: Mfap4 
+
+>Neuroblasts olfactory bulb
+subtype of: Non-glutamatergic neuroblasts
+expressed: Tiam2
+
+>Neuronal intermidate progenitor cells
+subtype of: Non-glutamatergic neuroblasts
+expressed: Pclaf 
+
+>Neuroblasts cerebellum glut
+subtype of: Glutamatergic neuroblasts
+expressed: Lmx1a
+
+>Neuroblasts olfactory
+subtype of: Glutamatergic neuroblasts
+expressed: 	Ms4a15, Ly6g6e, Eomes
+
+>Neuroblasts septum
+subtype of: Glutamatergic neuroblasts
+expressed: Sost 
+
+>Telencephalon interneurons
+subtype of: Neurons
+expressed: 	Trh
+
+>Olfactory inhibitory neurons
+subtype of: Telencephalon interneurons
+expressed: 	Trh
+
+>Dopaminergic periglomerular interneuron olfactory bulb
+subtype of: Olfactory inhibitory neurons
+expressed: 	Trh 
+	
+>Inhibitory neurons olfactory bulb
+subtype of: Olfactory inhibitory neurons
+expressed: 	Trdn, Nccrp1, Dlx5 
+
+>Inner horizontal cell olfactory bulb
+subtype of: Olfactory inhibitory neurons
+expressed: 	Shisa8, Fam184a
+
+>External plexiform layer interneuron olfactory bulb
+subtype of: Olfactory inhibitory neurons
+expressed: Crh, Tcap 
+
+>Telencephalon inhibitory interneurons
+subtype of: Telencephalon interneurons
+expressed: Cox6a2, Npas1, Stk32b
+
+>Inhibitory neurons thalamus tele
+subtype of: Telencephalon inhibitory interneurons
+expressed: Six3 
+
+>R-LM border Cck interneurons cortex/hippocampus
+expressed: 	Yjefn3, Col19a1, Slc17a8 
+subtype of: Telencephalon inhibitory interneurons
+
+>Non-border Cck interneurons cortex/hippocampus
+expressed: 	Krt73, 5330429C05Rik 
+subtype of: Telencephalon inhibitory interneurons
+
+>Trilaminar cells hippocampus
+subtype of: Telencephalon inhibitory interneurons
+expressed: Ibsp 
+
+>CGE-derived neurogliaform cells cortex/hippocampus
+subtype of: Telencephalon inhibitory interneurons
+expressed: 	Teddm3 
+
+>Ivy and MGE-derived neurogliaform cells cortex/hippocampus
+expressed: Lhx6 
+subtype of: Telencephalon inhibitory interneurons
+
+>Axo-axonic cortex/hippocampus
+subtype of: Telencephalon inhibitory interneurons
+expressed: 	Pthlh
+
+>Basket and bistratified cells cortex/hippocampus
+subtype of: Telencephalon inhibitory interneurons
+expressed: Cort 
+
+>Hippocamposeptal projection cortex/hippocampus
+subtype of: Telencephalon inhibitory interneurons
+expressed: 	Ccna1 
+
+>Inhibitory interneurons hippocampus
+subtype of: Telencephalon inhibitory interneurons
+expressed: 	Cyp26b1 
+
+>Sleep-active long-range projection interneurons cortex/hippocampus
+subtype of: Telencephalon inhibitory interneurons
+expressed: 	Crhbp, Tacr1 
+
+>Interneuron-selective interneurons cortex/hippocampus
+subtype of: Telencephalon inhibitory interneurons
+expressed: Ccne1, Cxcl14 
+
+>Telencephalon projecting neurons
+subtype of: Neurons
+expressed: Bhlhe22
+
+>Dentate gyrus granule neurons
+subtype of: Telencephalon projecting neurons
+expressed: Bhlhe22 
+
+>Granule neuroblasts dentate gyrus dent
+subtype of: Dentate gyrus granule neurons
+expressed: Bhlhe22 
+
+>Granule neurons dentate gyrus
+subtype of: Dentate gyrus granule neurons
+expressed: 	C1ql2, Nr3c2
+
+>Telencephalon projecting excitatory neurons
+subtype of: Telencephalon projecting neurons
+expressed: 	Myl4 
+
+>Excitatory neurons cerebral cortex
+subtype of: Telencephalon projecting excitatory neurons
+expressed: 	Myl4, Vipr1, Gm32647, Trim54, Rgs14, Fezf2, Gm19410, Fermt1, A830009L08Rik, Krt12 
+
+>Excitatory neurons amygdala
+subtype of: Telencephalon projecting excitatory neurons
+expressed: 	Prss23 
+
+>Excitatory neurons hippocampus CA3
+subtype of: Telencephalon projecting excitatory neurons
+expressed: 	Gm26644 
+
+>Excitatory neurons hippocampus CA1
+subtype of: Telencephalon projecting excitatory neurons
+expressed: Lefty1 
+
+>Telencephalon projecting inhibitory neurons
+subtype of: Telencephalon projecting neurons
+expressed: 	Drd1, Ido1
+
+>D2 medium spiny neurons striatum
+subtype of: Telencephalon projecting inhibitory neurons
+expressed: 	Adora2a, Gpr83 
+
+>D1 medium spiny neurons striatum
+subtype of: Telencephalon projecting inhibitory neurons
+expressed:  Ppp1r1b, Dclk3, Mhrt 
+
+>Patch D1/D2 neurons striatum
+subtype of: Telencephalon projecting inhibitory neurons
+expressed: Lrpprc
+
+>Matrix D1 neurons striatum
+subtype of: Telencephalon projecting inhibitory neurons
+expressed: Wnt2 
+
+>Enteric neurons
+subtype of: Neurons
+expressed: Tmem255b
+
+>Nitrergic enteric neurons
+subtype of: Enteric neurons
+expressed: Tmem255b, Bglap, Anxa11 
+
+>Cholinergic enteric neurons
+subtype of: Enteric neurons
+expressed: Htr2b, Tm4sf4, ND3, Cckar, P2rx2, Hspb7, Krt19 
+
+>Peripheral sensory neurons
+subtype of: Neurons
+expressed: Gm7271
+
+>Peripheral sensory neurofilament neurons
+subtype of: Peripheral sensory neurons
+expressed: Ppm1j, Tbx3os2, Palm3, Trappc3l 
+
+>Peripheral sensory non-peptidergic neurons
+subtype of: Peripheral sensory neurons
+expressed: Fam19a4, Tlx3, Gm7271, Mrgprd, Otoa, Mrgpra3, Cpb1, Isl2, Nppb, Tmem233, Il31ra
+
+>Peripheral sensory peptidergic neurons
+subtype of: Peripheral sensory neurons
+expressed: Gm13582, Ptgir, Trpv1, Prdm12, Asic3, Traf3ip3, Fam169b, Slc34a2 
+
+>Sympathetic neurons
+subtype of: Neurons
+expressed: Hand1
+
+>Sympathetic cholinergic neurons
+subtype of: Sympathetic neurons
+expressed: C1qtnf7, Slc18a3 
+
+>Sympathetic noradrenergic neurons 
+subtype of: Sympathetic neurons
+expressed: Ntrk1, Dbh,  Hand1, Slc6a2, Sctr 
+
+>Immune cells
+expressed: P2ry12
+
+>Microglia
+subtype of: Immune cells
+expressed: P2ry12, Ccr6, Tmem119, Casp8, Ccl4, Tnf
+
+>Perivascular macrophages
+subtype of: Immune cells
+expressed: Pf4, Cxcl2
+
+>Vascular cells
+expressed: Higd1b, Ecscr
+
+>Pericytes
+subtype of: Vascular cells
+expressed: 	Higd1b, Degs2, Tbxa2r, Cd93 
+
+>Vascular leptomeningeal cells
+subtype of: Vascular cells
+expressed: 	Slc47a1, Dapl1, Fam180a, Slc6a13
+
+>Vascular endothelial cells
+subtype of: Vascular cells
+expressed: 	Ly6c1, Scgb3a1 
+
+>Vascular smooth muscle cells
+subtype of: Vascular cells
+expressed: Acta2, Mustn1
+
+>CNS glia
+expressed: Gdf10
+
+>Astroependymal cells
+subtype of: CNS glia
+expressed: Gdf10
+
+>Astrocytes
+subtype of: Astroependymal cells  
+expressed: Timp4, Gfap, Slc6a11, Fam107a
+
+>Bergmann Glia
+expressed: Gdf10
+subtype of: Astrocytes
+
+>Dorsal midbrain Myoc-expressing astrocyte-like
+expressed: Myoc
+subtype of: Astrocytes
+
+>Non-telencephalon astrocytes
+expressed: Slc7a10, Agt, Apoc1 
+subtype of: Astrocytes
+
+>Olfactory astrocytes
+expressed: Islr
+subtype of: Astrocytes
+
+>Telencephalon astrocytes
+expressed: Cbs, Ppp1r3g 
+subtype of: Astrocytes
+
+>Choroid epithelial cells
+expressed: Folr1, Clic6 
+subtype of: Astroependymal cells
+
+>Dentate gyrus radial glia-like cells
+expressed: E330013P04Rik
+subtype of: Astroependymal cells
+
+>Ependymal cells
+expressed: Ccdc153, Tnnt3, Cfap126, 1500015O10Rik, Slc26a3
+subtype of: Astroependymal cells
+
+>Subcommissural organ hypendymal cells
+expressed: Spp2, Sspo
+subtype of: Astroependymal cells
+
+>Subventricular zone radial glia-like cells
+expressed: 2810459M11Rik, Gm14964
+subtype of: Astroependymal cells
+
+>Oligodendrocytes
+subtype of: CNS glia
+expressed: Neu4
+
+>Committed oligodendrocytes cells
+expressed: Neu4, Brca1
+subtype of: Oligodendrocytes
+
+>Myelin forming oligodendrocytes 
+expressed: 	Snx33, 	2210011C24Rik, Wfdc18
+subtype of: Oligodendrocytes
+
+>Mature oligodendrocytes
+expressed: 	Opalin, Ninj2, 	Hapln2, Dock5, 	Klk6, Nkx2-9
+subtype of: Oligodendrocytes
+
+>Newly formed oligodendrocytes
+expressed: 	Cnksr3, Cemip2, Gm26834 
+subtype of: Oligodendrocytes
+
+>Neural crest-like glia
+expressed: Dpt
+
+>Enteric mesothelial fibroblasts
+expressed: Dpt, Spon2 
+subtype of: Neural crest-like glia
+
+>Enteric glia
+expressed: Hist1h2ap, Casp4, Tax1bp3, Fam198b, 4930589L23Rik, Olfml2a, Lbp, H2-Q7, Col12a1 
+subtype of: Neural crest-like glia
+
+>Olfactory ensheathing cells
+expressed: Prss56, Mgst1
+subtype of: Neural crest-like glia
+
+>Oligodendrocytes precursor cells
+expressed: Pdgfra
+subtype of: Neural crest-like glia
+
+>Satellite glia
+expressed: Cdc20, Fbln2, Catsperz
+subtype of: Neural crest-like glia
+
+>Schwann cells
+expressed: Ncmap
+subtype of: Neural crest-like glia
+
+
+
+
+
+
+
