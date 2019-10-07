@@ -105,8 +105,20 @@ test_classifier <- train_cell_classifier(cds = test_cds,
                                          cds_gene_id_type = "SYMBOL",
                                          num_unknown = 50,
                                          marker_file_gene_id_type = "SYMBOL")
-
 test_that("training works with symbol ids", {
+  expect_is(test_classifier, "garnett_classifier")
+  expect_equal(length(test_classifier@classification_tree), 10)
+})
+
+set.seed(260)
+test_classifier2 <- train_cell_classifier(cds = test_cds,
+                                         marker_file = "../pbmc_test_dos.txt",
+                                         db=org.Hs.eg.db,
+                                         min_observations = 10,
+                                         cds_gene_id_type = "SYMBOL",
+                                         num_unknown = 50,
+                                         marker_file_gene_id_type = "SYMBOL")
+test_that("training works with carriage return", {
   expect_is(test_classifier, "garnett_classifier")
   expect_equal(length(test_classifier@classification_tree), 10)
 })

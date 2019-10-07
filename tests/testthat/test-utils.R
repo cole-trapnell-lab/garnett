@@ -81,6 +81,12 @@ marker_check <- check_markers(test_cds,
                               cds_gene_id_type = "SYMBOL",
                               marker_file_gene_id_type = "SYMBOL")
 
+marker_check_dos <- check_markers(test_cds,
+                              "../pbmc_test_dos.txt",
+                              db=org.Hs.eg.db,
+                              cds_gene_id_type = "SYMBOL",
+                              marker_file_gene_id_type = "SYMBOL")
+
 marker_check2 <- check_markers(test_cds, use_tf_idf = F,
                               "../pbmc_1mark.txt",
                               db=org.Hs.eg.db,
@@ -88,6 +94,7 @@ marker_check2 <- check_markers(test_cds, use_tf_idf = F,
                               marker_file_gene_id_type = "SYMBOL")
 
 test_that("check_markers works", {
+  expect_identical(marker_check, marker_check_dos)
   expect_equal(sum(marker_check$marker_score), 414.1387, tol = 1e-4)
   expect_equal(nrow(marker_check), 18)
   expect_equal(sum(marker_check$summary != "Ok"), 3)
