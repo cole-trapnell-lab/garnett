@@ -12,9 +12,9 @@ Lexer <- R6::R6Class(
       '[a-zA-Z0-9_+/\\-\\.|=`~\\*&<^%?@!$;:]*[a-zA-Z][a-zA-Z0-9_+/\\-\\.|=`~\\*&<^%?@!$;]*',
     t_NUM = '([0-9]*\\.[0-9]+)|([0-9]+)',
     t_ignore = " \t",
-    t_NEWLINE = "\n",
+    t_NEWLINE = "\n|\r\n",
     t_error = function(t) {
-      cat(sprintf("Marker file error. Illegal character '%s'\n", t$value[1]))
+      cat(sprintf(" Marker file error. Illegal character '%s'\n", t$value[1]))
       t$lexer$skip(1)
       return(t)
     }
