@@ -92,6 +92,13 @@ get_feature_genes <- function(classifier,
                               db=NULL) {
   assertthat::assert_that(is(classifier, "garnett_classifier"))
   assertthat::assert_that(is.character(node))
+  assertthat::assert_that(node %in% get_internal(classifier),
+                          msg = paste0("Parameter 'node' must be an internal ",
+                                       "(parent) node of the classifier tree. ",
+                                       "For this classifier, only: '",
+                                       paste(get_internal(classifier),
+                                             collapse = "', '"),
+                                       "' nodes are internal."))
   assertthat::assert_that(is.logical(convert_ids))
   if (convert_ids) {
     if (is.null(db)) stop("If convert_ids = TRUE, db must be provided.")
@@ -105,14 +112,14 @@ get_feature_genes <- function(classifier,
   }
   s = "lambda.min"
   cvfit <- igraph::V(classifier@classification_tree)[node]$model
-  feature_genes = stats::coef(cvfit[[1]], s = s)
+  feature_genes <- glmnet::coef.cv.glmnet(cvfit[[1]], s = s)
 
   all <- as.data.frame(as.matrix(do.call("cbind", feature_genes)))
   names(all) <- names(feature_genes)
   zeroes <- all != 0
   all <- all[rowSums(zeroes) > 0,]
 
-  if (.hasSlot(classifier, "gene_id_type")) {
+  if (methods::.hasSlot(classifier, "gene_id_type")) {
     classifier_gene_id_type <- classifier@gene_id_type
   } else {
     classifier_gene_id_type <- "ENSEMBL"
@@ -644,5 +651,15 @@ plot_markers <- function(marker_check_df,
       stringr::str_split_fixed(x, ">", 2)[,1]
     })
 
+}
+
+get_leaves <- function(classifier) {
+  gr <- classifier@classification_tree
+  names(igraph::V(gr)[sapply(igraph::V(gr), function(x) length(igraph::neighbors(gr,x))==0 )])
+}
+
+get_internal <- function(classifier) {
+  gr <- classifier@classification_tree
+  names(igraph::V(gr)[!sapply(igraph::V(gr), function(x) length(igraph::neighbors(gr,x))==0 )])
 }
 

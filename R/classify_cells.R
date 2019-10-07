@@ -131,7 +131,7 @@ classify_cells <- function(cds,
   norm_cds <- suppressWarnings(newCellDataSet(temp,
                              phenoData = pd, featureData = fd))
 
-  if (.hasSlot(classifier, "gene_id_type")) {
+  if (methods::.hasSlot(classifier, "gene_id_type")) {
     classifier_gene_id_type <- classifier@gene_id_type
   } else {
     classifier_gene_id_type <- "ENSEMBL"
