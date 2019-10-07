@@ -31,6 +31,16 @@
 #'  \code{cluster_extend = TRUE}, the function can be significantly slower the
 #'  first time it is run. See details for more information.
 #' @param verbose Logical. Should progress messages be printed.
+#' @param cluster_extend_max_frac_unknown Numeric between 0 and 1. The maximum
+#'   fraction of a cluster allowed to be classified as 'Unknown' and still
+#'   extend classifications to the cluster. Only used when
+#'   \code{cluster_extend = TRUE}. Default is 0.95. See details.
+#' @param cluster_extend_max_frac_incorrect Numeric between 0 and 1. The
+#'   maximum fraction of classified cells in a cluster allowed to be
+#'   incorrectly classified (i.e. assigned to a non-dominant type) and still
+#'   extend classifications to the cluster. Fraction does not include 'Unknown'
+#'   cells. Only used when \code{cluster_extend = TRUE}. Default is 0.1. See
+#'   details.
 #'
 #' @details This function applies a previously trained multinomial glmnet
 #'  classifier at each node of a previously defined garnett_classifier tree.
@@ -38,8 +48,9 @@
 #'  colData table.
 #'
 #'  When \code{cluster_extend = TRUE}, louvain communities are calculated in
-#'  PCA space. Any cluster where >90% of classified cells are of a single type,
-#'  >5% of cells are classified, and a minimum of 5 cells are classified will
+#'  PCA space. Any cluster where >\code{cluster_extend_max_frac_unknown},
+#'  (default 90%) of classified cells are of a single type,
+#'  >\code{1 - cluster_extend_max_frac_unknown} (default 5%) of cells are classified, and a minimum of 5 cells are classified will
 #'  be assigned that cluster-extended type. Both cluster-extended type and
 #'  originally calculated cell type are reported.
 #'
@@ -64,7 +75,9 @@ classify_cells <- function(cds,
                            cds_gene_id_type = "ENSEMBL",
                            rank_prob_ratio = 1.5,
                            cluster_extend = FALSE,
-                           verbose = FALSE) {
+                           verbose = FALSE,
+                           cluster_extend_max_frac_unknown = 0.95,
+                           cluster_extend_max_frac_incorrect = 0.1) {
   if(verbose) message("Starting classification")
   ##### Check inputs #####
   if(verbose) message("Checking inputs")
@@ -179,9 +192,12 @@ classify_cells <- function(cds,
   class_df <- run_classifier(classifier, norm_cds,
                              cluster_extend = cluster_extend,
                              s=s,
-                             rank_prob_ratio = rank_prob_ratio)
+                             rank_prob_ratio = rank_prob_ratio,
+                             cluster_extend_max_frac_unknown = cluster_extend_max_frac_unknown,
+                             cluster_extend_max_frac_incorrect = cluster_extend_max_frac_incorrect)
   if(!is.null(excluded_cells)) {
-    ext <- matrix(ncol=ncol(class_df), nrow = length(excluded_cells), dimnames = list(excluded_cells))
+    ext <- matrix(ncol=ncol(class_df), nrow = length(excluded_cells),
+                  dimnames = list(excluded_cells))
     colnames(ext) <- colnames(class_df)
     class_df <- rbind(class_df, ext)
     class_df <- class_df[row.names(colData(cds)),]
@@ -201,7 +217,9 @@ run_classifier <- function(classifier,
                            cds,
                            cluster_extend,
                            rank_prob_ratio,
-                           s) {
+                           s,
+                           cluster_extend_max_frac_unknown,
+                           cluster_extend_max_frac_incorrect) {
 
   imputed_gate_res <- list()
 
@@ -289,8 +307,9 @@ run_classifier <- function(classifier,
         if(nrow(freqs) == 1) next
         freqs <- freqs[freqs$Var1 != "Unknown",]
         putative_type <- as.character(freqs$Var1[which.max(freqs$Freq)])
-        if (freqs$Freq[freqs$Var1 == putative_type]/sum(freqs$Freq) > .9 &
-            num_unk/(sum(freqs$Freq) + num_unk) < .95 &
+        if (freqs$Freq[freqs$Var1 == putative_type]/sum(freqs$Freq) >
+            (1 - cluster_extend_max_frac_incorrect) &
+            num_unk/(sum(freqs$Freq) + num_unk) < cluster_extend_max_frac_unknown &
             freqs$Freq[freqs$Var1 == putative_type] > 5) {
           community_assign[["assign"]][
             community_assign[["cluster"]] == clust] <- putative_type
