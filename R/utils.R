@@ -38,8 +38,16 @@ convert_gene_ids <- function(gene_list,
                              db,
                              start_type,
                              end_type) {
-  suppressMessages(AnnotationDbi::mapIds(db, keys = gene_list,
-                                         column = end_type, start_type))
+
+  tryCatch({suppressMessages(AnnotationDbi::mapIds(db, keys = gene_list,
+                                         column = end_type, start_type))},
+           error = function(e) {
+             msg <- paste0("Garnett cannot convert the gene IDs using the ",
+                         "db and types provided. Please check that your db, ",
+                         "cds_gene_id_type and marker_file_gene_id_type ",
+                         "parameters are correct. Conversion error: ", e)
+             stop(msg)
+           })
 }
 
 
