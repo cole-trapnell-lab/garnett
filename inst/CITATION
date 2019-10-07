@@ -1,6 +1,6 @@
 citEntry(entry="article",
          title = "Supervised classification enables rapid annotation of cell atlases",
-         journal = "bioRxiv",
+         journal = "Nature Methods",
          year = 2019,
          author = personList( as.person("Hannah A. Pliner"),
                               as.person("Jay Shendure"),
@@ -8,4 +8,4 @@ citEntry(entry="article",
          textVersion =
            paste("Hannah A. Pliner, Jay Shendure & Cole Trapnell (2019).",
            "Supervised classification enables rapid annotation of cell atlases.",
-           "bioRxiv" ) )
+           "Nature Methods" ) )
