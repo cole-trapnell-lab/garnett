@@ -5,7 +5,9 @@
 \title{Classify cells from trained garnett_classifier}
 \usage{
 classify_cells(cds, classifier, db, cds_gene_id_type = "ENSEMBL",
-  rank_prob_ratio = 1.5, cluster_extend = FALSE, verbose = FALSE)
+  rank_prob_ratio = 1.5, cluster_extend = FALSE, verbose = FALSE,
+  cluster_extend_max_frac_unknown = 0.95,
+  cluster_extend_max_frac_incorrect = 0.1)
 }
 \arguments{
 \item{cds}{Input CDS object.}
@@ -41,6 +43,18 @@ datasets, if the "garnett_cluster" column is not provided and
 first time it is run. See details for more information.}
 
 \item{verbose}{Logical. Should progress messages be printed.}
+
+\item{cluster_extend_max_frac_unknown}{Numeric between 0 and 1. The maximum
+fraction of a cluster allowed to be classified as 'Unknown' and still
+extend classifications to the cluster. Only used when
+\code{cluster_extend = TRUE}. Default is 0.95. See details.}
+
+\item{cluster_extend_max_frac_incorrect}{Numeric between 0 and 1. The
+maximum fraction of classified cells in a cluster allowed to be
+incorrectly classified (i.e. assigned to a non-dominant type) and still
+extend classifications to the cluster. Fraction does not include 'Unknown'
+cells. Only used when \code{cluster_extend = TRUE}. Default is 0.1. See
+details.}
 }
 \value{
 CDS object with classifications in the \code{colData} table.
@@ -57,8 +71,9 @@ This function applies a previously trained multinomial glmnet
  colData table.
 
  When \code{cluster_extend = TRUE}, louvain communities are calculated in
- PCA space. Any cluster where >90% of classified cells are of a single type,
- >5% of cells are classified, and a minimum of 5 cells are classified will
+ PCA space. Any cluster where >\code{cluster_extend_max_frac_unknown},
+ (default 90%) of classified cells are of a single type,
+ >\code{1 - cluster_extend_max_frac_unknown} (default 5%) of cells are classified, and a minimum of 5 cells are classified will
  be assigned that cluster-extended type. Both cluster-extended type and
  originally calculated cell type are reported.
 }
