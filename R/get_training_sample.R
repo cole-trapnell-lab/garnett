@@ -128,7 +128,7 @@ assign_type <- function(total_vals,
                         training_cutoff) {
   cutoffs <- apply(total_vals, 2, stats::quantile, probs = training_cutoff)
 
-  q <- as.data.frame(total_vals > cutoffs)
+  q <- as.data.frame(t(t(total_vals) > cutoffs))
   q$total <- rowSums(q)
   q$assign <- sapply(q$total, function(x) {
     if (x == 0) {

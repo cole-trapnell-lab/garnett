@@ -1,7 +1,7 @@
 Package: garnett
 Type: Package
 Title: Automated cell type classification
-Version: 0.2.4
+Version: 0.2.5
 Author: c(
     person("Hannah", "Pliner", email = "hpliner@uw.edu", role = c("aut", "cre")), 
     person("Cole", "Trapnell", email = "coletrap@uw.edu", role = c("aut")))
