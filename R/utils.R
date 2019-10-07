@@ -45,7 +45,10 @@ convert_gene_ids <- function(gene_list,
              msg <- paste0("Garnett cannot convert the gene IDs using the ",
                          "db and types provided. Please check that your db, ",
                          "cds_gene_id_type and marker_file_gene_id_type ",
-                         "parameters are correct. Conversion error: ", e)
+                         "parameters are correct. Please note that the ", "
+                         cds_gene_id_type refers to the type of the ",
+                         "row.names of the feature (gene) table in your cds. ",
+                         "Conversion error: ", e)
              stop(msg)
            })
 }
