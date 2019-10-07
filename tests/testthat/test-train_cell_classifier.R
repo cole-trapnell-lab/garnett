@@ -7,6 +7,17 @@ parse_list <- garnett:::parse_input(file_str)
 name_order <- unlist(parse_list[["name_order"]])
 rm("name_order", envir=parse_list)
 
+test_that("error message for convert ids works",{
+  expect_error(garnett:::make_name_map(parse_list,
+                                       c("App", "Itga2", "Ncam1", "Lyve1",
+                                         "Tek", "Ncam3", "Kdr", "Ramp2",
+                                         "Flt1", "App2", "Itga1", "Itga2",
+                                         "Itga3"),
+                                       "SYMBOL",
+                                       "ENSEMBL",
+                                       org.Mm.eg.db))
+                 })
+
 # Check gene names and keywords
 gene_table <- garnett:::make_name_map(parse_list,
                             c("App", "Itga2", "Ncam1", "Lyve1", "Tek", "Ncam3",
