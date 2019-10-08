@@ -43,5 +43,5 @@ test_classifier <- train_cell_classifier(cds = test_cds,
 test_that("get_training_sample follows rules", {
   expect_equal(
     igraph::V(test_classifier@classification_tree)[1]$model[[1]]$glmnet.fit$nobs,
-    282)
+    297)
 })
