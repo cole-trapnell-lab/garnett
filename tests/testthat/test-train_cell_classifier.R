@@ -122,3 +122,5 @@ test_that("training works with carriage return", {
   expect_is(test_classifier, "garnett_classifier")
   expect_equal(length(test_classifier@classification_tree), 10)
 })
+
+
