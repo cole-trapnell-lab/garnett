@@ -1,0 +1,7 @@
+>test cell 1
+expressed: hannah
+references: website1.htm, website2.htm
+
+>test cell 2
+tissue: liver
+subtype of: test cell 2 # subtype of itself

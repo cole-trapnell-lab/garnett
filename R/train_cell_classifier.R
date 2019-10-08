@@ -200,6 +200,12 @@ train_cell_classifier <- function(cds,
     stop(paste("Subtype", unlist(unique(ranks[which(!ranks %in% names(ranks) & lengths(ranks) != 0L)])), "is not defined in marker file."))
   }
 
+  if(any(names(ranks) == ranks)) {
+    bad <- ranks[names(ranks) == ranks]
+    stop(paste0("'", bad,
+                "' cannot be a subtype of itself. Please modify marker file."))
+  }
+
   name_order <- names(ranks[lengths(ranks) == 0L])
   ranks <- ranks[!names(ranks) %in% name_order]
   while(length(ranks) != 0) {
