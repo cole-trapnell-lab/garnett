@@ -42,6 +42,12 @@
 #' @param classifier_gene_id_type The type of gene ID that will be used in the
 #'  classifier. If possible for your organism, this should be "ENSEMBL", which
 #'  is the default. Ignored if db = "none".
+#' @param return_initial_assign Logical indicating whether an initial
+#'  assignment data frame for the root level should be returned instead of a
+#'  classifier. This can be useful while choosing/debugging markers. Please
+#'  note that this means that a classifier will not be built, so you will not
+#'  be able to move on to the next steps of the workflow until you rerun the
+#'  functionwith \code{return_initial_assign = FALSE}. Default is \code{FALSE}.
 #'
 #' @details This function has three major parts: 1) parsing the marker file 2)
 #'  choosing cell representatives and 3) training the classifier. Details on
@@ -101,7 +107,8 @@ train_cell_classifier <- function(cds,
                                   propogate_markers = TRUE,
                                   cores=1,
                                   lambdas = NULL,
-                                  classifier_gene_id_type = "ENSEMBL") {
+                                  classifier_gene_id_type = "ENSEMBL",
+                                  return_initial_assign = FALSE) {
 
   ##### Check inputs #####
   assertthat::assert_that(is(cds, "CellDataSet"))
@@ -327,7 +334,12 @@ train_cell_classifier <- function(cds,
                                              num_unknown,
                                              back_cutoff,
                                              training_cutoff,
-                                             marker_scores)
+                                             marker_scores,
+                                             return_initial_assign)
+
+      if(return_initial_assign) {
+        return(training_sample)
+      }
 
       if (length(training_sample) > 0 & sum(training_sample != "Unknown") > 0) {
         # exclude useless genes
