@@ -20,9 +20,9 @@ test_cds <- garnett::classify_cells(test_cds, test_classifier,
 
 test_that("whole process is the same", {
   expect_equal(sum(pData(test_cds)$cell_type == "B cells"), 216)
-  expect_equal(sum(pData(test_cds)$cell_type == "CD4 T cells"), 99)
-  expect_equal(sum(pData(test_cds)$cell_type == "CD8 T cells"), 55)
-  expect_equal(sum(pData(test_cds)$cell_type == "T cells"), 129)
+  expect_equal(sum(pData(test_cds)$cell_type == "CD4 T cells"), 102)
+  expect_equal(sum(pData(test_cds)$cell_type == "CD8 T cells"), 56)
+  expect_equal(sum(pData(test_cds)$cell_type == "T cells"), 125)
   expect_equal(sum(pData(test_cds)$cluster_ext_type == "B cells"), 402)
   expect_equal(sum(pData(test_cds)$cluster_ext_type == "CD4 T cells"), 203)
   expect_equal(sum(pData(test_cds)$cluster_ext_type == "T cells"), 195)
@@ -54,9 +54,9 @@ test_cds <- garnett::classify_cells(test_cds, test_classifier,
 
 test_that("whole process is the same matrix", {
   expect_equal(sum(pData(test_cds)$cell_type == "B cells"), 216)
-  expect_equal(sum(pData(test_cds)$cell_type == "CD4 T cells"), 99)
-  expect_equal(sum(pData(test_cds)$cell_type == "CD8 T cells"), 55)
-  expect_equal(sum(pData(test_cds)$cell_type == "T cells"), 129)
+  expect_equal(sum(pData(test_cds)$cell_type == "CD4 T cells"), 102)
+  expect_equal(sum(pData(test_cds)$cell_type == "CD8 T cells"), 56)
+  expect_equal(sum(pData(test_cds)$cell_type == "T cells"), 125)
   expect_equal(sum(pData(test_cds)$cluster_ext_type == "B cells"), 402)
   expect_equal(sum(pData(test_cds)$cluster_ext_type == "CD4 T cells"), 203)
   expect_equal(sum(pData(test_cds)$cluster_ext_type == "T cells"), 195)
@@ -82,9 +82,9 @@ test_cds <- garnett::classify_cells(test_cds, test_classifier,
 
 test_that("whole process is the same multi-core", {
   expect_equal(sum(pData(test_cds)$cell_type == "B cells"), 216)
-  expect_equal(sum(pData(test_cds)$cell_type == "CD4 T cells"), 99)
-  expect_equal(sum(pData(test_cds)$cell_type == "CD8 T cells"), 55)
-  expect_equal(sum(pData(test_cds)$cell_type == "T cells"), 129)
+  expect_equal(sum(pData(test_cds)$cell_type == "CD4 T cells"), 102)
+  expect_equal(sum(pData(test_cds)$cell_type == "CD8 T cells"), 56)
+  expect_equal(sum(pData(test_cds)$cell_type == "T cells"), 125)
   expect_equal(sum(pData(test_cds)$cluster_ext_type == "B cells"), 402)
   expect_equal(sum(pData(test_cds)$cluster_ext_type == "CD4 T cells"), 203)
   expect_equal(sum(pData(test_cds)$cluster_ext_type == "T cells"), 195)
