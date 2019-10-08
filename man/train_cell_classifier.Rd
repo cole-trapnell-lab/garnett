@@ -8,7 +8,7 @@ train_cell_classifier(cds, marker_file, db, cds_gene_id_type = "ENSEMBL",
   marker_file_gene_id_type = "SYMBOL", min_observations = 8,
   max_training_samples = 500, num_unknown = 500,
   propogate_markers = TRUE, cores = 1, lambdas = NULL,
-  classifier_gene_id_type = "ENSEMBL")
+  classifier_gene_id_type = "ENSEMBL", return_initial_assign = FALSE)
 }
 \arguments{
 \item{cds}{Input CDS object.}
@@ -57,6 +57,13 @@ preset lambda values are used.}
 \item{classifier_gene_id_type}{The type of gene ID that will be used in the
 classifier. If possible for your organism, this should be "ENSEMBL", which
 is the default. Ignored if db = "none".}
+
+\item{return_initial_assign}{Logical indicating whether an initial
+assignment data frame for the root level should be returned instead of a
+classifier. This can be useful while choosing/debugging markers. Please
+note that this means that a classifier will not be built, so you will not
+be able to move on to the next steps of the workflow until you rerun the
+functionwith \code{return_initial_assign = FALSE}. Default is \code{FALSE}.}
 }
 \description{
 This function takes single-cell expression data in the form of a CDS object

@@ -10,7 +10,8 @@ get_training_sample <- function(cds,
                                 num_unknown,
                                 back_cutoff,
                                 training_cutoff,
-                                marker_scores) {
+                                marker_scores,
+                                return_initial_assign) {
 
   ##### Find type assignment from expressed/not expressed #####
 
@@ -25,7 +26,10 @@ get_training_sample <- function(cds,
     assigns <- assign_type(marker_scores[,intersect(child_cell_types,
                                                     colnames(marker_scores)),
                                          drop=FALSE],
-                           training_cutoff)
+                           training_cutoff, return_initial_assign)
+    if(return_initial_assign) {
+      return(assigns)
+    }
   }
 
   assigns <- as.data.frame(assigns)
@@ -125,7 +129,8 @@ get_training_sample <- function(cds,
 
 
 assign_type <- function(total_vals,
-                        training_cutoff) {
+                        training_cutoff,
+                        return_initial_assign) {
   cutoffs <- apply(total_vals, 2, stats::quantile, probs = training_cutoff)
 
   q <- as.data.frame(t(t(total_vals) > cutoffs))
@@ -141,6 +146,19 @@ assign_type <- function(total_vals,
     out
   })
   q$cell <- row.names(total_vals)
+  if (return_initial_assign) {
+    q$total <- NULL
+    types <- colnames(total_vals)
+    q$Assignment <- "None"
+    for(type in types) {
+      q$Assignment[q[,type]] <- type
+    }
+    q$Assignment[q$assign == "Ambiguous"] <- "Ambiguous"
+    q$cell <- NULL
+    q$assign <- NULL
+    return(q)
+  }
+
   out <- q[q$assign != "Assign",]$assign
   names(out) <- q[q$assign != "Assign",]$cell
   sub <- q[q$assign == "Assign",]
