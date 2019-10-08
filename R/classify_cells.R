@@ -132,6 +132,15 @@ classify_cells <- function(cds,
   pData(cds)$num_genes_expressed <- Matrix::colSums(as(exprs(cds),
                                                        "lgCMatrix"))
   new_cell_totals <- Matrix::colSums(exprs(cds))
+
+  excluded_cells <- NULL
+  if(sum(new_cell_totals == 0) != 0) {
+    warning(paste0(sum(new_cell_totals == 0), " cells in cds have no reads. These cells will be excluded from classification."))
+    excluded_cells <- names(new_cell_totals == 0)
+    cds <- cds[,new_cell_totals != 0]
+    new_cell_totals <- new_cell_totals[new_cell_totals != 0]
+  }
+
   sfs <- new_cell_totals/(classifier@cell_totals *
                             stats::median(pData(cds)$num_genes_expressed))
   sfs[is.na(sfs)] <- 1
