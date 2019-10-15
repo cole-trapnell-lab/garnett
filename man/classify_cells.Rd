@@ -7,7 +7,7 @@
 classify_cells(cds, classifier, db, cds_gene_id_type = "ENSEMBL",
   rank_prob_ratio = 1.5, cluster_extend = FALSE, verbose = FALSE,
   cluster_extend_max_frac_unknown = 0.95,
-  cluster_extend_max_frac_incorrect = 0.1)
+  cluster_extend_max_frac_incorrect = 0.1, return_type_levels = FALSE)
 }
 \arguments{
 \item{cds}{Input CDS object.}
@@ -55,6 +55,11 @@ incorrectly classified (i.e. assigned to a non-dominant type) and still
 extend classifications to the cluster. Fraction does not include 'Unknown'
 cells. Only used when \code{cluster_extend = TRUE}. Default is 0.1. See
 details.}
+
+\item{return_type_levels}{Logical. When \code{TRUE}, the function additionally
+appends assignments from each hierarchical level in the classifier as columns
+in the pData table labeled \code{cell_type_li}, where "i" indicates the 
+corresponding level index}
 }
 \value{
 CDS object with classifications in the \code{pData} table.

@@ -41,6 +41,10 @@
 #'   extend classifications to the cluster. Fraction does not include 'Unknown'
 #'   cells. Only used when \code{cluster_extend = TRUE}. Default is 0.1. See
 #'   details.
+#' @param return_type_levels Logical. When \code{TRUE}, the function additionally
+#'   appends assignments from each hierarchical level in the classifier as columns
+#'   in the pData table labeled \code{cell_type_li}, where "i" indicates the 
+#'   corresponding level index
 #'
 #' @details This function applies a previously trained multinomial glmnet
 #'  classifier at each node of a previously defined garnett_classifier tree.
@@ -77,7 +81,8 @@ classify_cells <- function(cds,
                            cluster_extend = FALSE,
                            verbose = FALSE,
                            cluster_extend_max_frac_unknown = 0.95,
-                           cluster_extend_max_frac_incorrect = 0.1) {
+                           cluster_extend_max_frac_incorrect = 0.1,
+                           return_type_levels = FALSE) {
   if(verbose) message("Starting classification")
   ##### Check inputs #####
   if(verbose) message("Checking inputs")
@@ -110,6 +115,7 @@ classify_cells <- function(cds,
                           msg = "rank_prob_ratio must be greater than 1")
   assertthat::assert_that(is.logical(cluster_extend))
   assertthat::assert_that(is.logical(verbose))
+  assertthat::assert_that(is.logical(return_type_levels))
 
   ##### Set internal parameters #####
   s <- "lambda.min"
@@ -194,7 +200,8 @@ classify_cells <- function(cds,
                              s=s,
                              rank_prob_ratio = rank_prob_ratio,
                              cluster_extend_max_frac_unknown = cluster_extend_max_frac_unknown,
-                             cluster_extend_max_frac_incorrect = cluster_extend_max_frac_incorrect)
+                             cluster_extend_max_frac_incorrect = cluster_extend_max_frac_incorrect,
+                             return_type_levels = return_type_levels)
   if(!is.null(excluded_cells)) {
     ext <- matrix(ncol=ncol(class_df), nrow = length(excluded_cells),
                   dimnames = list(excluded_cells))
@@ -219,7 +226,8 @@ run_classifier <- function(classifier,
                            rank_prob_ratio,
                            s,
                            cluster_extend_max_frac_unknown,
-                           cluster_extend_max_frac_incorrect) {
+                           cluster_extend_max_frac_incorrect,
+                           return_type_levels) {
 
   imputed_gate_res <- list()
 
@@ -324,6 +332,16 @@ run_classifier <- function(classifier,
     cell_type$cell_type <- as.character(cell_type$cell_type)
     cell_type$cluster_ext_type[cell_type$cluster_ext_type == "Unknown"] <-
       cell_type$cell_type[cell_type$cluster_ext_type == "Unknown"]
+  }
+
+  if (return_type_levels) {
+    level_table <- level_table[, grep("level", colnames(level_table))]
+    for(col in 2:ncol(level_table)) {
+      unknown_mask <- (level_table[[col]] == "Unknown")
+      level_table[[col]][unknown_mask] <- level_table[[col - 1]][unknown_mask]
+    }
+
+    cell_type[gsub("level", "cell_type_l", colnames(level_table))] <- level_table
   }
 
   return(cell_type)
