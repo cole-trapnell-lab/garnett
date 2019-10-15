@@ -43,7 +43,7 @@
 #'   details.
 #' @param return_type_levels Logical. When \code{TRUE}, the function additionally
 #'   appends assignments from each hierarchical level in the classifier as columns
-#'   in the pData table labeled \code{cell_type_li}, where "i" indicates the 
+#'   in the pData table labeled \code{cell_type_li}, where "i" indicates the
 #'   corresponding level index
 #'
 #' @details This function applies a previously trained multinomial glmnet
@@ -279,9 +279,13 @@ run_classifier <- function(classifier,
           type_res <- type_res[[1]]
         }
 
-        curr_assignments[Matrix::which(type_res == TRUE)] <- cell_type
+        new_assignment_mask <- type_res == 1
+        if (length(parents) > 1) {
+          new_assignment_mask <- new_assignment_mask & (curr_assignments == parents[[length(parents) - 1]])
+        }
+        curr_assignments[Matrix::which(new_assignment_mask)] <- cell_type
+        level_table[[curr_level]][Matrix::which(new_assignment_mask)] <- cell_type
 
-        level_table[[curr_level]][Matrix::which(type_res == TRUE)] <- cell_type
         level_table <- fill_in_assignments(curr_assignments, classifier, child,
                                            imputed_gate_res, level_table)
       }
