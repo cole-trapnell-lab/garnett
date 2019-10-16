@@ -582,7 +582,7 @@ tfidf <- function(input_cds) {
   ncounts <- ncounts[Matrix::rowSums(ncounts) != 0,]
   nfreqs <- ncounts
   nfreqs@x <- ncounts@x / rep.int(Matrix::colSums(ncounts), diff(ncounts@p))
-  tf_idf_counts <- nfreqs * log(1 + ncol(ncounts) / Matrix::rowSums(ncounts))
+  tf_idf_counts <- nfreqs * log(1 + ncol(ncounts) / Matrix::rowSums(ncounts > 0))
   Matrix::t(tf_idf_counts)
 }
 
