@@ -1,0 +1,25 @@
+branches:
+  only:
+  - gh-pages
+  - /.*/
+  
+sudo: false
+
+language: bash
+
+services:
+  - docker
+
+# Install the Docker Container
+install:
+  - docker pull ellerbrock/link-checker
+
+# Add your Site or Files to Check
+script:
+  - docker run ellerbrock/link-checker https://cole-trapnell-lab.github.io/garnett/
+
+# Notification Setup
+notifications:
+  email:
+    on_success: never
+    on_failure: always
