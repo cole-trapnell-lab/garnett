@@ -9,7 +9,7 @@ ensembl <- garnett:::cds_to_other_id(test_cds, db=org.Hs.eg.db,
 
 test_that("cds_to_other_id works", {
   expect_is(ensembl, "cell_data_set")
-  expect_equal(nrow(rowData(ensembl)), 19301)
+  expect_equal(nrow(rowData(ensembl)), 19151)
   expect_equal(row.names(rowData(ensembl)[
     rowData(ensembl)$gene_short_name == "FAM87B",]), "ENSG00000177757")
   expect_identical(counts(test_cds)["FAM87B",],
@@ -28,9 +28,9 @@ test_that("get_feature_genes works", {
   expect_is(out, "data.frame")
   expect_is(out2, "data.frame")
   expect_is(out3, "data.frame")
-  expect_equal(nrow(out), 274)
+  expect_equal(nrow(out), 22)
   expect_equal(ncol(out3), 3)
-  expect_equal(row.names(out2)[2], "ENSG00000187608")
+  expect_equal(row.names(out2)[2], "ENSG00000197747")
 })
 
 test_that("get_classifier_references works", {
@@ -95,7 +95,7 @@ marker_check2 <- check_markers(test_cds, use_tf_idf = F,
 
 test_that("check_markers works", {
   expect_identical(marker_check, marker_check_dos)
-  expect_equal(sum(marker_check$marker_score), 414.1387, tol = 1e-4)
+  expect_equal(sum(marker_check$marker_score), 413.8816, tol = 1e-4)
   expect_equal(nrow(marker_check), 18)
   expect_equal(sum(marker_check$summary != "Ok"), 3)
   sub <- subset(marker_check, parent != "root")
