@@ -394,7 +394,7 @@ make_predictions <- function(cds,
 
       # predict probabilities using fitted model
       nonz <- Matrix::rowSums(do.call(cbind,
-                                      glmnet::coef.cv.glmnet(cvfit,
+                                      glmnet:::coef.cv.glmnet(cvfit,
                                                              s="lambda.min")))
       nonz <- names(nonz[nonz != 0])
       nonz <- nonz[2:length(nonz)]
