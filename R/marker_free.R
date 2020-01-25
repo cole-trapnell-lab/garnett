@@ -96,34 +96,31 @@
 #'                                          num_unknown = 50,
 #'                                          marker_file_gene_id_type = "SYMBOL")
 #'
-train_cell_classifier <- function(cds,
-                                  marker_file,
+train_marker_free_classifier <- function(cds,
+                                         classifier_column,
                                   db,
                                   cds_gene_id_type = "ENSEMBL",
-                                  marker_file_gene_id_type = "SYMBOL",
                                   min_observations=8,
                                   max_training_samples=500,
                                   num_unknown = 500,
-                                  propogate_markers = TRUE,
                                   cores=1,
                                   lambdas = NULL,
-                                  classifier_gene_id_type = "ENSEMBL",
-                                  return_initial_assign = FALSE) {
+                                  classifier_gene_id_type = "ENSEMBL") {
 
   ##### Check inputs #####
   assertthat::assert_that(is(cds, "cell_data_set"))
+  assertthat::assert_that(assertthat::has_name(colData(cds), classifier_column),
+                          msg = paste("classifier_column must be a column in",
+                                      "the colData table."))
   assertthat::assert_that(assertthat::has_name(colData(cds), "Size_Factor"),
                           msg = paste("Must run estimate_size_factors() on cds",
                                       "before calling train_cell_classifier"))
   assertthat::assert_that(sum(is.na(colData(cds)$Size_Factor)) == 0,
                           msg = paste("Must run estimate_size_factors() on cds",
                                       "before calling train_cell_classifier"))
-  assertthat::assert_that(is.character(marker_file))
-  assertthat::is.readable(marker_file)
   if (is(db, "character") && db == "none") {
     cds_gene_id_type <- 'custom'
     classifier_gene_id_type <- 'custom'
-    marker_file_gene_id_type <- 'custom'
   } else {
     assertthat::assert_that(is(db, "OrgDb"),
                             msg = paste0("db must be an 'AnnotationDb' object ",
@@ -131,21 +128,15 @@ train_cell_classifier <- function(cds,
                                          "http://bioconductor.org/packages/",
                                          "3.8/data/annotation/ for available"))
     assertthat::assert_that(is.character(cds_gene_id_type))
-    assertthat::assert_that(is.character(marker_file_gene_id_type))
     assertthat::assert_that(cds_gene_id_type %in% AnnotationDbi::keytypes(db),
                             msg = paste("cds_gene_id_type must be one of",
                                         "keytypes(db)"))
     assertthat::assert_that(classifier_gene_id_type %in% AnnotationDbi::keytypes(db),
                             msg = paste("classifier_gene_id_type must be one of",
                                         "keytypes(db)"))
-    assertthat::assert_that(marker_file_gene_id_type %in%
-                              AnnotationDbi::keytypes(db),
-                            msg = paste("marker_file_gene_id_type must be one of",
-                                        "keytypes(db)"))
   }
   assertthat::is.count(num_unknown)
   assertthat::is.count(cores)
-  assertthat::assert_that(is.logical(propogate_markers))
   if (!is.null(lambdas)) {
     assertthat::assert_that(is.numeric(lambdas))
   }
@@ -192,95 +183,17 @@ train_cell_classifier <- function(cds,
   }
   colData(norm_cds)$Size_Factor <- sf
 
-
-  ##### Parse Marker File #####
-  file_str = paste0(readChar(marker_file, file.info(marker_file)$size),"\n")
-
-  parse_list <- parse_input(file_str)
-  orig_name_order <- unlist(parse_list[["name_order"]])
-  rm("name_order", envir=parse_list)
-
-  # Check and order subtypes
-  ranks <- lapply(orig_name_order, function(i) parse_list[[i]]@parenttype)
-  names(ranks) <- orig_name_order
-
-  if(length(unlist(unique(ranks[which(!ranks %in% names(ranks) & lengths(ranks) != 0L)])) != 0)) {
-    stop(paste("Subtype", unlist(unique(ranks[which(!ranks %in% names(ranks) & lengths(ranks) != 0L)])), "is not defined in marker file."))
-  }
-  if(any(names(ranks) == ranks)) {
-    bad <- ranks[names(ranks) == ranks]
-    stop(paste0("'", bad,
-                "' cannot be a subtype of itself. Please modify marker file."))
-  }
-
-  name_order <- names(ranks[lengths(ranks) == 0L])
-  ranks <- ranks[!names(ranks) %in% name_order]
-  while(length(ranks) != 0) {
-    name_order <- c(name_order, names(ranks)[ranks %in% name_order])
-    ranks <- ranks[!names(ranks) %in% name_order]
-  }
-
-
-  if(is.null(parse_list)) stop("Parse failed!")
-  message(paste("There are", length(parse_list), "cell type definitions"))
-
-  # Check gene names and keywords
-  gene_table <- make_name_map(parse_list,
-                              as.character(row.names(rowData(norm_cds))),
-                              classifier_gene_id_type,
-                              marker_file_gene_id_type,
-                              db)
-
   ##### Make garnett_classifier #####
   classifier <- new_garnett_classifier()
   classifier@gene_id_type <- classifier_gene_id_type
   if(is(db, "character") && db == "none") classifier@gene_id_type <- "custom"
 
-  for(i in name_order) {
-    # check meta data exists
-    if (nrow(parse_list[[i]]@meta) != 0) {
-      if (!all(parse_list[[i]]@meta$name %in% colnames(colData(norm_cds)))) {
-        bad_meta <- parse_list[[i]]@meta$name[!parse_list[[i]]@meta$name %in%
-                                                colnames(colData(norm_cds))]
-        stop(paste0("Cell type '", parse_list[[i]]@name,
-                    "' has a meta data specification '", bad_meta ,
-                    "' that's not in the colData table."))
-      }
-    }
-    logic_list <- assemble_logic(parse_list[[i]], gene_table)
-    classifier <- add_cell_rule(parse_list[[i]], classifier, logic_list)
-  }
-
   classifier@cell_totals <- exp(mean(log(cell_totals)))/
     stats::median(colData(norm_cds)$num_genes_expressed)
 
   ##### Create transformed marker table #####
-  if(propogate_markers) {
-    root <- propogate_func(curr_node = "root", parse_list, classifier)
-  }
 
   tf_idf <- tfidf(norm_cds) #slow
-
-
-  ### Aggregate markers ###
-  marker_scores <- data.frame(cell = row.names(tf_idf))
-  meta_only <- c()
-  for (i in name_order) {
-    agg <- aggregate_positive_markers(parse_list[[i]], tf_idf,
-                                      gene_table, back_cutoff)
-    bad_cells <- get_negative_markers(parse_list[[i]], tf_idf,
-                                      gene_table, back_cutoff)
-    if(is.null(agg))  {
-      warning (paste("Cell type", i, "has no genes that are expressed",
-                     "and will be skipped"))
-    } else if(class(agg) == "character" && agg == "no_gene") {
-      meta_only <- c(meta_only, i)
-    } else {
-      agg[names(agg) %in% bad_cells] <- 0
-      marker_scores <- cbind(marker_scores, as.matrix(agg))
-      colnames(marker_scores)[ncol(marker_scores)] <- parse_list[[i]]@name
-    }
-  }
 
   ##### Train Classifier #####
 
@@ -337,8 +250,7 @@ train_cell_classifier <- function(cds,
                                              back_cutoff,
                                              training_cutoff,
                                              marker_scores,
-                                             return_initial_assign,
-                                             meta_only = meta_only)
+                                             return_initial_assign)
 
       if(return_initial_assign) {
         return(training_sample)
@@ -405,11 +317,6 @@ make_name_map <- function(parse_list,
   gene_table$parent <- as.character(gene_table$parent)
   gene_table$fgenes <- as.character(gene_table$fgenes)
   gene_table$orig_fgenes <- gene_table$fgenes
-  if(is.null(gene_start)) {
-    message(paste("Marker file has no genes, continuing to build marker-free",
-                  "classifier"))
-    return(gene_table)
-  }
   if(cds_gene_id_type != marker_file_gene_id_type) {
     gene_table$fgenes <- convert_gene_ids(gene_table$orig_fgenes,
                                           db,
@@ -530,33 +437,29 @@ assemble_logic <- function(cell_type,
 
   logic = ""
   logic_list = list()
+  bad_genes <- gene_table[!gene_table$in_cds,]$orig_fgenes
 
-  if(length(cell_type@gene_rules) > 0 | (length(cell_type@expressed) > 0 | length(cell_type@not_expressed) > 0)) {
-
-
-    bad_genes <- gene_table[!gene_table$in_cds,]$orig_fgenes
-
-    # expressed/not expressed
-    logic_list <- lapply(cell_type@gene_rules, function(rule) {
-      log_piece <- ""
-      if (!rule@gene_name %in% bad_genes) {
-        paste0("(x['",
-               gene_table$fgenes[match(rule@gene_name, gene_table$orig_fgenes)],
-               "',] > ", rule@lower,
-               ") & (x['",
-               gene_table$fgenes[match(rule@gene_name, gene_table$orig_fgenes)],
-               "',] < ",
-               rule@upper,
-               ")")
-      }
-    })
-    if (length(cell_type@expressed) > 0 | length(cell_type@not_expressed) > 0) {
-      logic_list <- list(logic_list, paste0("assigns == '", cell_type@name, "'"))
+  # expressed/not expressed
+  logic_list <- lapply(cell_type@gene_rules, function(rule) {
+    log_piece <- ""
+    if (!rule@gene_name %in% bad_genes) {
+      paste0("(x['",
+             gene_table$fgenes[match(rule@gene_name, gene_table$orig_fgenes)],
+             "',] > ", rule@lower,
+             ") & (x['",
+             gene_table$fgenes[match(rule@gene_name, gene_table$orig_fgenes)],
+             "',] < ",
+             rule@upper,
+             ")")
     }
-
-    if(length(logic_list) == 0) warning(paste("Cell type", cell_type@name,
-                                              "has no valid expression rules."))
+  })
+  if (length(cell_type@expressed) > 0 | length(cell_type@not_expressed) > 0) {
+    logic_list <- list(logic_list, paste0("assigns == '", cell_type@name, "'"))
   }
+
+  if(length(logic_list) == 0) warning(paste("Cell type", cell_type@name,
+                                            "has no valid expression rules."))
+
   # meta data
   if (nrow(cell_type@meta) > 0) {
     mlogic <- plyr::dlply(cell_type@meta, plyr::.(name), function(x) {
@@ -572,8 +475,6 @@ assemble_logic <- function(cell_type,
     logic_list <- c(logic_list, unname(mlogic))
   }
   logic_list <- logic_list[!is.na(logic_list)]
-  if(length(logic_list) == 0) warning(paste("Cell type", cell_type@name,
-                                            "has no valid rules."))
   logic_list
 }
 

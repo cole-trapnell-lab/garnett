@@ -1,0 +1,13 @@
+>B cells
+FACS_type: B cells
+
+>T cells
+overall_type: T cells
+
+>CD4 T cells
+FACS_type: CD4 T cells
+subtype of: T cells
+
+>CD8 T cells
+FACS_type: CD8 T cells
+subtype of: T cells
