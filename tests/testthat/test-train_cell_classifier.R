@@ -134,4 +134,12 @@ test_that("circular subtypes not allowed", {
                                               marker_file_gene_id_type = "SYMBOL"),
     "'test cell 2' cannot be a subtype of itself. Please modify marker file.")
 })
+pData(test_cds)$overall_type <- ifelse(pData(test_cds)$FACS_type == "B cells", "B cells", "T cells")
 
+test_classifier <- train_cell_classifier(cds = test_cds,
+                                        marker_file = "../marker_free_test.txt",
+                                        db=org.Hs.eg.db,
+                                        min_observations = 10,
+                                        cds_gene_id_type = "SYMBOL",
+                                        num_unknown = 50,
+                                        marker_file_gene_id_type = "SYMBOL")
