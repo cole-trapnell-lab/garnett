@@ -6,28 +6,28 @@ tags: [garnett, manual, vignette]
 ---
 
 <div class="container">
-    <div class= "row">
-        <div class= "col-sm-4">
-            <nav id= "toc" data-spy= "affix" data-toggle= "toc"></nav>
+  <div class= "row">
+    <div class= "col-sm-4">
+      <nav id= "toc" data-spy= "affix" data-toggle= "toc"></nav>
+    </div>
+    <div class= "col-sm-8">
+      <h1>Garnett Documentation for Monocle 3</h1>
+      
+      <div class= "panel panel-warning">
+        <div class= "panel-heading">
+          <h4 class= "panel-title">Monocle or Monocle3?</h4>
         </div>
-        <div class= "col-sm-8">
-            <h1>Garnett Documentation for Monocle 3</h1>
-            
-            <div class= "panel panel-warning">
-                <div class= "panel-heading">
-                    <h4 class= "panel-title">Monocle or Monocle3?</h4>
-                </div>
-                <div class= "panel-body">
-                    <p>
-                        If you are using <a href="http://cole-trapnell-lab.github.io/monocle3/">Monocle 3</a> 
-                        (loading using <code>library(monocle3)</code>), then follow the instructions on this page. 
-                        If you are instead using 
-                        <a href="http://cole-trapnell-lab.github.io/monocle-release/">Monocle or Monocle 2</a> 
-                        (loading using <code>library(monocle)</code>), then please follow the instructions 
-                        <a href="{{ site.baseurl }}/docs_m3/">here</a>.    
-                    </p>
-                </div>
-            </div>
+        <div class= "panel-body">
+          <p>
+            If you are using <a href="http://cole-trapnell-lab.github.io/monocle3/">Monocle 3</a> 
+            (loading using <code>library(monocle3)</code>), then follow the instructions on this page. 
+            If you are instead using 
+            <a href="http://cole-trapnell-lab.github.io/monocle-release/">Monocle or Monocle 2</a> 
+            (loading using <code>library(monocle)</code>), then please follow the instructions 
+            <a href="{{ site.baseurl }}/docs_m3/">here</a>.    
+          </p>
+        </div>
+      </div>
       <h2>Abstract</h2>
       <p>
         Garnett is a software package that faciliates automated cell type classification from single-cell expression
@@ -36,7 +36,7 @@ tags: [garnett, manual, vignette]
         classify future datasets from similar tissues. In addition to describing training and classifying functions,
         this website aims to be a repository of previously trained classifiers.
       </p>
-
+      
       <h2> Installing Garnett </h2>
       <p>
         Garnett runs in the <a href= "http://www.r-project.org/">R statistical computing environment</a>. You will need
@@ -52,7 +52,7 @@ tags: [garnett, manual, vignette]
         <a href="https://cole-trapnell-lab.github.io/monocle3/docs/installation/">here</a>. 
         Briefly, install Monocle 3 using:
       </p>
-        
+      
 {% highlight R %}
 # First install Bioconductor and Monocle 3
 if (!requireNamespace("BiocManager"))
@@ -68,12 +68,12 @@ BiocManager::install(c('BiocGenerics', 'DelayedArray', 'DelayedMatrixStats',
 install.packages("devtools")
 devtools::install_github('cole-trapnell-lab/monocle3')
 {% endhighlight %}
-
+      
       <p>
         You're now ready to install Garnett:
       </p>
-
-      {% highlight R %}
+      
+{% highlight R %}
 # Install a few Garnett dependencies:
 BiocManager::install(c('org.Hs.eg.db', 'org.Mm.eg.db'))
 
@@ -84,40 +84,42 @@ devtools::install_github("cole-trapnell-lab/garnett", ref="monocle3")
       <p>
         After installation, test that Garnett installed correctly by opening a new R session and typing:
       </p>
-      {% highlight R %}library(garnett){% endhighlight %}
-
+{% highlight R %}library(garnett){% endhighlight %}
+      
       <h2> Getting help </h2>
       <p>
         Questions about Garnett should be posted on our
         <a href="https://groups.google.com/forum/#!forum/garnett-users">Google Group</a>. Please do not email technical
         questions to Garnett contributors directly.
       </p>
-
+      
       <h2>Garnett overview</h2>
-
-          <div class= "text-center">
-              <img src= "/garnett/images/flow_chart.png">
-            </div>
-            <p>
+      
+      <div class= "text-center">
+        <img src= "/garnett/images/flow_chart.png">
+      </div>
+      <p>
         The Garnett workflow has two major parts, each described in detail below:
         <ol>
           <li><strong>Train/obtain the classifier:</strong> Either download an existing classifier, or train your own.
             To train, Garnett parses a marker file, chooses a set of training cells, and then trains a
-            multinomial classifier to distinguish cell types.</li>
+            multinomial classifier to distinguish cell types.
+          </li>
           <li><strong>Classify cells:</strong> Next, Garnett applies the classifier to a set of cells to generate cell 
             type assignments. Optionally, Garnett will expand classifications to similar cells to generate a separate 
-            set of cluster-extended type assignments.</li>
+            set of cluster-extended type assignments.
+          </li>
         </ol>
       </p>
-
+      
       <h2>1a. Using a pre-trained classifier</h2>
       <p>
         There are two options for the first part of the Garnett workflow: using a pre-trained classifier, or generating
         your own classifier.
       </p>
       <div class= "text-center">
-          <img src= "/garnett/images/flow_chart_pretrained.png">
-        </div>
+        <img src= "/garnett/images/flow_chart_pretrained.png">
+      </div>
       <p>
         We have generated a series of pre-trained classifiers for various organisms and tissues. If a pre-trained
         classifier exists for your data type, we recommend you try it. The list of available classifiers can be found
@@ -126,23 +128,26 @@ devtools::install_github("cole-trapnell-lab/garnett", ref="monocle3")
         build the community! Details on how to submit your classifier are can be found
         <a href="/garnett/docs_m3#submitting-a-classifier">here</a>.
       </p>
-
+      
       <p>To use a pre-trained classifier, first download the classifier, and then load it into your R session using:</p>
 {% highlight R %}
 classifier <- readRDS("path/to/classifier.RDS")
 {% endhighlight %}
+     
+      <p>
+        Once you've loaded the classifier, go on to part 2,
+        <a href="/garnett/docs_m3#2-classifying-your-cells">Classifying your cells</a>
+      </p>
 
-      <p>Once you've loaded the classifier, go on to part 2,
-        <a href="/garnett/docs_m3#2-classifying-your-cells">Classifying your cells</a></p>
       <h2>1b. Train your own classifier</h2>
       <div class= "text-center">
-          <img src= "/garnett/images/flow_chart_train.png">
-        </div>
+        <img src= "/garnett/images/flow_chart_train.png">
+      </div>
       <p>
         If a classifier doesn't exist for your tissue type, or doesn't include the cell types you expect in your data,
         then you'll need to generate your own.
       </p>
-
+      
       <h3>Loading your data</h3>
       <p>
         The first step to train your classifier is to load your single-cell data.
@@ -178,7 +183,7 @@ pbmc_cds <- new_cell_data_set(as(mat, "dgCMatrix"),
                               cell_metadata = pdata,
                               gene_metadata = fdata)
 {% endhighlight %}
-
+      
       <h3>Constructing a marker file</h3>
       <p>
         Besides the expression data, the second major input you'll need is a marker file. The
@@ -197,18 +202,18 @@ expressed: CD19, MS4A1
 >T cells
 expressed: CD3D
 {% endhighlight %}
-
+      
       <p>
         There are several ways to define cell types in the Garnett marker file format. In general, each cell's
         definition can have three major components. Only the first component is required.
       </p>
-
+      
       <h4><strong>Define the expression</strong></h4>
       <p>
         The first and most important specification for a cell type is its expression. Garnett offers several options
         for specifying marker genes, detailed below.
       </p>
-
+      
       <div class= "panel panel-info">
         <div class= "panel-heading">
           <h4 class= "panel-title">Recommended expression specifications</h4>
@@ -239,7 +244,7 @@ expressed: CD3D
         calculates a marker score for each cell, accounting for potential leakage, overall expression levels, and read
         depth. <code>expressed:</code> markers should be specific to the cell type being defined.
       </p>
-
+      
       <div class= "panel panel-success">
         <div class= "panel-heading">
           <h4 class= "panel-title">Alternative expression specifications</h4>
@@ -275,13 +280,13 @@ expressed: CD3D
         will not account for read depth and overall expression in each cell. Values are in the same units as your input
         data.
       </p>
-
+      
       <h4><strong>Define the meta data</strong></h4>
       <p>
         In addition to expression information, you can further refine your cell type definitions using meta data. This
         is also where you will specify any subtypes you expect in your data.
       </p>
-
+      
       <div class= "panel panel-info">
         <div class= "panel-heading">
           <h4 class= "panel-title">Meta data specifications</h4>
@@ -316,7 +321,7 @@ expressed: CD3D
         cell type. Any column in the <code>pData</code> table of your CDS object can be used as a meta data
         specification. In the example above, there would be a column in the <code>pData</code> table called "tissue".
       </p>
-
+      
       <h4><strong>Provide your evidence</strong></h4>
       <p>
         Lastly, we highly recommend that you document how you chose your marker definitions. To make it easier to keep
@@ -324,13 +329,13 @@ expressed: CD3D
         information for each cell type. Add a set of URLs or DOIs and they will be included in your classifier. See
         <a href="/garnett/docs_m3#viewing-references">here</a> for functions to get access to this information.
       </p>
-
+      
       <h4><strong>Add any comments</strong></h4>
       <p>
         Similar to R code, we have included a comment character <code>#</code> so you can add notes/comments in your
         marker file. Anything after a <code>#</code> on the same line will be ignored by Garnett.
       </p>
-
+      
       <p>A more complex example:</p>
 {% highlight text %}
 >B cells
@@ -348,21 +353,21 @@ expressed: CD4
 subtype of: T cells
 references: https://www.ncbi.nlm.nih.gov/pubmed/?term=12000723
 {% endhighlight %}
-
-<div class= "panel panel-warning">
-  <div class= "panel-heading">
-    <h4 class= "panel-title">Warning for Windows users:</h4>
-  </div>
-  <div class= "panel-body">
-    At the moment, the Garnett marker file cannot have carriage returns (\r), which will be included automatically if you
-    generate your marker file in certain Windows text editors. Instead, you must use newline characters (\n). There are 
-    many ways to replace carriage returns on Windows, for example using Notepad++ you can use replace, choose extended, and 
-    replace all \r with \n.
-
-    I intend to address this in a more automated way soon.
-  </div>
-</div>
-
+      
+      <div class= "panel panel-warning">
+        <div class= "panel-heading">
+          <h4 class= "panel-title">Warning for Windows users:</h4>
+        </div>
+        <div class= "panel-body">
+          At the moment, the Garnett marker file cannot have carriage returns (\r), which will be included automatically if you
+          generate your marker file in certain Windows text editors. Instead, you must use newline characters (\n). There are 
+          many ways to replace carriage returns on Windows, for example using Notepad++ you can use replace, choose extended, and 
+          replace all \r with \n.
+          
+          I intend to address this in a more automated way soon.
+        </div>
+      </div>
+      
       <h3>Checking your markers</h3>
       <p>
         Because defining the marker file is often the hardest part of the process, Garnett includes functions to check
@@ -370,11 +375,11 @@ references: https://www.ncbi.nlm.nih.gov/pubmed/?term=12000723
         <code>plot_markers</code>. <code>check_markers</code> generates a table of information about your markers and
         <code>plot_markers</code> plots the most relevant information.
       </p>
-
-    <p>
-      In addition to the small included dataset, we have included two example marker files with the package. Here are
-    the contents of "pbmc_bad_markers.txt"
-    </p>
+      
+      <p>
+        In addition to the small included dataset, we have included two example marker files with the package. Here are
+        the contents of "pbmc_bad_markers.txt"
+      </p>
 {% highlight text %}
 >B cells
 expressed: CD19, MS4A1, CD79A, ACTN, ACTB
@@ -394,24 +399,27 @@ expressed: CD8A, CD8B
 subtype of: T cells
 
 {% endhighlight %}
-    <p>
-      Besides the CDS object and the path to the marker file, there are a few arguments to add:
-      <ul>
-        <li><code>db</code>: <code>db</code> is a required argument for a Bioconductor AnnotationDb-class package used
-          for converting gene IDs. For example, for humans use 
-          <a href="http://bioconductor.org/packages/3.8/data/annotation/html/org.Hs.eg.db.html">org.Hs.eg.db</a>. See 
-          available packages at the
-          <a href = "http://bioconductor.org/packages/3.8/data/annotation/">Bioconductor website</a>. Load your chosen
-        db using <code>library(db)</code>. If your species does not have an AnnotationDb-class package, see 
-        <a href="/garnett/docs_m3/#my-species-doesn-t-have-an-annotationdbi-class-database">here</a>.</li>
-        <li><code>cds_gene_id_type</code>: This argument tells Garnett the format of the gene IDs in your CDS object.
-        It should be one of the values in <code>columns(db)</code>. The default is "ENSEMBL".</li>
-        <li><code>marker_file_gene_id_type</code>: Similarly to above, this argument tells Garnett the format of the
-        gene IDs in your marker file.</li>
-      </ul>
-      After generating your marker_check data.frame, you can use our built in plotting function
-      <code>plot_markers</code> to view the results.
-    </p>
+      <p>
+        Besides the CDS object and the path to the marker file, there are a few arguments to add:
+        <ul>
+          <li><code>db</code>: <code>db</code> is a required argument for a Bioconductor AnnotationDb-class package used
+            for converting gene IDs. For example, for humans use 
+            <a href="http://bioconductor.org/packages/3.8/data/annotation/html/org.Hs.eg.db.html">org.Hs.eg.db</a>. See 
+            available packages at the
+            <a href = "http://bioconductor.org/packages/3.8/data/annotation/">Bioconductor website</a>. Load your chosen
+            db using <code>library(db)</code>. If your species does not have an AnnotationDb-class package, see 
+            <a href="/garnett/docs_m3/#my-species-doesn-t-have-an-annotationdbi-class-database">here</a>.
+          </li>
+          <li><code>cds_gene_id_type</code>: This argument tells Garnett the format of the gene IDs in your CDS object.
+            It should be one of the values in <code>columns(db)</code>. The default is "ENSEMBL".
+          </li>
+          <li><code>marker_file_gene_id_type</code>: Similarly to above, this argument tells Garnett the format of the
+            gene IDs in your marker file.
+          </li>
+        </ul>
+        After generating your marker_check data.frame, you can use our built in plotting function
+        <code>plot_markers</code> to view the results.
+      </p>
 {% highlight R %}
 library(org.Hs.eg.db)
 marker_file_path <- system.file("extdata", "pbmc_bad_markers.txt",
@@ -424,36 +432,36 @@ marker_check <- check_markers(pbmc_cds, marker_file_path,
 plot_markers(marker_check)
 {% endhighlight %}
 
-<div class= "text-center">
-    <img src= "/garnett/images/marker_check.png">
-</div>
-    <p>
-      This marker plot provides some key information about whether the chosen markers are good. First, The red note
-      'not in db' lets us know that the marker ACTN was not present as a 'SYMBOL' in the <a href="http://bioconductor.org/packages/3.8/data/annotation/html/org.Hs.eg.db.html">org.Hs.eg.db</a> annotation. In this
-      case, it's a typo. Next, the x-axis shows the ambiguity score for each of the markers - a measure of how many cells
-      receive ambiguous labels when this marker is included - in this case, ACTB and PTPRC have high ambiguity and should
-      be excluded. The last piece of relevant information is what percent of all the cells nominated in a cell type were
-      chosen because of that marker. This is indicated by color.
-    </p>
-    <p>
-      <strong>NOTE:</strong> The values output by <code>check_markers</code> and plotted by <code>plot_markers</code> 
-      are <strong>estimates</strong> of the numbers of cells that <strong>could</strong> be chosen by the classifier. 
-      However, it uses heuristics to quickly find candidate cells, and will not exactly match the cells that are chosen 
-      by the marker. Please use the numbers as relative measures, rather than absolute representations of the training 
-      set.
-    </p>
-    <p>
-      <strong>A further note on ambiguity scores:</strong> Ambiguity scores are the fraction of the cells a marker nominates 
-      that a become labeled as "Ambiguous" when that marker is included in the marker file. However, a high ambiguity 
-      score does not necessarily mean that a given marker is not specific. It could mean that a different marker is the 
-      culprit, but that marker also nominates a lot of otherwise unlabeled cells (high nomination rate). Look closely 
-      at both the marker with a high ambiguity score, and markers in the cell type that it is most ambiguous with 
-      before deciding which marker to exclude.
-    </p>
-    <p>
-      After making a marker plot, you may want to revise your marker file. In our toy example, we'll remove ACTN, ACTB 
-      and PTPRC to get our final 'pbmc_test.txt' marker file.
-    </p>
+      <div class= "text-center">
+        <img src= "/garnett/images/marker_check.png">
+      </div>
+      <p>
+        This marker plot provides some key information about whether the chosen markers are good. First, The red note
+        'not in db' lets us know that the marker ACTN was not present as a 'SYMBOL' in the <a href="http://bioconductor.org/packages/3.8/data/annotation/html/org.Hs.eg.db.html">org.Hs.eg.db</a> annotation. In this
+        case, it's a typo. Next, the x-axis shows the ambiguity score for each of the markers - a measure of how many cells
+        receive ambiguous labels when this marker is included - in this case, ACTB and PTPRC have high ambiguity and should
+        be excluded. The last piece of relevant information is what percent of all the cells nominated in a cell type were
+        chosen because of that marker. This is indicated by color.
+      </p>
+      <p>
+        <strong>NOTE:</strong> The values output by <code>check_markers</code> and plotted by <code>plot_markers</code> 
+        are <strong>estimates</strong> of the numbers of cells that <strong>could</strong> be chosen by the classifier. 
+        However, it uses heuristics to quickly find candidate cells, and will not exactly match the cells that are chosen 
+        by the marker. Please use the numbers as relative measures, rather than absolute representations of the training 
+        set.
+      </p>
+      <p>
+        <strong>A further note on ambiguity scores:</strong> Ambiguity scores are the fraction of the cells a marker nominates 
+        that a become labeled as "Ambiguous" when that marker is included in the marker file. However, a high ambiguity 
+        score does not necessarily mean that a given marker is not specific. It could mean that a different marker is the 
+        culprit, but that marker also nominates a lot of otherwise unlabeled cells (high nomination rate). Look closely 
+        at both the marker with a high ambiguity score, and markers in the cell type that it is most ambiguous with 
+        before deciding which marker to exclude.
+      </p>
+      <p>
+        After making a marker plot, you may want to revise your marker file. In our toy example, we'll remove ACTN, ACTB 
+        and PTPRC to get our final 'pbmc_test.txt' marker file.
+      </p>
 
 {% highlight text %}
 #pbmc_test.txt
@@ -475,19 +483,19 @@ subtype of: T cells
 
 {% endhighlight %}
 
-<div class= "panel panel-warning">
-  <div class= "panel-heading">
-    <h4 class= "panel-title">No ENSEMBL in your db</h4>
-  </div>
-  <div class= "panel-body">
-    By default, Garnett converts gene IDs into ENSEMBL for use in the classifier. This allows classifiers to be portable 
-    so they can classify future datasets that might have different gene IDs. For some organisms however, ENSEMBL IDs are 
-    either not available or not commonly used. In these cases, you can use the parameter <code>classifier_gene_id_type</code>
-    in both <code>train_cell_classifier</code> and <code>check_markers</code> to specify a different ID type. The value you 
-    choose will be stored with the classifier, so you do not need to specify it again when classifying future datasets.
-
-  </div>
-</div>
+      <div class= "panel panel-warning">
+        <div class= "panel-heading">
+          <h4 class= "panel-title">No ENSEMBL in your db</h4>
+        </div>
+        <div class= "panel-body">
+          By default, Garnett converts gene IDs into ENSEMBL for use in the classifier. This allows classifiers to be portable 
+          so they can classify future datasets that might have different gene IDs. For some organisms however, ENSEMBL IDs are 
+          either not available or not commonly used. In these cases, you can use the parameter <code>classifier_gene_id_type</code>
+          in both <code>train_cell_classifier</code> and <code>check_markers</code> to specify a different ID type. The value you 
+          choose will be stored with the classifier, so you do not need to specify it again when classifying future datasets.
+          
+        </div>
+      </div>
 
       <h4>Train the classifier</h4>
       <p>
@@ -508,14 +516,6 @@ pbmc_classifier <- train_cell_classifier(cds = pbmc_cds,
                                          cds_gene_id_type = "SYMBOL",
                                          num_unknown = 50,
                                          marker_file_gene_id_type = "SYMBOL")
-head(pData(pbmc_cds))
-#                     tsne_1    tsne_2 Size_Factor FACS_type
-# AAGCACTGCACACA-1  3.840315 12.084191   0.5591814   B cells
-# GGCTCACTGGTCTA-1  9.970962  3.505393   0.5159340   B cells
-# AGCACTGATATCTC-1  3.459529  4.935273   0.6980284   B cells
-# ACACGTGATATTCC-1  1.743949  7.782671   0.8156310   B cells
-# ATATGCCTCTGCAA-1  5.783448  8.558898   1.1153280   B cells
-# TGACGAACCTATTC-1 10.792853 10.585274   0.6494699   B cells
 
 {% endhighlight %}
 
@@ -555,7 +555,6 @@ head(feature_genes)
 #IGLL5       -0.00103241 -0.0001045559  0.001136966
 {% endhighlight %}
 
-
       <h3>Viewing references</h3>
       <p>
         We explained <a href = "/garnett/docs_m3/#constructing-a-marker-file">above</a> how to include documentation about
@@ -575,7 +574,6 @@ get_classifier_references(pbmc_class)
 {% endhighlight %}
 
 
-
       <h3>Submitting a classifier</h3>
       <p>
         We encourage you to submit your high quality classifiers to us so we can make them available to the community.
@@ -584,9 +582,137 @@ get_classifier_references(pbmc_class)
         started!
       </p>
 
+      <h2>1c. Train a marker-free classifier</h2>
+      <div class= "panel panel-danger">
+        <div class= "panel-heading">
+          <h4 class= "panel-title">Warning - Alpha Feature:</h4>
+        </div>
+        <div class= "panel-body">
+          This is a new feature of Garnett. This 
+          method has been neither published, nor tested extensively, and is therefore an alpha feature. This means that 
+          it is subject to change, and in addition that we would appreciate hearing any feedback that you might have! 
+          Please submit a <a href="https://github.com/cole-trapnell-lab/garnett/issues">bug report</a> 
+          if you run into any issues, or if you would like to suggest additional/different features.
+        </div>
+      </div>
+
+      <p>
+        If a classifier doesn't exist for your tissue type, but there exists an additional dataset from the same tissue
+        and organism with known cell types, then you can train a classifier on this dataset to apply to any future data 
+        without providing marker genes by using the marker-free method.
+      </p>
+      
+      <p>
+        To use marker-free classifier training, follow all of the steps above for creating your own classifier, but provide
+        a marker-free cell type definition file as described below:
+      </p>
+      
+      <h3>Constructing a marker-free cell type definition file</h3>
+      <p>
+        As described <a href="/garnett/docs_m3#constructing-a-marker-file">above</a>, the Garnett marker file contains 
+        a list of cell type definitions written in an easy-to-read text format. The cell type definitions tell Garnett 
+        how to choose cells to train the model on. Each cell type definition starts with a <strong>'>'</strong> symbol 
+        and the cell type name, followed by a series of lines with definition information. Definition lines start with a 
+        keyword and a <strong>':'</strong> and entries are separated by a comma. 
+      </p>
+      <p>
+        In the case of the marker-free cell type definition file, instead of providing marker gene information, you will 
+        instead provide alternative definition information which corresponds to a column in your cell metadata (colData/pData).
+        For example, if I have a column in my colData table called "known_type", then I can use definitions there to generate
+        cell type definitions.
+      </p>
+{% highlight text %}
+>B cells
+known_type: B cells
+
+>T cells
+known_type: T cells
+{% endhighlight %}
+      
+      <p>
+        Marker-free cell type definition allows nested cell types, for example, another valid marker file would be:
+      </p>
+
+{% highlight text %}
+>B cells
+known_type: B cells
+
+>T cells
+known_type: T cells
+
+>CD4 T cells
+known_sub_type: CD4 T cells
+subtype of:  T cells
+
+>CD8 T cells
+known_sub_type: CD8 T cells
+subtype of: T cells
+{% endhighlight %}      
+
+      <p>
+        Lastly, some cell types can be defined by gene expression as above while others are defined without markers. 
+        However please note that at present, <strong>cell types defined marker-free cannot also include expression markers</strong>.
+        In the case that both an expression marker and a marker-free definition are included in the same cell type definition, the 
+        marker-free tag will be treated as additional metadata (see above) rather than as a marker-free definition. See below for
+        and example of a valid marker file with some cell types defined using expression and others defined marker-free:
+      </p>
+
+{% highlight text %}
+>B cells
+known_type: B cells
+
+>T cells
+known_type: T cells
+
+>CD4 T cells
+expressed: CD4
+subtype of:  T cells
+
+>CD8 T cells
+expressed: CD8A, CD8B
+subtype of: T cells
+{% endhighlight %}     
+
+      <h4>Training example using marker-free cell type definitions</h4>
+      <p>
+        Using the example cell type definition file from above:
+      </p>
+{% highlight R %}
+library(org.Hs.eg.db)
+set.seed(260)
+
+head(pData(pbmc_cds))
+#                     tsne_1    tsne_2 Size_Factor FACS_type
+# AAGCACTGCACACA-1  3.840315 12.084191   0.5591814   B cells
+# GGCTCACTGGTCTA-1  9.970962  3.505393   0.5159340   B cells
+# AGCACTGATATCTC-1  3.459529  4.935273   0.6980284   B cells
+# ACACGTGATATTCC-1  1.743949  7.782671   0.8156310   B cells
+# ATATGCCTCTGCAA-1  5.783448  8.558898   1.1153280   B cells
+# TGACGAACCTATTC-1 10.792853 10.585274   0.6494699   B cells
+
+# Add the columns needed for the example:
+pData(pbmc_cds)$known_type <- ifelse(pData(pbmc_cds)$FACS_type == "B cells", "B cells", "T cells")
+
+marker_file_path <- system.file("extdata", "pbmc_marker_free_test.txt",
+                                package = "garnett")
+pbmc_classifier <- train_cell_classifier(cds = pbmc_cds,
+                                         marker_file = marker_file_path,
+                                         db=org.Hs.eg.db,
+                                         cds_gene_id_type = "SYMBOL",
+                                         num_unknown = 50,
+                                         marker_file_gene_id_type = "SYMBOL")
+
+{% endhighlight %}
+
+      <p>
+        After running train_cell_classifier, the output object, of type "garnett_classifier" contains all of the
+        information necessary to classify cells.
+      </p>
+
+      
       <h2>2. Classifying your cells</h2>
       <div class= "text-center">
-          <img src= "/garnett/images/flow_chart_classify.png">
+        <img src= "/garnett/images/flow_chart_classify.png">
       </div>
       <h3>Load your data</h3>
       <p>
@@ -630,27 +756,30 @@ pbmc_cds <- new_cell_data_set(as(mat, "dgCMatrix"),
         <ul>
           <li><code>cds</code>: This is the CDS object containing your gene expression data (see above).</li>
           <li><code>classifier</code>: This the the garnett_classifier you obtained above.</li>
-            <li><code>db</code>: <code>db</code> is a required argument for a Bioconductor AnnotationDb-class package used
-              for converting gene IDs. For example, for humans use <a href="http://bioconductor.org/packages/3.8/data/annotation/html/org.Hs.eg.db.html">org.Hs.eg.db</a>. See available packages at the
-              <a href = "http://bioconductor.org/packages/3.8/data/annotation/">Bioconductor website</a>. Load your
-              chosen db using <code>library(db)</code>. If your species does not have an AnnotationDb-class package, see 
-              <a href="/garnett/docs_m3/#my-species-doesn-t-have-an-annotationdbi-class-database">here</a>.</li>
-              <li><code>cluster_extend</code>: This tells Garnett whether to create a second set of assignments that 
-              expands classifications to cells in the same cluster. You can either provide cluster IDs in the pData 
-              table in a column titled "garnett_cluster", or you can let Garnett calculate the clusters and populate 
-              the column. <div class= "panel panel-danger"><emph>Warning:</emph> if not providing a "garnett_cluster" column and setting 
-              <code>cluster_extend</code> to <code>TRUE</code> with a very large dataset, this function will slow 
-              down considerably. For convenience, Garnett will save the clusters it calculates to "garnett_cluster", so 
-              the function will be faster if run again.</div></li>
-              <li><code>cds_gene_id_type</code>: This argument tells Garnett the format of the gene IDs in your CDS object.
-            It should be one of the values in <code>columns(db)</code>. The default is "ENSEMBL".</li>
-          </ul>
-
-          The <code>classify_cells</code> function returns the input CDS object with one (or two if 
-          <code>cluster_extend = TRUE</code>) new columns in the pData table containing the Garnett 
-          classifications.
+          <li><code>db</code>: <code>db</code> is a required argument for a Bioconductor AnnotationDb-class package used
+            for converting gene IDs. For example, for humans use <a href="http://bioconductor.org/packages/3.8/data/annotation/html/org.Hs.eg.db.html">org.Hs.eg.db</a>. See available packages at the
+            <a href = "http://bioconductor.org/packages/3.8/data/annotation/">Bioconductor website</a>. Load your
+            chosen db using <code>library(db)</code>. If your species does not have an AnnotationDb-class package, see 
+            <a href="/garnett/docs_m3/#my-species-doesn-t-have-an-annotationdbi-class-database">here</a>.
+          </li>
+          <li><code>cluster_extend</code>: This tells Garnett whether to create a second set of assignments that 
+            expands classifications to cells in the same cluster. You can either provide cluster IDs in the pData 
+            table in a column titled "garnett_cluster", or you can let Garnett calculate the clusters and populate 
+            the column. <div class= "panel panel-danger"><emph>Warning:</emph> if not providing a "garnett_cluster" column and setting 
+            <code>cluster_extend</code> to <code>TRUE</code> with a very large dataset, this function will slow 
+            down considerably. For convenience, Garnett will save the clusters it calculates to "garnett_cluster", so 
+            the function will be faster if run again.</div>
+          </li>
+          <li><code>cds_gene_id_type</code>: This argument tells Garnett the format of the gene IDs in your CDS object.
+            It should be one of the values in <code>columns(db)</code>. The default is "ENSEMBL".
+          </li>
+        </ul>
+        
+        The <code>classify_cells</code> function returns the input CDS object with one (or two if 
+        <code>cluster_extend = TRUE</code>) new columns in the pData table containing the Garnett 
+        classifications.
       </p>
-
+      
 {% highlight R %}
 library(org.Hs.eg.db)
 pbmc_cds <- classify_cells(pbmc_cds, pbmc_classifier,
@@ -684,93 +813,92 @@ qplot(tsne_1, tsne_2, color = cell_type, data = as.data.frame(pData(pbmc_cds))) 
 qplot(tsne_1, tsne_2, color = cluster_ext_type, data = as.data.frame(pData(pbmc_cds))) + 
     theme_bw()
 {% endhighlight %}
-
-
-<div class= "text-center">
-    <img src= "/garnett/images/cell_type_ex.png">
-  </div>
-
-<div class= "text-center">
-    <img src= "/garnett/images/community_type_ex.png">
-</div>
-
-<p>
-  The top plot above shows Garnett's cell type assignments, and the second plot show Garnett's cluster-extended type 
-  assignments. You can see that the T cell subsets (CD4 and CD8) are not well separated in these clusters, so when the 
-  cluster-extended type is calculated, Garnett backs up the hierarchy to the more confident assignment of "T cells".
-</p>
-<p>
-  Because this example data is from a FACS sorted cell sample, we can compare Garnett's assignments to the "true" cell
-  types.
-</p>
-
+        
+      
+      <div class= "text-center">
+        <img src= "/garnett/images/cell_type_ex.png">
+      </div>
+      
+      <div class= "text-center">
+        <img src= "/garnett/images/community_type_ex.png">
+      </div>
+      
+      <p>
+        The top plot above shows Garnett's cell type assignments, and the second plot show Garnett's cluster-extended type 
+        assignments. You can see that the T cell subsets (CD4 and CD8) are not well separated in these clusters, so when the 
+        cluster-extended type is calculated, Garnett backs up the hierarchy to the more confident assignment of "T cells".
+      </p>
+      <p>
+        Because this example data is from a FACS sorted cell sample, we can compare Garnett's assignments to the "true" cell
+        types.
+      </p>
+      
 {% highlight R %}
 qplot(tsne_1, tsne_2, color = FACS_type, data = as.data.frame(pData(pbmc_cds))) + 
     theme_bw()
 {% endhighlight %}
+      
+      <div class= "text-center">
+        <img src= "/garnett/images/FACS_type_ex.png">
+      </div>
+      
+      <h2>Troubleshooting </h2>
+      <h3>Common marker file errors</h3>
+      <div class= "text-center">
+        <img src= "/garnett/images/marker_errors.png">
+      </div>
+      <p>
+        Here, we provide examples of a few of the common marker file errors and potential outcomes in Garnett's classification.
+        For all panels, a classifier was trained on the 10x PBMC version 2 (V2) data 
+        and the classifier was then used to classify the 10x PBMC version 1 (V1) data shown above. The first panel is colored 
+        by the FACS-based 10x cell type assignments. The remaining panels are colored by the Garnett cluster-agnostic cell type 
+        assignment. 
+      </p> 
+      <ol>
+        <li>
+          <strong>A cell type is missing from the marker file.</strong> For example, in the PBMC marker file, not including a 
+          T cell definition (Panel 2). We found that, in general, Garnett labels the 
+          missing cell type as ‘Unknown’. The exception to this, discussed in an addition to the manuscript, is when a feature 
+          describing an existing cell type is present in missing cell type (i.e. the NKT cells that express NK marker FCGR3A.
+        </li>
+        <li>
+          <strong>A cell type is defined but includes no good specific markers.</strong> For example, in the PBMC marker file, 
+          defining T cells using only CD4 and not CD3 (Panel 3). In this case, we found that Garnett labelled only 
+          a subset of the T cells as such and left the remaining cells unlabelled.
+        </li>
+        <li>
+          <strong>A gene that is not specific and widely expressed is used to define a cell type.</strong> For example, if we 
+          add MALAT1 (the most expressed transcript in the PBMC dataset) to the T cell definition (Panel 4). In 
+          this case, we find that each of the cell types ends up with mixed assignments between the true cell types and T cells.
+          In an alternative scenario, the inclusion of a widely expressed non-specific gene may cause Garnett not to find sufficient
+          training samples at all, because it will consider all cells to be ambiguous (i.e. they will express other marker plus the
+          non-specific one).
+        </li>
+        <li>
+          <strong>A cell type definition includes genes that are specific to another cell type.</strong> This is the case 
+          where a definition is truly ‘wrong’, i.e. if the best marker for B cells (CD79A) is add to the T cell definition 
+          (Panel 5). We found that the B cell clusters gets mixed cell type assignments of B cell and T cell, 
+          but that the remaining cell types’ labels are mostly unchanged.
+        </li>
+      </ol>
+      
+      <h3>My species doesn't have an AnnotationDbi-class database</h3>
+      <p>
+        If your species doesn't have an available AnnotationDbi-class database, then Garnett won't be able to convert among
+        gene ID types. However, you can still use Garnett for classification. Set <code>db = 'none'</code> and then be sure 
+        that <strong>you use the same gene ID type in your marker file as your CDS object</strong>. When <code>db = 'none'</code>
+        Garnett ignores the arguments for gene ID type.
+      </p>
+      
+      <p>
+        More troubleshooting to come...
+      </p>
 
-<div class= "text-center">
-    <img src= "/garnett/images/FACS_type_ex.png">
-</div>
-
-<h2>Troubleshooting </h2>
-<h3>Common marker file errors</h3>
-<div class= "text-center">
-  <img src= "/garnett/images/marker_errors.png">
-</div>
-<p>
-  Here, we provide examples of a few of the common marker file errors and potential outcomes in Garnett's classification.
-  For all panels, a classifier was trained on the 10x PBMC version 2 (V2) data 
-  and the classifier was then used to classify the 10x PBMC version 1 (V1) data shown above. The first panel is colored 
-  by the FACS-based 10x cell type assignments. The remaining panels are colored by the Garnett cluster-agnostic cell type 
-  assignment. 
-</p> 
-<ol>
-<li>
-  <strong>A cell type is missing from the marker file.</strong> For example, in the PBMC marker file, not including a 
-  T cell definition (Panel 2). We found that, in general, Garnett labels the 
-  missing cell type as ‘Unknown’. The exception to this, discussed in an addition to the manuscript, is when a feature 
-  describing an existing cell type is present in missing cell type (i.e. the NKT cells that express NK marker FCGR3A.
-</li>
-<li>
-  <strong>A cell type is defined but includes no good specific markers.</strong> For example, in the PBMC marker file, 
-  defining T cells using only CD4 and not CD3 (Panel 3). In this case, we found that Garnett labelled only 
-  a subset of the T cells as such and left the remaining cells unlabelled.
-</li>
-<li>
-  <strong>A gene that is not specific and widely expressed is used to define a cell type.</strong> For example, if we 
-  add MALAT1 (the most expressed transcript in the PBMC dataset) to the T cell definition (Panel 4). In 
-  this case, we find that each of the cell types ends up with mixed assignments between the true cell types and T cells.
-  In an alternative scenario, the inclusion of a widely expressed non-specific gene may cause Garnett not to find sufficient
-  training samples at all, because it will consider all cells to be ambiguous (i.e. they will express other marker plus the
-  non-specific one).
-</li>
-<li>
-  <strong>A cell type definition includes genes that are specific to another cell type.</strong> This is the case 
-  where a definition is truly ‘wrong’, i.e. if the best marker for B cells (CD79A) is add to the T cell definition 
-  (Panel 5). We found that the B cell clusters gets mixed cell type assignments of B cell and T cell, 
-  but that the remaining cell types’ labels are mostly unchanged.
-</li>
-</ol>
-
-<h3>My species doesn't have an AnnotationDbi-class database</h3>
-<p>
-  If your species doesn't have an available AnnotationDbi-class database, then Garnett won't be able to convert among
-  gene ID types. However, you can still use Garnett for classification. Set <code>db = 'none'</code> and then be sure 
-  that <strong>you use the same gene ID type in your marker file as your CDS object</strong>. When <code>db = 'none'</code>
-  Garnett ignores the arguments for gene ID type.
-</p>
-
-
-
-<p>
-  More troubleshooting to come...
-</p>
       <h2>Citation </h2>
-
+      
       If you use Garnett to analyze your experiments, please cite:
-
-      {% highlight R %}
+      
+{% highlight R %}
 
 citation("garnett")
 
@@ -785,10 +913,10 @@ citation("garnett")
 #     author = {Hannah A. Pliner and Jay Shendure and Cole Trapnell},
 #   }
 #
-      {% endhighlight %}
-
+{% endhighlight %}
+        
       <h2>Acknowledgements </h2>
-
+      
       Garnett was developed by Hannah Pliner in Cole Trapnell's and Jay Shendure's labs.
       <br>
       <br>
@@ -797,14 +925,15 @@ citation("garnett")
       <br>
       This vignette was created from Wolfgang Huber's Bioconductor vignette style document, and patterned after the
       vignette for <em>DESeq</em>, by Simon Anders and Wolfgang Huber.
-
+        
       <h2>References </h2>
-      [1] G. X. Y. Zheng, J. M. Terry, P. Belgrader, P. Ryvkin, Z. W. Bent, R. Wilson, S. B. Ziraldo, T. D. Wheeler, 
-      G. P. McDermott, J. Zhu, M. T. Gregory, J. Shuga, L. Montesclaros, J. G. Underwood, D. A. Masquelier, 
-      S. Y. Nishimura, M. Schnall-Levin, P. W. Wyatt, C. M. Hindson, R. Bharadwaj, A. Wong, K. D. Ness, L. W. Beppu, 
-      H. J. Deeg, C. McFarland, K. R. Loeb, W. J. Valente, N. G. Ericson, E. A. Stevens, J. P. Radich, T. S. Mikkelsen, 
-      B. J. Hindson, J. H. Bielas, Massively parallel digital transcriptional profiling of single cells. 
-      Nat. Commun. 8, 14049 (2017). doi:10.1038/ncomms14049pmid:28091601
+      <p>
+        [1] G. X. Y. Zheng, J. M. Terry, P. Belgrader, P. Ryvkin, Z. W. Bent, R. Wilson, S. B. Ziraldo, T. D. Wheeler, 
+        G. P. McDermott, J. Zhu, M. T. Gregory, J. Shuga, L. Montesclaros, J. G. Underwood, D. A. Masquelier, 
+        S. Y. Nishimura, M. Schnall-Levin, P. W. Wyatt, C. M. Hindson, R. Bharadwaj, A. Wong, K. D. Ness, L. W. Beppu, 
+        H. J. Deeg, C. McFarland, K. R. Loeb, W. J. Valente, N. G. Ericson, E. A. Stevens, J. P. Radich, T. S. Mikkelsen, 
+        B. J. Hindson, J. H. Bielas, Massively parallel digital transcriptional profiling of single cells. 
+        Nat. Commun. 8, 14049 (2017). doi:10.1038/ncomms14049pmid:28091601
       </p>
     </div>
   </div>
