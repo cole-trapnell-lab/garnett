@@ -18,43 +18,43 @@ knitr::opts_chunk$set(
 
 ```{r}
 library(garnett)
-library(org.Hs.eg.db)
 ```
 
 ```{r}
 # load in the data
-# NOTE: the 'system.file' file name is only necessary to read in 
+# NOTE: the 'system.file' file name is only necessary to read in
 # included package data
 #
 mat <- Matrix::readMM(system.file("extdata", "exprs_sparse.mtx", package = "garnett"))
 fdata <- read.table(system.file("extdata", "fdata.txt", package = "garnett"))
-pdata <- read.table(system.file("extdata", "pdata.txt", package = "garnett"), 
+pdata <- read.table(system.file("extdata", "pdata.txt", package = "garnett"),
                     sep="\t")
-
 row.names(mat) <- row.names(fdata)
 colnames(mat) <- row.names(pdata)
-# create a new CDS object
-pbmc_cds <- new_cell_data_set(as(mat, "dgCMatrix"),cell_metadata = pdata, gene_metadata = fdata)
 
-# generate size factors for normalization later
-pbmc_cds <- estimate_size_factors(pbmc_cds)
+# create a new CDS object
+pbmc_cds <- new_cell_data_set(as(mat, "dgCMatrix"),
+                              cell_metadata = pdata,
+                              gene_metadata = fdata)
 ```
 
 ```{r}
-marker_file_path <- system.file("extdata", "pbmc_bad_markers.txt", 
+library(org.Hs.eg.db)
+marker_file_path <- system.file("extdata", "pbmc_bad_markers.txt",
                                 package = "garnett")
-marker_check <- check_markers(pbmc_cds, marker_file_path, 
-                              db=org.Hs.eg.db, 
-                              cds_gene_id_type = "SYMBOL", 
+marker_check <- check_markers(pbmc_cds, marker_file_path,
+                              db=org.Hs.eg.db,
+                              cds_gene_id_type = "SYMBOL",
                               marker_file_gene_id_type = "SYMBOL")
 
 plot_markers(marker_check)
 ```
 
 ```{r}
+library(org.Hs.eg.db)
 set.seed(260)
 
-marker_file_path <- system.file("extdata", "pbmc_test.txt", 
+marker_file_path <- system.file("extdata", "pbmc_test.txt",
                                 package = "garnett")
 pbmc_classifier <- train_cell_classifier(cds = pbmc_cds,
                                          marker_file = marker_file_path,
@@ -62,25 +62,85 @@ pbmc_classifier <- train_cell_classifier(cds = pbmc_cds,
                                          cds_gene_id_type = "SYMBOL",
                                          num_unknown = 50,
                                          marker_file_gene_id_type = "SYMBOL")
-head(colData(pbmc_cds))
 ```
 
-
 ```{r}
-feature_genes <- get_feature_genes(pbmc_classifier, 
-                                   node = "root", 
+feature_genes <- get_feature_genes(pbmc_classifier,
+                                   node = "root",
                                    db = org.Hs.eg.db)
 head(feature_genes)
 ```
 
+```{r}
+get_classifier_references(pbmc_classifier)
+```
+
 
 ```{r}
+library(org.Hs.eg.db)
+set.seed(260)
+
+head(pData(pbmc_cds))
+
+# Add the columns needed for the example:
+pData(pbmc_cds)$known_type <- ifelse(pData(pbmc_cds)$FACS_type == "B cells", "B cells", "T cells")
+
+marker_file_path <- system.file("extdata", "pbmc_marker_free_test.txt",
+                                package = "garnett")
+pbmc_classifier <- train_cell_classifier(cds = pbmc_cds,
+                                         marker_file = marker_file_path,
+                                         db=org.Hs.eg.db,
+                                         cds_gene_id_type = "SYMBOL",
+                                         num_unknown = 50,
+                                         marker_file_gene_id_type = "SYMBOL")
+```
+
+```{r}
+# load in the data
+# NOTE: the 'system.file' file name is only necessary to read in
+# included package data
+#
+mat <- Matrix::readMM(system.file("extdata", "exprs_sparse.mtx", package = "garnett"))
+fdata <- read.table(system.file("extdata", "fdata.txt", package = "garnett"))
+pdata <- read.table(system.file("extdata", "pdata.txt", package = "garnett"),
+                    sep="\t")
+row.names(mat) <- row.names(fdata)
+colnames(mat) <- row.names(pdata)
+
+# create a new CDS object
+pbmc_cds <- new_cell_data_set(as(mat, "dgCMatrix"),
+                              cell_metadata = pdata,
+                              gene_metadata = fdata)
+```
+
+```{r}
+library(org.Hs.eg.db)
 pbmc_cds <- classify_cells(pbmc_cds, pbmc_classifier,
                            db = org.Hs.eg.db,
                            cluster_extend = TRUE,
                            cds_gene_id_type = "SYMBOL")
 
-table(colData(pbmc_cds)$cell_type)
-table(colData(pbmc_cds)$cluster_ext_type)
+
+head(pData(pbmc_cds))
+
+table(pData(pbmc_cds)$cell_type)
+
+table(pData(pbmc_cds)$cluster_ext_type)
+
+library(ggplot2)
+
+qplot(tsne_1, tsne_2, color = cell_type, data = as.data.frame(pData(pbmc_cds))) + 
+    theme_bw()
+
+qplot(tsne_1, tsne_2, color = cluster_ext_type, data = as.data.frame(pData(pbmc_cds))) + 
+    theme_bw()
+
+qplot(tsne_1, tsne_2, color = FACS_type, data = as.data.frame(pData(pbmc_cds))) + 
+    theme_bw()
+```
+
+
+```{r}
+citation("garnett")
 ```
 
