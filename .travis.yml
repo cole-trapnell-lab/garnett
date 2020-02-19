@@ -18,6 +18,7 @@ r_github_packages:
 
 r_binary_packages:
 - assertthat
+- backports
 - doParallel
 - forcats
 - ggplot2
