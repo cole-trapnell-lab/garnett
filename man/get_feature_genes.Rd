@@ -4,8 +4,7 @@
 \alias{get_feature_genes}
 \title{Extract feature genes}
 \usage{
-get_feature_genes(classifier, node = "root", convert_ids = FALSE,
-  db = NULL)
+get_feature_genes(classifier, node = "root", convert_ids = FALSE, db = NULL)
 }
 \arguments{
 \item{classifier}{Trained garnett_classifier - output from

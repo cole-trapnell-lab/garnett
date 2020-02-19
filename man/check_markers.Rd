@@ -4,9 +4,16 @@
 \alias{check_markers}
 \title{Check marker file}
 \usage{
-check_markers(cds, marker_file, db, cds_gene_id_type = "SYMBOL",
-  marker_file_gene_id_type = "SYMBOL", propogate_markers = TRUE,
-  use_tf_idf = TRUE, classifier_gene_id_type = "ENSEMBL")
+check_markers(
+  cds,
+  marker_file,
+  db,
+  cds_gene_id_type = "SYMBOL",
+  marker_file_gene_id_type = "SYMBOL",
+  propogate_markers = TRUE,
+  use_tf_idf = TRUE,
+  classifier_gene_id_type = "ENSEMBL"
+)
 }
 \arguments{
 \item{cds}{Input CDS object.}

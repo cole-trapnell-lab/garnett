@@ -139,7 +139,7 @@ train_cell_classifier <- function(cds,
                             msg = paste("classifier_gene_id_type must be one of",
                                         "keytypes(db)"))
     assertthat::assert_that(marker_file_gene_id_type %in%
-                            AnnotationDbi::keytypes(db),
+                              AnnotationDbi::keytypes(db),
                             msg = paste("marker_file_gene_id_type must be one of",
                                         "keytypes(db)"))
   }
@@ -164,21 +164,21 @@ train_cell_classifier <- function(cds,
   if (!is(counts(cds), "dgCMatrix")) {
     sf <- colData(cds)$Size_Factor
     cds <- suppressWarnings(new_cell_data_set(as(counts(cds), "dgCMatrix"),
-                                       cell_metadata = colData(cds),
-                                       gene_metadata = rowData(cds)))
+                                              cell_metadata = colData(cds),
+                                              gene_metadata = rowData(cds)))
     colData(cds)$Size_Factor <- sf
   }
 
   colData(cds)$num_genes_expressed <- Matrix::colSums(as(counts(cds),
-                                                       "lgCMatrix"))
+                                                         "lgCMatrix"))
   cell_totals <-  Matrix::colSums(counts(cds))
   sf <- colData(cds)$Size_Factor
 
   temp <- counts(cds)
   temp@x <- temp@x / rep.int(colData(cds)$Size_Factor, diff(temp@p))
   norm_cds <- suppressWarnings(new_cell_data_set(temp,
-                                     cell_metadata = colData(cds),
-                                     gene_metadata = rowData(cds)))
+                                                 cell_metadata = colData(cds),
+                                                 gene_metadata = rowData(cds)))
 
   orig_cds <- cds
   if(cds_gene_id_type != classifier_gene_id_type)  {
@@ -264,7 +264,7 @@ train_cell_classifier <- function(cds,
 
   ### Aggregate markers ###
   marker_scores <- data.frame(cell = row.names(tf_idf))
-
+  meta_only <- c()
   for (i in name_order) {
     agg <- aggregate_positive_markers(parse_list[[i]], tf_idf,
                                       gene_table, back_cutoff)
@@ -273,6 +273,8 @@ train_cell_classifier <- function(cds,
     if(is.null(agg))  {
       warning (paste("Cell type", i, "has no genes that are expressed",
                      "and will be skipped"))
+    } else if(class(agg) == "character" && agg == "no_gene") {
+      meta_only <- c(meta_only, i)
     } else {
       agg[names(agg) %in% bad_cells] <- 0
       marker_scores <- cbind(marker_scores, as.matrix(agg))
@@ -335,7 +337,8 @@ train_cell_classifier <- function(cds,
                                              back_cutoff,
                                              training_cutoff,
                                              marker_scores,
-                                             return_initial_assign)
+                                             return_initial_assign,
+                                             meta_only = meta_only)
 
       if(return_initial_assign) {
         return(training_sample)
@@ -402,6 +405,11 @@ make_name_map <- function(parse_list,
   gene_table$parent <- as.character(gene_table$parent)
   gene_table$fgenes <- as.character(gene_table$fgenes)
   gene_table$orig_fgenes <- gene_table$fgenes
+  if(is.null(gene_start)) {
+    message(paste("Marker file has no genes, continuing to build marker-free",
+                  "classifier"))
+    return(gene_table)
+  }
   if(cds_gene_id_type != marker_file_gene_id_type) {
     gene_table$fgenes <- convert_gene_ids(gene_table$orig_fgenes,
                                           db,
@@ -409,12 +417,12 @@ make_name_map <- function(parse_list,
                                           cds_gene_id_type)
     bad_convert <- sum(is.na(gene_table$fgenes))
     if (bad_convert > 0) warning(paste(bad_convert,
-                                 "genes could not be converted from",
-                                 marker_file_gene_id_type,
-                                 "to", cds_gene_id_type, "These genes are",
-                                 "listed below:", paste0(gene_table$orig_genes[
-                                   is.na(gene_table$fgenes)],
-                                   collapse="\n")))
+                                       "genes could not be converted from",
+                                       marker_file_gene_id_type,
+                                       "to", cds_gene_id_type, "These genes are",
+                                       "listed below:", paste0(gene_table$orig_genes[
+                                         is.na(gene_table$fgenes)],
+                                         collapse="\n")))
   } else {
     gene_table$cds <- gene_table$fgenes
   }
@@ -522,29 +530,33 @@ assemble_logic <- function(cell_type,
 
   logic = ""
   logic_list = list()
-  bad_genes <- gene_table[!gene_table$in_cds,]$orig_fgenes
 
-  # expressed/not expressed
-  logic_list <- lapply(cell_type@gene_rules, function(rule) {
-    log_piece <- ""
-    if (!rule@gene_name %in% bad_genes) {
-      paste0("(x['",
-             gene_table$fgenes[match(rule@gene_name, gene_table$orig_fgenes)],
-             "',] > ", rule@lower,
-             ") & (x['",
-             gene_table$fgenes[match(rule@gene_name, gene_table$orig_fgenes)],
-             "',] < ",
-             rule@upper,
-             ")")
+  if(length(cell_type@gene_rules) > 0 | (length(cell_type@expressed) > 0 | length(cell_type@not_expressed) > 0)) {
+
+
+    bad_genes <- gene_table[!gene_table$in_cds,]$orig_fgenes
+
+    # expressed/not expressed
+    logic_list <- lapply(cell_type@gene_rules, function(rule) {
+      log_piece <- ""
+      if (!rule@gene_name %in% bad_genes) {
+        paste0("(x['",
+               gene_table$fgenes[match(rule@gene_name, gene_table$orig_fgenes)],
+               "',] > ", rule@lower,
+               ") & (x['",
+               gene_table$fgenes[match(rule@gene_name, gene_table$orig_fgenes)],
+               "',] < ",
+               rule@upper,
+               ")")
+      }
+    })
+    if (length(cell_type@expressed) > 0 | length(cell_type@not_expressed) > 0) {
+      logic_list <- list(logic_list, paste0("assigns == '", cell_type@name, "'"))
     }
-  })
-  if (length(cell_type@expressed) > 0 | length(cell_type@not_expressed) > 0) {
-    logic_list <- list(logic_list, paste0("assigns == '", cell_type@name, "'"))
+
+    if(length(logic_list) == 0) warning(paste("Cell type", cell_type@name,
+                                              "has no valid expression rules."))
   }
-
-  if(length(logic_list) == 0) warning(paste("Cell type", cell_type@name,
-                                            "has no valid expression rules."))
-
   # meta data
   if (nrow(cell_type@meta) > 0) {
     mlogic <- plyr::dlply(cell_type@meta, plyr::.(name), function(x) {
@@ -560,6 +572,8 @@ assemble_logic <- function(cell_type,
     logic_list <- c(logic_list, unname(mlogic))
   }
   logic_list <- logic_list[!is.na(logic_list)]
+  if(length(logic_list) == 0) warning(paste("Cell type", cell_type@name,
+                                            "has no valid rules."))
   logic_list
 }
 

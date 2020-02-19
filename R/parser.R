@@ -43,12 +43,12 @@ Lexer <- R6::R6Class(
 #' a comma). Each new descriptor should begin on a new line. A generic cell
 #' type entry looks like this:
 #'
-#' ```
+#' \code{
 #' > cell type name
 #' descriptor: spec1, spec2,
 #' spec3, spec4
 #' descriptor2: spec1
-#' ```
+#' }
 #'
 #' The following are the potential descriptors:
 #' \describe{
@@ -56,7 +56,8 @@ Lexer <- R6::R6Class(
 #'   and the name should head the cell type description. To indicate a new cell
 #'   type, use the \code{>} symbol, followed by the cell name, followed by a
 #'   new line. For example, \code{> T cell}.}
-#'   \item{expressed:}{\strong{Required} After the cell name, the minimal
+#'   \item{expressed:}{\strong{Required unless using marker-free (see below)}
+#'   After the cell name, the minimal
 #'   requirement for each cell type is the name of a single marker gene. The
 #'   line in the marker file will begin with \code{expressed:}, followed by one
 #'   or more gene names separated by commas. The last gene name of the
@@ -120,6 +121,13 @@ Lexer <- R6::R6Class(
 #'   \code{expressed between: ACT5 2 5.5, ACT2 1 2.7}. This descriptor will
 #'   only allow training cells expressing the given gene between the two values
 #'   provided.}
+#'
+#'   \strong{Marker-free cell-type definitions (alpha-feature):} If you would like
+#'   to specify a cell type based only on a meta-data definition, you can do that
+#'   using the meta data tag as described above \strong{without providing any gene markers}.
+#'   This new feature is useful for generating Garnett models when you already have
+#'   cell type definitions on one dataset and would like to extend them to a new dataset.
+#'
 #' }
 #' @section Checking your marker file:
 #'

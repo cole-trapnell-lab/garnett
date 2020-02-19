@@ -135,3 +135,69 @@ test_that("circular subtypes not allowed", {
     "'test cell 2' cannot be a subtype of itself. Please modify marker file.")
 })
 
+pData(test_cds)$overall_type <- ifelse(pData(test_cds)$FACS_type == "B cells", "B cells", "T cells")
+
+test_classifier <- train_cell_classifier(cds = test_cds,
+                                        marker_file = "../marker_free_test.txt",
+                                        db=org.Hs.eg.db,
+                                        min_observations = 10,
+                                        cds_gene_id_type = "SYMBOL",
+                                        num_unknown = 50,
+                                        marker_file_gene_id_type = "SYMBOL")
+
+test_that("training works with marker_free", {
+  expect_is(test_classifier, "garnett_classifier")
+  expect_equal(length(test_classifier@classification_tree), 10)
+})
+
+set.seed(10)
+new_cds <- classify_cells(test_cds, test_classifier,
+                           db = org.Hs.eg.db,
+                           cluster_extend = TRUE,
+                           cds_gene_id_type = "SYMBOL")
+
+test_that("classify_cells marker_free works", {
+  expect_identical(counts(new_cds), counts(test_cds))
+  expect_identical(rowData(new_cds), rowData(test_cds))
+  expect_equal(sum(colData(new_cds)$cell_type == "B cells"), 376)
+  expect_equal(sum(colData(new_cds)$cell_type == "CD4 T cells"), 213)
+  expect_equal(sum(colData(new_cds)$cell_type == "CD8 T cells"), 111)
+  expect_equal(sum(colData(new_cds)$cell_type == "T cells"), 50)
+  expect_equal(sum(colData(new_cds)$cluster_ext_type == "B cells"), 402)
+  expect_equal(sum(colData(new_cds)$cluster_ext_type == "CD4 T cells"), 201)
+  expect_equal(sum(colData(new_cds)$cluster_ext_type == "T cells"), 197)
+})
+
+pData(test_cds)$overall_type <- ifelse(pData(test_cds)$FACS_type == "B cells", "B cells", "T cells")
+
+test_classifier <- train_cell_classifier(cds = test_cds,
+                                         marker_file = "../marker_free_mixed_test.txt",
+                                         db=org.Hs.eg.db,
+                                         min_observations = 10,
+                                         cds_gene_id_type = "SYMBOL",
+                                         num_unknown = 50,
+                                         marker_file_gene_id_type = "SYMBOL")
+
+test_that("training works with marker_free mixed", {
+  expect_is(test_classifier, "garnett_classifier")
+  expect_equal(length(test_classifier@classification_tree), 10)
+})
+
+set.seed(10)
+new_cds <- classify_cells(test_cds, test_classifier,
+                          db = org.Hs.eg.db,
+                          cluster_extend = TRUE,
+                          cds_gene_id_type = "SYMBOL")
+
+test_that("classify_cells marker_free mixed works", {
+  expect_identical(counts(new_cds), counts(test_cds))
+  expect_identical(rowData(new_cds), rowData(test_cds))
+  expect_equal(sum(colData(new_cds)$cell_type == "B cells"), 209)
+  expect_equal(sum(colData(new_cds)$cell_type == "CD4 T cells"), 24)
+  expect_equal(sum(colData(new_cds)$cell_type == "CD8 T cells"), 99)
+  expect_equal(sum(colData(new_cds)$cell_type == "T cells"), 280)
+  expect_equal(sum(colData(new_cds)$cluster_ext_type == "B cells"), 402)
+  expect_equal(sum(colData(new_cds)$cluster_ext_type == "CD4 T cells"), 205)
+  expect_equal(sum(colData(new_cds)$cluster_ext_type == "T cells"), 47)
+})
+

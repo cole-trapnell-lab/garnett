@@ -11,7 +11,8 @@ get_training_sample <- function(cds,
                                 back_cutoff,
                                 training_cutoff,
                                 marker_scores,
-                                return_initial_assign) {
+                                return_initial_assign,
+                                meta_only) {
 
   ##### Find type assignment from expressed/not expressed #####
 
@@ -19,27 +20,29 @@ get_training_sample <- function(cds,
     suppressWarnings(outnei(curr_node)) ]$name
   parent <- igraph::V(classifier@classification_tree)[curr_node]$name
   if (length(child_cell_types) > 0) {
-    if (length(intersect(child_cell_types,
-                         colnames(marker_scores))) == 0) {
+    if (length(intersect(child_cell_types, colnames(marker_scores))) == 0 &
+        length(intersect(child_cell_types, meta_only)) == 0) {
       return(NULL)
     }
-    assigns <- assign_type(marker_scores[,intersect(child_cell_types,
-                                                    colnames(marker_scores)),
-                                         drop=FALSE],
-                           training_cutoff, return_initial_assign)
-    if(return_initial_assign) {
-      return(assigns)
+    if (length(intersect(child_cell_types, colnames(marker_scores))) > 0) {
+      assigns <- assign_type(marker_scores[,intersect(child_cell_types,
+                                                      colnames(marker_scores)),
+                                           drop=FALSE],
+                             training_cutoff, return_initial_assign)
+      if(return_initial_assign) {
+        return(assigns)
+      }
+      assigns <- as.data.frame(assigns)
+      names(assigns) <- "assigns"
+      colData(orig_cds)$assigns <- assigns[row.names(colData(orig_cds)),"assigns"]
+      colData(orig_cds)$assigns <- as.character(colData(orig_cds)$assigns)
+      colData(orig_cds)$assigns[is.na(colData(orig_cds)$assigns)] <- "None"
     }
   }
 
-  assigns <- as.data.frame(assigns)
 
-  names(assigns) <- "assigns"
-  colData(orig_cds)$assigns <- assigns[row.names(colData(orig_cds)),"assigns"]
-  colData(orig_cds)$assigns <- as.character(colData(orig_cds)$assigns)
-  colData(orig_cds)$assigns[is.na(colData(orig_cds)$assigns)] <- "None"
 
-  ##### Exclude possibles using other definitions #####
+  ##### Add/Exclude possibles using other definitions #####
   child_rules <- list()
   for (child in child_cell_types) {
     cell_class_func <-
@@ -91,9 +94,17 @@ get_training_sample <- function(cds,
   outgroup_samples <- !ctf_cell_type %in% child_cell_types
 
   if (length(outgroup_samples) > 0){
-    outgroup_samples <- ctf_cell_type[outgroup_samples]
+    # if very few cells are available for outgroup, use whole cds to find outgroup
+    if(sum(outgroup_samples) < (.1 * num_unknown)) {
+      out_group_cds <- cds
+      outgroup_samples <- rep("Unknown", nrow(pData(cds)))
+      names(outgroup_samples) <- row.names(pData(cds))
+    } else {
+      outgroup_samples <- ctf_cell_type[outgroup_samples]
 
-    out_group_cds <- cds[,names(outgroup_samples)]
+      out_group_cds <- cds[,names(outgroup_samples)]
+    }
+
     out_group_cds <- out_group_cds[,sample(row.names(colData(out_group_cds)),
                                            min(nrow(colData(out_group_cds)),
                                                num_unknown * 10),
@@ -117,6 +128,7 @@ get_training_sample <- function(cds,
     }
     outgroup <- rep("Unknown", length(outg))
     names(outgroup) <- outg
+    training_sample <- training_sample[!names(training_sample) %in% names(outgroup)]
     training_sample <- append(training_sample, outgroup)
   }
 
@@ -180,6 +192,7 @@ aggregate_positive_markers <- function(cell_type,
                                        back_cutoff,
                                        agg = TRUE) {
   gene_list <- cell_type@expressed
+  if (length(gene_list) == 0) return("no_gene")
   bad_genes <- gene_table[!gene_table$in_cds,]$orig_fgenes
   gene_list <- gene_list[!gene_list %in% bad_genes]
   gene_list <- gene_table$fgenes[match(gene_list,gene_table$orig_fgenes)]

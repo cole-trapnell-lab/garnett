@@ -1,0 +1,13 @@
+>B cells
+expressed: CD19, MS4A1, CD79A
+
+>T cells
+overall_type: T cells
+
+>CD4 T cells
+expressed: CD4
+subtype of: T cells
+
+>CD8 T cells
+expressed: CD8A, CD8B
+subtype of: T cells
