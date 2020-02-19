@@ -541,7 +541,7 @@ pbmc_classifier <- train_cell_classifier(cds = pbmc_cds,
       </p>
 
 {% highlight R %}
-feature_genes <- get_feature_genes(pbmc_classifier,
+feature_genes <- get_feature_genes(pbmc_classifier, 
                                    node = "root",
                                    db = org.Hs.eg.db)
 head(feature_genes)
