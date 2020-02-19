@@ -4,10 +4,18 @@
 \alias{classify_cells}
 \title{Classify cells from trained garnett_classifier}
 \usage{
-classify_cells(cds, classifier, db, cds_gene_id_type = "ENSEMBL",
-  rank_prob_ratio = 1.5, cluster_extend = FALSE, verbose = FALSE,
+classify_cells(
+  cds,
+  classifier,
+  db,
+  cds_gene_id_type = "ENSEMBL",
+  rank_prob_ratio = 1.5,
+  cluster_extend = FALSE,
+  verbose = FALSE,
   cluster_extend_max_frac_unknown = 0.95,
-  cluster_extend_max_frac_incorrect = 0.1, return_type_levels = FALSE)
+  cluster_extend_max_frac_incorrect = 0.1,
+  return_type_levels = FALSE
+)
 }
 \arguments{
 \item{cds}{Input CDS object.}
@@ -58,7 +66,7 @@ details.}
 
 \item{return_type_levels}{Logical. When \code{TRUE}, the function additionally
 appends assignments from each hierarchical level in the classifier as columns
-in the pData table labeled \code{cell_type_li}, where "i" indicates the 
+in the pData table labeled \code{cell_type_li}, where "i" indicates the
 corresponding level index}
 }
 \value{

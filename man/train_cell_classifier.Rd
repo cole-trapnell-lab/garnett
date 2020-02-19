@@ -4,11 +4,21 @@
 \alias{train_cell_classifier}
 \title{Train a cell type classifier}
 \usage{
-train_cell_classifier(cds, marker_file, db, cds_gene_id_type = "ENSEMBL",
-  marker_file_gene_id_type = "SYMBOL", min_observations = 8,
-  max_training_samples = 500, num_unknown = 500,
-  propogate_markers = TRUE, cores = 1, lambdas = NULL,
-  classifier_gene_id_type = "ENSEMBL", return_initial_assign = FALSE)
+train_cell_classifier(
+  cds,
+  marker_file,
+  db,
+  cds_gene_id_type = "ENSEMBL",
+  marker_file_gene_id_type = "SYMBOL",
+  min_observations = 8,
+  max_training_samples = 500,
+  num_unknown = 500,
+  propogate_markers = TRUE,
+  cores = 1,
+  lambdas = NULL,
+  classifier_gene_id_type = "ENSEMBL",
+  return_initial_assign = FALSE
+)
 }
 \arguments{
 \item{cds}{Input CDS object.}

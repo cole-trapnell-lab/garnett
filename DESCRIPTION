@@ -46,5 +46,6 @@ Suggests:
     knitr,
     rmarkdown,
     vdiffr
-RoxygenNote: 6.1.1
+Roxygen: list(r6 = FALSE)
+RoxygenNote: 7.0.2
 VignetteBuilder: knitr
