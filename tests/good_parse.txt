@@ -9,7 +9,7 @@ tissue: liver
 references: website1.htm, website2.htm
 
 >cell 2 test
-expressed: hannah, gene2
+expressed: han(n)-ah, gene2
 not expressed: zach, gene3
 expressed below: jose 7, dejun 2, gene4 0.9
 expressed above: lauren 1.2, greg 2, hannah 5
