@@ -15,6 +15,7 @@ test_that("basic parsing works", {
   expect_is(parse_list[["test cell 1"]]@gene_rules, "list")
   expect_is(parse_list[["test cell 1"]]@gene_rules[[1]], "gene_rule")
   expect_equal(parse_list[["cell 2 test"]]@parenttype, "test cell 1")
+  expect_equal(parse_list[["cell 2 test"]]@expressed[[1]], "han(n)-ah")
   expect_equal(parse_list[["cell 2 test"]]@gene_rules[[1]]@upper, 7)
   expect_equal(parse_list[["test cell 1"]]@references[[1]], "website1.htm")
   expect_equal(parse_list[["test cell 14"]]@references[[3]], "website2.htm")
