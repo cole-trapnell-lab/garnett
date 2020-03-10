@@ -21,8 +21,6 @@ r_binary_packages:
 - backports
 - doParallel
 - forcats
-- ggplot2
-- ggrepel
 - glasso
 - glmnet
 - igraph
