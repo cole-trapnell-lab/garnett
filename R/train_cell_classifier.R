@@ -353,7 +353,7 @@ train_cell_classifier <- function(cds,
         rm <- do.call(cbind, rm)
         rm <- as.data.frame(rm)
         rm$num_3q <- rowSums(rm > apply(rm, 2, stats::quantile,
-                                        p = rel_gene_quantile))
+                                        p = rel_gene_quantile, na.rm=TRUE))
         exclude <- row.names(rm[rm$num_3q == max(rm$num_3q),])
         cds_sub <- cds_sub[setdiff(row.names(fData(cds_sub)), exclude),]
 
