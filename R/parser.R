@@ -9,7 +9,7 @@ Lexer <- R6::R6Class(
       c('expressed below|expressed above|expressed between|subtype of'),
     t_SIMP_KEY = c('celltype|expressed|not expressed|references'),
     t_NAME =
-      '[a-zA-Z0-9_+/\\-\\.|=`~\\*&<^%?@!$;:]*[a-zA-Z][a-zA-Z0-9_+/\\-\\.|=`~\\*&<^%?@!$;]*',
+      '[a-zA-Z0-9_+/\\-\\.|=`~\\*&<^%?@!$();:]*[a-zA-Z][a-zA-Z0-9_+/\\-\\.|=`~\\*&<^%?@!$();]*',
     t_NUM = '([0-9]*\\.[0-9]+)|([0-9]+)',
     t_ignore = " \t",
     t_NEWLINE = "\n|\r\n",
