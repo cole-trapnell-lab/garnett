@@ -158,7 +158,7 @@ classify_cells <- function(cds,
 
   if (methods::.hasSlot(classifier, "gene_id_type")) {
     classifier_gene_id_type <- classifier@gene_id_type
-  } else {
+  } else if (classifier_gene_id_type != "custom") {
     classifier_gene_id_type <- "ENSEMBL"
   }
 
