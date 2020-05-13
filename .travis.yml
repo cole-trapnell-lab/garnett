@@ -53,11 +53,10 @@ r_binary_packages:
 - nlme
 - nnet
 - pillar
-- pkgconfig 
-- pkgkitten 
+- pkgconfig
+- pkgkitten
 - plogr
 - purrr
-- r6
 - rcolorbrewer
 - rcpp
 - rlang
