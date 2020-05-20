@@ -156,10 +156,12 @@ classify_cells <- function(cds,
                              cell_metadata = colData(cds),
                              gene_metadata = rowData(cds)))
 
-  if (methods::.hasSlot(classifier, "gene_id_type")) {
-    classifier_gene_id_type <- classifier@gene_id_type
-  } else if (classifier_gene_id_type != "custom") {
-    classifier_gene_id_type <- "ENSEMBL"
+  if (classifier_gene_id_type != "custom") {
+    if (methods::.hasSlot(classifier, "gene_id_type")) {
+      classifier_gene_id_type <- classifier@gene_id_type
+    } else {
+      classifier_gene_id_type <- "ENSEMBL"
+    }
   }
 
   ### Convert to Classifier IDs ###
