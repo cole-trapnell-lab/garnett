@@ -94,8 +94,8 @@ get_training_sample <- function(cds,
   outgroup_samples <- !ctf_cell_type %in% child_cell_types
 
   if (length(outgroup_samples) > 0){
-    # if very few cells are available for outgroup, use whole cds to find outgroup
-    if(sum(outgroup_samples) < (.1 * num_unknown)) {
+    # if few cells are available for outgroup, use whole cds to find outgroup
+    if(sum(outgroup_samples) < (num_unknown)) {
       out_group_cds <- cds
       outgroup_samples <- rep("Unknown", nrow(pData(cds)))
       names(outgroup_samples) <- row.names(pData(cds))

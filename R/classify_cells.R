@@ -108,6 +108,7 @@ classify_cells <- function(cds,
     assertthat::assert_that(cds_gene_id_type %in% AnnotationDbi::keytypes(db),
                             msg = paste("cds_gene_id_type must be one of",
                                         "keytypes(db)"))
+    classifier_gene_id_type <- 'temp'
   }
 
   assertthat::assert_that(is.numeric(rank_prob_ratio))
