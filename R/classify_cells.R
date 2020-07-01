@@ -396,8 +396,9 @@ make_predictions <- function(cds,
       nonz <- Matrix::rowSums(do.call(cbind,
                                       glmnet:::coef.cv.glmnet(cvfit,
                                                              s="lambda.min")))
-      nonz <- names(nonz[nonz != 0])
       nonz <- nonz[2:length(nonz)]
+      nonz <- names(nonz[nonz != 0])
+
       if (sum(!nonz %in% row.names(exprs(cds))) > 0) {
         warning(paste("The following genes used in the classifier are not",
                       "present in the input CDS. Interpret with caution.",
