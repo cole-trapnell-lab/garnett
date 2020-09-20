@@ -108,7 +108,7 @@ get_feature_genes <- function(classifier,
   }
   s = "lambda.min"
   cvfit <- igraph::V(classifier@classification_tree)[node]$model
-  feature_genes <- glmnet:::coef.cv.glmnet(cvfit[[1]], s = s)
+  feature_genes <- glmnet::coef.glmnet(cvfit[[1]], s = s)
 
   all <- as.data.frame(as.matrix(do.call("cbind", feature_genes)))
   names(all) <- names(feature_genes)
