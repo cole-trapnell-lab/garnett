@@ -1,7 +1,7 @@
 Package: garnett
 Type: Package
 Title: Automated cell type classification
-Version: 0.1.18
+Version: 0.1.19
 Author: c(
     person("Hannah", "Pliner", email = "hpliner@uw.edu", role = c("aut", "cre")), 
     person("Cole", "Trapnell", email = "coletrap@uw.edu", role = c("aut")))
@@ -28,7 +28,7 @@ Imports:
     forcats (>= 0.3.0),
     ggplot2 (>= 3.1.0),
     ggrepel (>= 0.8.0),
-    glmnet (>= 2.0-16),
+    glmnet (>= 4.0-2),
     igraph (>= 1.2.2),
     irlba (>= 2.3.2),
     Matrix (>= 1.2-15),
