@@ -19,13 +19,13 @@ test_cds <- garnett::classify_cells(test_cds, test_classifier,
                                     cds_gene_id_type = "SYMBOL")
 
 test_that("whole process is the same", {
-  expect_equal(sum(colData(test_cds)$cell_type == "B cells"), 204)
-  expect_equal(sum(colData(test_cds)$cell_type == "CD4 T cells"), 64)
-  expect_equal(sum(colData(test_cds)$cell_type == "CD8 T cells"), 45)
-  expect_equal(sum(colData(test_cds)$cell_type == "T cells"), 93)
-  expect_equal(sum(colData(test_cds)$cluster_ext_type == "B cells"), 403)
-  expect_equal(sum(colData(test_cds)$cluster_ext_type == "CD4 T cells"), 201)
-  expect_equal(sum(colData(test_cds)$cluster_ext_type == "T cells"), 196)
+  expect_equal(sum(colData(test_cds)$cell_type == "B cells"), 220)
+  expect_equal(sum(colData(test_cds)$cell_type == "CD4 T cells"), 75)
+  expect_equal(sum(colData(test_cds)$cell_type == "CD8 T cells"), 47)
+  expect_equal(sum(colData(test_cds)$cell_type == "T cells"), 103)
+  expect_equal(sum(colData(test_cds)$cluster_ext_type == "B cells"), 400)
+  expect_equal(sum(colData(test_cds)$cluster_ext_type == "CD4 T cells"), 206)
+  expect_equal(sum(colData(test_cds)$cluster_ext_type == "T cells"), 194)
 })
 
 
@@ -79,13 +79,13 @@ test_cds <- garnett::classify_cells(test_cds, test_classifier,
                                     cds_gene_id_type = "SYMBOL")
 
 test_that("whole process is the same multi-core", {
-  expect_equal(sum(colData(test_cds)$cell_type == "B cells"), 204)
-  expect_equal(sum(colData(test_cds)$cell_type == "CD4 T cells"), 64)
-  expect_equal(sum(colData(test_cds)$cell_type == "CD8 T cells"), 45)
-  expect_equal(sum(colData(test_cds)$cell_type == "T cells"), 93)
-  expect_equal(sum(colData(test_cds)$cluster_ext_type == "B cells"), 403)
-  expect_equal(sum(colData(test_cds)$cluster_ext_type == "CD4 T cells"), 201)
-  expect_equal(sum(colData(test_cds)$cluster_ext_type == "T cells"), 196)
+  expect_equal(sum(colData(test_cds)$cell_type == "B cells"), 220)
+  expect_equal(sum(colData(test_cds)$cell_type == "CD4 T cells"), 75)
+  expect_equal(sum(colData(test_cds)$cell_type == "CD8 T cells"), 47)
+  expect_equal(sum(colData(test_cds)$cell_type == "T cells"), 103)
+  expect_equal(sum(colData(test_cds)$cluster_ext_type == "B cells"), 400)
+  expect_equal(sum(colData(test_cds)$cluster_ext_type == "CD4 T cells"), 206)
+  expect_equal(sum(colData(test_cds)$cluster_ext_type == "T cells"), 194)
 })
 
 data(test_cds)
@@ -110,8 +110,8 @@ test_that("whole process is the same db = 'none'", {
   expect_equal(sum(colData(test_cds)$cell_type == "CD4 T cells"), 66)
   expect_equal(sum(colData(test_cds)$cell_type == "CD8 T cells"), 48)
   expect_equal(sum(colData(test_cds)$cell_type == "T cells"), 106)
-  expect_equal(sum(colData(test_cds)$cluster_ext_type == "B cells"), 403)
-  expect_equal(sum(colData(test_cds)$cluster_ext_type == "CD4 T cells"), 201)
-  expect_equal(sum(colData(test_cds)$cluster_ext_type == "T cells"), 196)
+  expect_equal(sum(colData(test_cds)$cluster_ext_type == "B cells"), 400)
+  expect_equal(sum(colData(test_cds)$cluster_ext_type == "CD4 T cells"), 206)
+  expect_equal(sum(colData(test_cds)$cluster_ext_type == "T cells"), 194)
 })
 
