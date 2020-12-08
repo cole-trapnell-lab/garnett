@@ -9,7 +9,7 @@ ensembl <- garnett:::cds_to_other_id(test_cds, db=org.Hs.eg.db,
 
 test_that("cds_to_other_id works", {
   expect_is(ensembl, "CellDataSet")
-  expect_equal(nrow(fData(ensembl)), 19140)
+  expect_equal(nrow(fData(ensembl)), 19076)
   expect_equal(row.names(fData(ensembl)[
     fData(ensembl)$gene_short_name == "FAM87B",]), "ENSG00000177757")
   expect_identical(exprs(test_cds)["FAM87B",],
@@ -96,7 +96,7 @@ marker_check2 <- check_markers(test_cds, use_tf_idf = F,
 
 test_that("check_markers works", {
   expect_identical(marker_check, marker_check_dos)
-  expect_equal(sum(marker_check$marker_score), 413.8816, tol = 1e-4)
+  expect_equal(sum(marker_check$marker_score), 414.1387, tol = 1e-4)
   expect_equal(nrow(marker_check), 18)
   expect_equal(sum(marker_check$summary != "Ok"), 3)
   sub <- subset(marker_check, parent != "root")

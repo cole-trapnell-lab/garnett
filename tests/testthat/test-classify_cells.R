@@ -33,9 +33,9 @@ test_that("classify_cells works", {
   expect_equal(sum(pData(new_cds)$cell_type == "CD4 T cells"), 82)
   expect_equal(sum(pData(new_cds)$cell_type == "CD8 T cells"), 48)
   expect_equal(sum(pData(new_cds)$cell_type == "T cells"), 142)
-  expect_equal(sum(pData(new_cds)$cluster_ext_type == "B cells"), 402)
-  expect_equal(sum(pData(new_cds)$cluster_ext_type == "CD4 T cells"), 200)
-  expect_equal(sum(pData(new_cds)$cluster_ext_type == "T cells"), 198)
+  expect_equal(sum(pData(new_cds)$cluster_ext_type == "B cells"), 400)
+  expect_equal(sum(pData(new_cds)$cluster_ext_type == "CD4 T cells"), 206)
+  expect_equal(sum(pData(new_cds)$cluster_ext_type == "T cells"), 194)
 })
 
 pData(test_cds)$garnett_cluster <- c(rep(1, times=200), rep(2, times=200),
