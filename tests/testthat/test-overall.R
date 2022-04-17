@@ -117,9 +117,9 @@ test_cds <- garnett::classify_cells(test_cds, test_classifier,
 
 test_that("whole process is the same db = 'none'", {
   expect_equal(sum(pData(test_cds)$cell_type == "B cells"), 202)
-  expect_equal(sum(pData(test_cds)$cell_type == "CD4 T cells"), 64)
-  expect_equal(sum(pData(test_cds)$cell_type == "CD8 T cells"), 43)
-  expect_equal(sum(pData(test_cds)$cell_type == "T cells"), 105)
+  expect_equal(sum(pData(test_cds)$cell_type == "CD4 T cells"), 65)
+  expect_equal(sum(pData(test_cds)$cell_type == "CD8 T cells"), 52)
+  expect_equal(sum(pData(test_cds)$cell_type == "T cells"), 100)
   expect_equal(sum(pData(test_cds)$cluster_ext_type == "B cells"), 400)
   expect_equal(sum(pData(test_cds)$cluster_ext_type == "CD4 T cells"), 0)
   expect_equal(sum(pData(test_cds)$cluster_ext_type == "T cells"), 400)
