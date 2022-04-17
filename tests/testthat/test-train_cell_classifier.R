@@ -74,7 +74,7 @@ test_classifier <- train_cell_classifier(cds = test_cds,
 
 test_that("training works with ensembl ids", {
   expect_is(test_classifier, "garnett_classifier")
-  expect_equal(length(test_classifier@classification_tree), 10)
+  expect_equal(length(test_classifier@classification_tree), 3)
 })
 
 data(test_cds)
@@ -93,7 +93,7 @@ test_classifier <- train_cell_classifier(cds = ens_cds,
 
 test_that("training works with both ids", {
   expect_is(test_classifier, "garnett_classifier")
-  expect_equal(length(test_classifier@classification_tree), 10)
+  expect_equal(length(test_classifier@classification_tree), 3)
 })
 
 
@@ -107,7 +107,7 @@ test_classifier <- train_cell_classifier(cds = test_cds,
                                          marker_file_gene_id_type = "SYMBOL")
 test_that("training works with symbol ids", {
   expect_is(test_classifier, "garnett_classifier")
-  expect_equal(length(test_classifier@classification_tree), 10)
+  expect_equal(length(test_classifier@classification_tree), 5)
 })
 
 set.seed(260)
@@ -120,7 +120,7 @@ test_classifier2 <- train_cell_classifier(cds = test_cds,
                                          marker_file_gene_id_type = "SYMBOL")
 test_that("training works with carriage return", {
   expect_is(test_classifier, "garnett_classifier")
-  expect_equal(length(test_classifier@classification_tree), 10)
+  expect_equal(length(test_classifier@classification_tree), 5)
 })
 
 test_that("circular subtypes not allowed", {
@@ -147,7 +147,7 @@ test_classifier <- train_cell_classifier(cds = test_cds,
 
 test_that("training works with marker_free", {
   expect_is(test_classifier, "garnett_classifier")
-  expect_equal(length(test_classifier@classification_tree), 10)
+  expect_equal(length(test_classifier@classification_tree), 5)
 })
 
 set.seed(10)
@@ -159,13 +159,13 @@ new_cds <- classify_cells(test_cds, test_classifier,
 test_that("classify_cells marker_free works", {
   expect_identical(counts(new_cds), counts(test_cds))
   expect_identical(rowData(new_cds), rowData(test_cds))
-  expect_equal(sum(colData(new_cds)$cell_type == "B cells"), 375)
-  expect_equal(sum(colData(new_cds)$cell_type == "CD4 T cells"), 217)
-  expect_equal(sum(colData(new_cds)$cell_type == "CD8 T cells"), 108)
-  expect_equal(sum(colData(new_cds)$cell_type == "T cells"), 50)
+  expect_equal(sum(colData(new_cds)$cell_type == "B cells"), 376)
+  expect_equal(sum(colData(new_cds)$cell_type == "CD4 T cells"), 175)
+  expect_equal(sum(colData(new_cds)$cell_type == "CD8 T cells"), 93)
+  expect_equal(sum(colData(new_cds)$cell_type == "T cells"), 106)
   expect_equal(sum(colData(new_cds)$cluster_ext_type == "B cells"), 400)
-  expect_equal(sum(colData(new_cds)$cluster_ext_type == "CD4 T cells"), 206)
-  expect_equal(sum(colData(new_cds)$cluster_ext_type == "T cells"), 194)
+  expect_equal(sum(colData(new_cds)$cluster_ext_type == "CD4 T cells"), 271)
+  expect_equal(sum(colData(new_cds)$cluster_ext_type == "T cells"), 129)
 })
 
 pData(test_cds)$overall_type <- ifelse(pData(test_cds)$FACS_type == "B cells", "B cells", "T cells")
@@ -180,7 +180,7 @@ test_classifier <- train_cell_classifier(cds = test_cds,
 
 test_that("training works with marker_free mixed", {
   expect_is(test_classifier, "garnett_classifier")
-  expect_equal(length(test_classifier@classification_tree), 10)
+  expect_equal(length(test_classifier@classification_tree), 5)
 })
 
 set.seed(10)
@@ -192,12 +192,12 @@ new_cds <- classify_cells(test_cds, test_classifier,
 test_that("classify_cells marker_free mixed works", {
   expect_identical(counts(new_cds), counts(test_cds))
   expect_identical(rowData(new_cds), rowData(test_cds))
-  expect_equal(sum(colData(new_cds)$cell_type == "B cells"), 211)
+  expect_equal(sum(colData(new_cds)$cell_type == "B cells"), 208)
   expect_equal(sum(colData(new_cds)$cell_type == "CD4 T cells"), 24)
-  expect_equal(sum(colData(new_cds)$cell_type == "CD8 T cells"), 99)
+  expect_equal(sum(colData(new_cds)$cell_type == "CD8 T cells"), 98)
   expect_equal(sum(colData(new_cds)$cell_type == "T cells"), 279)
   expect_equal(sum(colData(new_cds)$cluster_ext_type == "B cells"), 400)
-  expect_equal(sum(colData(new_cds)$cluster_ext_type == "CD4 T cells"), 209)
-  expect_equal(sum(colData(new_cds)$cluster_ext_type == "T cells"), 39)
+  expect_equal(sum(colData(new_cds)$cluster_ext_type == "CD4 T cells"), 0)
+  expect_equal(sum(colData(new_cds)$cluster_ext_type == "T cells"), 271)
 })
 
