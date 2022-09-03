@@ -172,7 +172,7 @@ train_cell_classifier <- function(cds,
   }
 
   pData(cds)$num_genes_expressed <- Matrix::colSums(as(exprs(cds),
-                                                       "lgCMatrix"))
+                                                       "lMatrix"))
   cell_totals <-  Matrix::colSums(exprs(cds))
   sf <- pData(cds)$Size_Factor
 

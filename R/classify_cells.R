@@ -136,7 +136,7 @@ classify_cells <- function(cds,
   }
 
   pData(cds)$num_genes_expressed <- Matrix::colSums(as(exprs(cds),
-                                                       "lgCMatrix"))
+                                                       "lMatrix"))
   new_cell_totals <- Matrix::colSums(exprs(cds))
 
   excluded_cells <- NULL
