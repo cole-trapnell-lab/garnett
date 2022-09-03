@@ -135,7 +135,7 @@ classify_cells <- function(cds,
   }
 
   colData(cds)$num_genes_expressed <- Matrix::colSums(as(counts(cds),
-                                                       "lgCMatrix"))
+                                                       "lMatrix"))
   save_sf <- colData(cds)$Size_Factor
   new_cell_totals <- Matrix::colSums(counts(cds))
 

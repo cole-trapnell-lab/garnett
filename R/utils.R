@@ -311,7 +311,7 @@ check_markers <- function(cds,
                            classifier_gene_id_type)
     colData(cds)$Size_Factor <- sf
   }
-  colData(cds)$num_genes_expressed <- Matrix::colSums(as(counts(cds), "lgCMatrix"))
+  colData(cds)$num_genes_expressed <- Matrix::colSums(as(counts(cds), "lMatrix"))
   cell_totals <-  Matrix::colSums(counts(cds))
 
   orig_cds <- cds
