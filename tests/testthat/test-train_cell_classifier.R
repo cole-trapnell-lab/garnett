@@ -74,7 +74,7 @@ test_classifier <- train_cell_classifier(cds = test_cds,
 
 test_that("training works with ensembl ids", {
   expect_is(test_classifier, "garnett_classifier")
-  expect_equal(length(test_classifier@classification_tree), 10)
+  expect_equal(length(test_classifier@classification_tree), 3)
 })
 
 data(test_cds)
@@ -94,7 +94,7 @@ test_classifier <- train_cell_classifier(cds = ens_cds,
 
 test_that("training works with both ids", {
   expect_is(test_classifier, "garnett_classifier")
-  expect_equal(length(test_classifier@classification_tree), 10)
+  expect_equal(length(test_classifier@classification_tree), 3)
 })
 
 
@@ -108,7 +108,7 @@ test_classifier <- train_cell_classifier(cds = test_cds,
                                          marker_file_gene_id_type = "SYMBOL")
 test_that("training works with symbol ids", {
   expect_is(test_classifier, "garnett_classifier")
-  expect_equal(length(test_classifier@classification_tree), 10)
+  expect_equal(length(test_classifier@classification_tree), 5)
 })
 
 set.seed(260)
@@ -121,7 +121,7 @@ test_classifier2 <- train_cell_classifier(cds = test_cds,
                                          marker_file_gene_id_type = "SYMBOL")
 test_that("training works with carriage return", {
   expect_is(test_classifier, "garnett_classifier")
-  expect_equal(length(test_classifier@classification_tree), 10)
+  expect_equal(length(test_classifier@classification_tree), 5)
 })
 
 test_that("circular subtypes not allowed", {

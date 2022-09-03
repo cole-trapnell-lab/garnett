@@ -96,7 +96,7 @@ marker_check2 <- check_markers(test_cds, use_tf_idf = F,
 
 test_that("check_markers works", {
   expect_identical(marker_check, marker_check_dos)
-  expect_equal(sum(marker_check$marker_score), 414.1387, tol = 1e-4)
+  expect_equal(sum(marker_check$marker_score), 414.4068, tol = 1)
   expect_equal(nrow(marker_check), 18)
   expect_equal(sum(marker_check$summary != "Ok"), 3)
   sub <- subset(marker_check, parent != "root")

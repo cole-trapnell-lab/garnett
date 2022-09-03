@@ -13,9 +13,9 @@ test_that("get_communities works", {
   expect_identical(exprs(new_cds), exprs(test_cds))
   expect_equal(ncol(pData(new_cds)) - 1, ncol(pData(test_cds)))
   expect_identical(fData(new_cds), fData(test_cds))
-  expect_equal(length(unique(pData(new_cds)$louv_cluster)), 6)
-  expect_equal(sum(pData(new_cds)$louv_cluster == 2), 240)
-  expect_equal(as.character(pData(new_cds)$louv_cluster[5]), "3")
+  expect_equal(length(unique(pData(new_cds)$louv_cluster)), 5)
+  expect_equal(sum(pData(new_cds)$louv_cluster == 2), 172)
+  expect_equal(as.character(pData(new_cds)$louv_cluster[5]), "2")
 })
 
 # classify cells
