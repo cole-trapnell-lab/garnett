@@ -1,3 +1,4 @@
+![example workflow](https://github.com/cole-trapnell-lab/garnett/actions/workflows/check-standard.yaml/badge.svg)
 [![Coverage status](https://codecov.io/gh/cole-trapnell-lab/garnett/branch/master/graph/badge.svg)](https://codecov.io/github/cole-trapnell-lab/garnett?branch=master)
 
 # Garnett
