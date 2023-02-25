@@ -1,7 +1,7 @@
 Package: garnett
 Type: Package
 Title: Automated cell type classification
-Version: 0.2.19
+Version: 0.2.20
 Author: c(
     person("Hannah", "Pliner", email = "hpliner@uw.edu", role = c("aut", "cre")), 
     person("Cole", "Trapnell", email = "coletrap@uw.edu", role = c("aut")))
@@ -49,3 +49,5 @@ Suggests:
 Roxygen: list(r6 = FALSE)
 RoxygenNote: 7.0.2
 VignetteBuilder: knitr
+Remotes:
+    github::cole-trapnell-lab/monocle3
