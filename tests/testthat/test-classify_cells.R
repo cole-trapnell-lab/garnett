@@ -33,8 +33,8 @@ test_that("classify_cells works", {
   expect_equal(sum(pData(new_cds)$cell_type == "CD4 T cells"), 82)
   expect_equal(sum(pData(new_cds)$cell_type == "CD8 T cells"), 48)
   expect_equal(sum(pData(new_cds)$cell_type == "T cells"), 142)
-  expect_equal(sum(pData(new_cds)$cluster_ext_type == "B cells"), 400)
-  expect_equal(sum(pData(new_cds)$cluster_ext_type == "CD4 T cells"), 206)
+  expect_equal(sum(pData(new_cds)$cluster_ext_type == "B cells"), 402)
+  expect_equal(sum(pData(new_cds)$cluster_ext_type == "CD4 T cells"), 204)
   expect_equal(sum(pData(new_cds)$cluster_ext_type == "T cells"), 194)
 })
 

@@ -615,7 +615,8 @@ plot_markers <- function(marker_check_df,
                   ggplot2::aes(x=ambiguity,
                                y=forcats::fct_reorder2(tempy,
                                                        cell_type,
-                                                       -marker_score),
+                                                       -marker_score,
+                                                       .na_rm = FALSE),
                                fill=100 * nominates/total_nominated)) +
     ggplot2::geom_point(ggplot2::aes(size = marker_score), color = "black",
                         pch=21, data = marker_check_df, stroke = .1) +
