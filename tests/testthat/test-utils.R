@@ -9,7 +9,7 @@ ensembl <- garnett:::cds_to_other_id(test_cds, db=org.Hs.eg.db,
 
 test_that("cds_to_other_id works", {
   expect_is(ensembl, "cell_data_set")
-  expect_equal(nrow(rowData(ensembl)), 18954)
+  expect_equal(nrow(rowData(ensembl)), 18895)
   expect_equal(row.names(rowData(ensembl)[
     rowData(ensembl)$gene_short_name == "FAM87B",]), "ENSG00000177757")
   expect_identical(counts(test_cds)["FAM87B",],
