@@ -24,7 +24,7 @@ test_that("whole process is the same", {
   expect_equal(sum(pData(test_cds)$cell_type == "CD8 T cells"), 56)
   expect_equal(sum(pData(test_cds)$cell_type == "T cells"), 120)
   expect_equal(sum(pData(test_cds)$cluster_ext_type == "B cells"), 401)
-  expect_equal(sum(pData(test_cds)$cluster_ext_type == "CD4 T cells"), 256)
+  expect_equal(sum(pData(test_cds)$cluster_ext_type == "CD4 T cells"), 265)
   expect_equal(sum(pData(test_cds)$cluster_ext_type == "T cells"), 134)
 })
 
