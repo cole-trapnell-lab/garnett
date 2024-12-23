@@ -299,7 +299,7 @@ train_cell_classifier <- function(cds,
           make_predictions(norm_cds,
                            classifier,
                            igraph::V(classifier@classification_tree)[
-                             suppressWarnings(innei(v))]$name,
+                             suppressWarnings(.innei(v))]$name,
                            rank_prob_ratio = 1.1,
                            s = "lambda.min")
         if(!igraph::V(classifier@classification_tree)[v]$name %in%
