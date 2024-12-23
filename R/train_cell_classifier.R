@@ -286,7 +286,7 @@ train_cell_classifier <- function(cds,
 
   for (v in igraph::V(classifier@classification_tree)){
     child_cell_types <- igraph::V(classifier@classification_tree)[
-      suppressWarnings(outnei(v))]$name
+      suppressWarnings(.outnei(v))]$name
 
     if(length(child_cell_types) > 0) {
       ### Get CDS subset for training ###
@@ -581,7 +581,7 @@ propogate_func <- function(curr_node,
                            parse_list,
                            classifier) {
   children <- igraph::V(classifier@classification_tree)[
-    suppressWarnings(outnei(curr_node))]$name
+    suppressWarnings(.outnei(curr_node))]$name
 
   if(length(children) == 0) {
     return(parse_list[[curr_node]]@expressed)

@@ -237,7 +237,7 @@ run_classifier <- function(classifier,
   for (v in igraph::V(classifier@classification_tree)){
 
     child_cell_types <- igraph::V(classifier@classification_tree)[
-      suppressWarnings(outnei(v))]$name
+      suppressWarnings(.outnei(v))]$name
 
     if (length(child_cell_types) > 0){
       new_gate_res <- make_predictions(cds, classifier, v,
@@ -261,7 +261,7 @@ run_classifier <- function(classifier,
                                   imputed_gate_res, level_table){
 
     for (child in igraph::V(classifier@classification_tree)[
-      suppressWarnings(outnei(v))]){
+      suppressWarnings(.outnei(v))]){
       curr_level <- paste0("level", tree_levels[child])
       if(!curr_level %in% names(level_table)) {
         level_table[[curr_level]] <- "Unknown"
@@ -365,7 +365,7 @@ make_predictions <- function(cds,
   predictions <- tryCatch({
     if(is.null(cvfit)) {
       child_cell_types <- igraph::V(classifier@classification_tree)[
-        suppressWarnings(outnei(curr_node)) ]$name
+        suppressWarnings(.outnei(curr_node)) ]$name
       predictions <- matrix(FALSE, nrow=nrow(colData(cds)),
                             ncol=length(child_cell_types),
                             dimnames=list(row.names(colData(cds)),

@@ -395,7 +395,7 @@ check_markers <- function(cds,
   ##### For each node #####
   for (v in igraph::V(classifier@classification_tree)){
     child_cell_types <-
-      igraph::V(classifier@classification_tree)[suppressWarnings(outnei(v))]$name
+      igraph::V(classifier@classification_tree)[suppressWarnings(.outnei(v))]$name
 
     if(length(child_cell_types) == 0) next
 
