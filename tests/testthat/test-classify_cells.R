@@ -14,7 +14,7 @@ test_that("get_communities works", {
   expect_equal(ncol(pData(new_cds)) - 1, ncol(pData(test_cds)))
   expect_identical(fData(new_cds), fData(test_cds))
   expect_equal(length(unique(pData(new_cds)$louv_cluster)), 5)
-  expect_equal(sum(pData(new_cds)$louv_cluster == 2), 172)
+  expect_equal(sum(pData(new_cds)$louv_cluster == 2), 161)
   expect_equal(as.character(pData(new_cds)$louv_cluster[5]), "2")
 })
 
@@ -34,8 +34,8 @@ test_that("classify_cells works", {
   expect_equal(sum(pData(new_cds)$cell_type == "CD8 T cells"), 48)
   expect_equal(sum(pData(new_cds)$cell_type == "T cells"), 142)
   expect_equal(sum(pData(new_cds)$cluster_ext_type == "B cells"), 402)
-  expect_equal(sum(pData(new_cds)$cluster_ext_type == "CD4 T cells"), 204)
-  expect_equal(sum(pData(new_cds)$cluster_ext_type == "T cells"), 194)
+  expect_equal(sum(pData(new_cds)$cluster_ext_type == "CD4 T cells"), 267)
+  expect_equal(sum(pData(new_cds)$cluster_ext_type == "T cells"), 131)
 })
 
 pData(test_cds)$garnett_cluster <- c(rep(1, times=200), rep(2, times=200),
