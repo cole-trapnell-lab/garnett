@@ -1,7 +1,7 @@
 Package: garnett
 Type: Package
 Title: Automated cell type classification
-Version: 0.2.20
+Version: 0.2.22
 Author: c(
     person("Hannah", "Pliner", email = "hpliner@uw.edu", role = c("aut", "cre")), 
     person("Cole", "Trapnell", email = "coletrap@uw.edu", role = c("aut")))
@@ -16,7 +16,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends:
-    R (>= 3.5.0),
+    R (>= 4.0.0),
     monocle3
 Imports:
     AnnotationDbi (>= 1.44.0),

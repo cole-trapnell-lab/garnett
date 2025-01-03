@@ -17,7 +17,7 @@ get_training_sample <- function(cds,
   ##### Find type assignment from expressed/not expressed #####
 
   child_cell_types <- igraph::V(classifier@classification_tree)[
-    suppressWarnings(outnei(curr_node)) ]$name
+    suppressWarnings(.outnei(curr_node)) ]$name
   parent <- igraph::V(classifier@classification_tree)[curr_node]$name
   if (length(child_cell_types) > 0) {
     if (length(intersect(child_cell_types, colnames(marker_scores))) == 0 &

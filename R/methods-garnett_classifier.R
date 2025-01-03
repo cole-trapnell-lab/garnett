@@ -1,7 +1,7 @@
 new_garnett_classifier <- function()
 {
   garc <- new( "garnett_classifier",
-               classification_tree = igraph::graph.empty())
+               classification_tree = igraph::make_empty_graph())
 
   root_node_id <- "root"
 
